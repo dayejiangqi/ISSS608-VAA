@@ -4,6 +4,9 @@
 .httr-oauth
 .DS_Store
 .quarto
+<<<<<<< HEAD
 
 /.quarto/
 **/*.quarto_ipynb
+=======
+>>>>>>> 3c949470748bba402c46750d191d08297a2ca2f2

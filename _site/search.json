@@ -1,10 +1,21 @@
 [
   {
+<<<<<<< HEAD
+=======
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS608-VAA",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+  },
+  {
+>>>>>>> 3c949470748bba402c46750d191d08297a2ca2f2
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
+<<<<<<< HEAD
   },
   {
     "objectID": "index.html",
@@ -12,5 +23,7 @@
     "title": "ISSS608-VAA",
     "section": "",
     "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course."
+=======
+>>>>>>> 3c949470748bba402c46750d191d08297a2ca2f2
   }
 ]
