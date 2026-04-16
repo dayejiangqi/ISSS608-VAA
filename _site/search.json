@@ -12,5 +12,33 @@
     "title": "ISSS608-VAA",
     "section": "",
     "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "title": "Hands-on_Exercise 1",
+    "section": "",
+    "text": "The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data &lt;- read.csv(\"data/Exam_data.csv\")\n\n\n\n\n\nlibrary(ggplot2)\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar( fill = \"forestgreen\") +\n  labs(\n    x = \"Race Category\",\n    y = \"Number of Students\",\n    title = \"Distribution of Students by Race\"\n  ) +\n  theme_minimal() +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
+    "title": "Hands-on_Exercise 1",
+    "section": "",
+    "text": "exam_data &lt;- read.csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#install-and-launching-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#install-and-launching-r-packages",
+    "title": "Hands-on_Exercise 1",
+    "section": "",
+    "text": "The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
+    "title": "Hands-on_Exercise 1",
+    "section": "",
+    "text": "library(ggplot2)\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar( fill = \"forestgreen\") +\n  labs(\n    x = \"Race Category\",\n    y = \"Number of Students\",\n    title = \"Distribution of Students by Race\"\n  ) +\n  theme_minimal() +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))"
   }
 ]
