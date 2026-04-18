@@ -25,7 +25,7 @@ pacman::p_load(tidyverse)
 ## 1.1.2 Importing the data
 
 ```{r}
-exam_data <- read.csv("chap01/data/Exam_data.csv")
+exam_data <- read.csv("data/Exam_data.csv")
 ```
 
 # 1.2 Introducing ggplot
@@ -413,7 +413,7 @@ ggplot(data=exam_data,
 ```
 
 
-# Pre-set ip example
+# Pre-set up example
 
 ## Plotting a simple bar chart
 
