@@ -7,27 +7,6 @@
     "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "ISSS608-VAA",
-    "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
-    "title": "Hands-on_Exercise 1",
-    "section": "",
-    "text": "The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data &lt;- read.csv(\"data/Exam_data.csv\")\n\n\n\n\n\nlibrary(ggplot2)\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar( fill = \"forestgreen\") +\n  labs(\n    x = \"Race Category\",\n    y = \"Number of Students\",\n    title = \"Distribution of Students by Race\"\n  ) +\n  theme_minimal() +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
-    "title": "Hands-on_Exercise 1",
-    "section": "1.1.2 Importing the data",
-    "text": "1.1.2 Importing the data\n\nexam_data &lt;- read.csv(\"data/Exam_data.csv\")"
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#install-and-launching-r-packages",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#install-and-launching-r-packages",
     "title": "Hands-on_Exercise 1",
@@ -35,11 +14,11 @@
     "text": "1.1.1 Install and launching R packages\nThe code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#importing-the-data",
     "title": "Hands-on_Exercise 1",
-    "section": "Plotting a simple bar chart",
-    "text": "Plotting a simple bar chart\n\nlibrary(ggplot2)\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar( fill = \"forestgreen\") +\n  labs(\n    x = \"Race Category\",\n    y = \"Number of Students\",\n    title = \"Distribution of Students by Race\"\n  ) +\n  theme_minimal() +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))"
+    "section": "1.1.2 Importing the data",
+    "text": "1.1.2 Importing the data\n\nexam_data &lt;- read.csv(\"data/Exam_data.csv\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#r-graphics-vs-ggplot",
@@ -187,5 +166,54 @@
     "title": "Hands-on_Exercise 1",
     "section": "1.10.1 Working with theme",
     "text": "1.10.1 Working with theme\nThe code chunk below plot a horizontal bar chart using theme_gray().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()\n\n\n\n\n\n\n\n\nA horizontal bar chart plotted using theme_classic().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()\n\n\n\n\n\n\n\n\nA horizontal bar chart plotted using theme_minimal().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
+    "title": "Hands-on_Exercise 1",
+    "section": "Plotting a simple bar chart",
+    "text": "Plotting a simple bar chart\n\nlibrary(ggplot2)\nggplot(data = exam_data,\n       aes(x = RACE)) +\n  geom_bar( fill = \"forestgreen\") +\n  labs(\n    x = \"Race Category\",\n    y = \"Number of Students\",\n    title = \"Distribution of Students by Race\"\n  ) +\n  theme_minimal() +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS608-VAA",
+    "section": "",
+    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#installing-and-loading-the-required-libraries",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#installing-and-loading-the-required-libraries",
+    "title": "Hands-on Exercise 2",
+    "section": "2.1.1 Installing and loading the required libraries",
+    "text": "2.1.1 Installing and loading the required libraries\nIn this workshop, we will learn the following libraries.\nggrepel: an R package provides geoms for ggplot2 to repel overlapping text labels.\nggthemes: an R package provides some extra themes, geoms, and scales for ‘ggplot2’.\nhrbrthemes: an R package provides typography-centric themes and theme components for ggplot2.\npatchwork: an R package for preparing composite figure created using ggplot2.\nThe below code chunk is to check if each package is installed.\nIf not, it will install it automatically, and then load all packages into session. So it replaces multiple install.packages() + library() calls.\n\npacman::p_load(ggrepel, patchwork, \n               ggthemes, hrbrthemes,\n               tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#importing-data",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#importing-data",
+    "title": "Hands-on Exercise 2",
+    "section": "2.1.2 Importing data",
+    "text": "2.1.2 Importing data\nThe code chunk below uses readr to import Exam_data.csv.\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggrepel",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggrepel",
+    "title": "Hands-on Exercise 2",
+    "section": "2.2.1 Working with ggrepel",
+    "text": "2.2.1 Working with ggrepel\ngeom_label_repel() uses a smart algorithm to “repel” labels away from each other and from points. It greatly reduces overlap, making the plot more readable.\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  geom_label_repel(aes(label = ID), \n                   fontface = \"bold\") +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores for Primary 3\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.1 Working with ggtheme package",
+    "text": "2.3.1 Working with ggtheme package\nggthemes package extends ggplot2 with a wide variety of additional themes that mimic the visual styles of well-known publications, software, and visualization experts.\n\n\n\n\n\n\n\nTheme (from ggthemes)\nStyle Inspiration\n\n\n\n\ntheme_tufte()\nEdward Tufte’s minimalist design — very clean, data-focused, minimal ink.\n\n\ntheme_few()\nStephen Few’s practical, uncluttered style for dashboards and business charts.\n\n\ntheme_fivethirtyeight()\nThe distinctive look of FiveThirtyEight’s data journalism plots.\n\n\ntheme_economist()\nMimics The Economist magazine’s charts — professional, polished, with signature colors.\n\n\ntheme_stata()\nReplicates Stata’s default plotting style.\n\n\ntheme_excel()\nRecreates the look of Microsoft Excel charts.\n\n\ntheme_wsj()\nThe Wall Street Journal’s chart style — clean, financial-report oriented.\n\n\n\nIt’s especially useful when you want your plots to look like they came from a specific source or design tradition.\ntheme_economist() applies a distinctive blue-gray background, subtle grid lines, and a professional style that mirrors The Economist’s charts.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_economist()\n\n\n\n\n\n\n\n\nIf we want to push the style further, we can also use scale_color_economist() or scale_fill_economist() to apply The Economist’s color palette to our bars or points.\n\nggplot(data=exam_data, aes(x = MATHS)) +\n  geom_histogram(bins=20, boundary=100,\n                 color=\"white\", fill=\"blue\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_economist() +\n  scale_fill_economist()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.2 Working with hrbthems package",
+    "text": "2.3.2 Working with hrbthems package\nThe hrbrthemes package is all about typography and presentation polish in ggplot2. While ggthemes focuses on mimicking well-known publication styles, hrbrthemes emphasizes readability and typographic quality.\nKey Features of hrbrthemes\n\nBase theme (theme_ipsum()): A clean, modern theme with carefully chosen fonts, spacing, and label placement.\nFont control: Lets you easily use system fonts or Google fonts for titles, labels, and annotations.\nBetter defaults: Adjusts margins, axis placement, and text sizes to improve readability.\nVariants: Includes specialized versions like theme_ipsum_ps(), theme_ipsum_rc(), etc., tailored for different font families.\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum()"
   }
 ]
