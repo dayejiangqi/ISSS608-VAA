@@ -134,7 +134,7 @@ ggplot(data=exam_data, aes(x = MATHS)) +
 ggthemes package extends ggplot2 with a wide variety of additional themes that mimic the visual styles of well-known publications, software, and visualization experts.
 
 | Theme (from ggthemes) | Style Inspiration |
-|----------------------|--------------------------------------------------|
+|-----------------------|------------------------------------------------|
 | theme_tufte() | Edward Tufte’s minimalist design — very clean, data-focused, minimal ink. |
 | theme_few() | Stephen Few’s practical, uncluttered style for dashboards and business charts. |
 | theme_fivethirtyeight() | The distinctive look of FiveThirtyEight’s data journalism plots. |
@@ -183,6 +183,7 @@ The hrbrthemes package is all about **typography and presentation polish** in gg
 
 -   Variants: Includes specialized versions like theme_ipsum_ps(), theme_ipsum_rc(), etc., tailored for different font families.
 
+Compared to ggthemes, hrbrthemes is less about mimicking external styles and more about making your plots look polished and readable by default.
 
 ```{r}
 ggplot(data=exam_data, 
@@ -195,27 +196,89 @@ ggplot(data=exam_data,
   theme_ipsum()
 ```
 
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  ggtitle("Distribution of Maths scores") +
+  theme_ipsum(axis_title_size = 18,
+              base_size = 15,
+              grid = "Y")
+```
 
+# 2.4 Beyond Single Graph
 
+```{r}
+p1 <- ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") + 
+  coord_cartesian(xlim=c(0,100)) +
+  ggtitle("Distribution of Maths scores")
+```
 
+```{r}
+p2 <- ggplot(data=exam_data, 
+             aes(x = ENGLISH)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  coord_cartesian(xlim=c(0,100)) +
+  ggtitle("Distribution of English scores")
+```
 
+```{r}
+p3 <- ggplot(data=exam_data, 
+             aes(x= MATHS, 
+                 y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              size=0.5) +  
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100)) +
+  ggtitle("English scores versus Maths scores for Primary 3")
+```
 
+## 2.4.1 Creating Composite Graphics: pathwork methods
 
+## 2.4.2 Combining two ggplot2 graphs
 
+```{r}
+p1 + p2
+```
 
+## 2.4.3 Combining three ggplot2 graphs
 
+```{r}
+(p1 / p2) | p3
+```
 
+## 2.4.4 Creating a composite figure with tag
 
+```{r}
+((p1 / p2) | p3) + 
+  plot_annotation(tag_levels = 'I')
+```
 
+## 2.4.5 Creating figure with insert
 
+```{r}
+p3 + inset_element(p2, 
+                   left = 0.02, 
+                   bottom = 0.7, 
+                   right = 0.5, 
+                   top = 1)
+```
 
+## 2.4.6 Creating a composite figure by using patchwork and ggtheme
 
-
-
-
-
-
-
-
-
-
+```{r}
+patchwork <- (p1 / p2) | p3
+patchwork & theme_economist()
+```
