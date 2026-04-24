@@ -134,7 +134,7 @@ ggplot(data=exam_data, aes(x = MATHS)) +
 ggthemes package extends ggplot2 with a wide variety of additional themes that mimic the visual styles of well-known publications, software, and visualization experts.
 
 | Theme (from ggthemes) | Style Inspiration |
-|-----------------------|------------------------------------------------|
+|------------------------|------------------------------------------------|
 | theme_tufte() | Edward Tufte’s minimalist design — very clean, data-focused, minimal ink. |
 | theme_few() | Stephen Few’s practical, uncluttered style for dashboards and business charts. |
 | theme_fivethirtyeight() | The distinctive look of FiveThirtyEight’s data journalism plots. |
@@ -196,6 +196,8 @@ ggplot(data=exam_data,
   theme_ipsum()
 ```
 
+hrbrthemes vignette emphasizes that its real strength is in a production workflow. The idea is that when you’re generating plots repeatedly (for reports, dashboards, or stakeholder-ready deliverables), you don’t want to manually tweak fonts, margins, and label placement every single time.
+
 ```{r}
 ggplot(data=exam_data, 
              aes(x = MATHS)) +
@@ -211,6 +213,12 @@ ggplot(data=exam_data,
 
 # 2.4 Beyond Single Graph
 
+When you’re telling a visual story, a single chart often isn’t enough. ggplot2 itself doesn’t have built-in functions for combining multiple plots, but there are excellent extensions that make this easy.
+
+Let's start with drawing P1, P2 and P3, and later we can try to combine them with customization.
+
+P1: Use ggplot to draw a histogram
+
 ```{r}
 p1 <- ggplot(data=exam_data, 
              aes(x = MATHS)) +
@@ -220,7 +228,11 @@ p1 <- ggplot(data=exam_data,
                  fill="grey90") + 
   coord_cartesian(xlim=c(0,100)) +
   ggtitle("Distribution of Maths scores")
+
+print(p1)
 ```
+
+P2: Use ggplot to draw a histogram
 
 ```{r}
 p2 <- ggplot(data=exam_data, 
@@ -231,7 +243,11 @@ p2 <- ggplot(data=exam_data,
                  fill="grey90") +
   coord_cartesian(xlim=c(0,100)) +
   ggtitle("Distribution of English scores")
+
+print(p2)
 ```
+
+P1: Use ggplot to draw a scatterplot
 
 ```{r}
 p3 <- ggplot(data=exam_data, 
@@ -243,11 +259,23 @@ p3 <- ggplot(data=exam_data,
   coord_cartesian(xlim=c(0,100),
                   ylim=c(0,100)) +
   ggtitle("English scores versus Maths scores for Primary 3")
+
+print(p3)
 ```
 
 ## 2.4.1 Creating Composite Graphics: pathwork methods
 
+**Common approaches to composite plots**
+
+gridExtra: Functions like grid.arrange() let you place multiple ggplot objects side by side or in a grid.
+
+cowplot: Designed for publication-ready layouts. It has plot_grid() for arranging plots and ggdraw() for annotations.
+
+patchwork: The most modern and intuitive — you can literally use +, /, and \| operators to combine plots like math expressions.
+
 ## 2.4.2 Combining two ggplot2 graphs
+
+Figure in the tabset below shows a composite of two histograms created using patchwork. Note that the syntax used to create the plot is very simple.
 
 ```{r}
 p1 + p2
@@ -255,11 +283,17 @@ p1 + p2
 
 ## 2.4.3 Combining three ggplot2 graphs
 
+We can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:
+
+“/” operator to stack two ggplot2 graphs, “\|” operator to place the plots beside each other, “()” operator the define the sequence of the plotting.
+
 ```{r}
 (p1 / p2) | p3
 ```
 
 ## 2.4.4 Creating a composite figure with tag
+
+In order to identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below.
 
 ```{r}
 ((p1 / p2) | p3) + 
@@ -267,6 +301,8 @@ p1 + p2
 ```
 
 ## 2.4.5 Creating figure with insert
+
+Beyond arranging plots side by side, patchwork also lets you overlay plots using inset_element(). This is powerful when you want to highlight a smaller chart inside a larger one, or add contextual information without breaking the main layout.
 
 ```{r}
 p3 + inset_element(p2, 
@@ -277,6 +313,8 @@ p3 + inset_element(p2,
 ```
 
 ## 2.4.6 Creating a composite figure by using patchwork and ggtheme
+
+Figure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.
 
 ```{r}
 patchwork <- (p1 / p2) | p3

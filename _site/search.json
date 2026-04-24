@@ -207,7 +207,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
     "title": "Hands-on Exercise 2",
     "section": "2.3.2 Working with hrbthems package",
-    "text": "2.3.2 Working with hrbthems package\nThe hrbrthemes package is all about typography and presentation polish in ggplot2. While ggthemes focuses on mimicking well-known publication styles, hrbrthemes emphasizes readability and typographic quality.\nKey Features of hrbrthemes\n\nBase theme (theme_ipsum()): A clean, modern theme with carefully chosen fonts, spacing, and label placement.\nFont control: Lets you easily use system fonts or Google fonts for titles, labels, and annotations.\nBetter defaults: Adjusts margins, axis placement, and text sizes to improve readability.\nVariants: Includes specialized versions like theme_ipsum_ps(), theme_ipsum_rc(), etc., tailored for different font families.\n\nCompared to ggthemes, hrbrthemes is less about mimicking external styles and more about making your plots look polished and readable by default.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum()\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum(axis_title_size = 18,\n              base_size = 15,\n              grid = \"Y\")"
+    "text": "2.3.2 Working with hrbthems package\nThe hrbrthemes package is all about typography and presentation polish in ggplot2. While ggthemes focuses on mimicking well-known publication styles, hrbrthemes emphasizes readability and typographic quality.\nKey Features of hrbrthemes\n\nBase theme (theme_ipsum()): A clean, modern theme with carefully chosen fonts, spacing, and label placement.\nFont control: Lets you easily use system fonts or Google fonts for titles, labels, and annotations.\nBetter defaults: Adjusts margins, axis placement, and text sizes to improve readability.\nVariants: Includes specialized versions like theme_ipsum_ps(), theme_ipsum_rc(), etc., tailored for different font families.\n\nCompared to ggthemes, hrbrthemes is less about mimicking external styles and more about making your plots look polished and readable by default.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum()\n\n\n\n\n\n\n\n\nhrbrthemes vignette emphasizes that its real strength is in a production workflow. The idea is that when you’re generating plots repeatedly (for reports, dashboards, or stakeholder-ready deliverables), you don’t want to manually tweak fonts, margins, and label placement every single time.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum(axis_title_size = 18,\n              base_size = 15,\n              grid = \"Y\")"
   },
   {
     "objectID": "index.html",
@@ -221,41 +221,41 @@
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
     "title": "Hands-on Exercise 2",
     "section": "2.4.1 Creating Composite Graphics: pathwork methods",
-    "text": "2.4.1 Creating Composite Graphics: pathwork methods"
+    "text": "2.4.1 Creating Composite Graphics: pathwork methods\nCommon approaches to composite plots\ngridExtra: Functions like grid.arrange() let you place multiple ggplot objects side by side or in a grid.\ncowplot: Designed for publication-ready layouts. It has plot_grid() for arranging plots and ggdraw() for annotations.\npatchwork: The most modern and intuitive — you can literally use +, /, and | operators to combine plots like math expressions."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-two-ggplot2-graphs",
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-two-ggplot2-graphs",
     "title": "Hands-on Exercise 2",
     "section": "2.4.2 Combining two ggplot2 graphs",
-    "text": "2.4.2 Combining two ggplot2 graphs\n\np1 + p2"
+    "text": "2.4.2 Combining two ggplot2 graphs\nFigure in the tabset below shows a composite of two histograms created using patchwork. Note that the syntax used to create the plot is very simple.\n\np1 + p2"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
     "title": "Hands-on Exercise 2",
     "section": "2.4.3 Combining three ggplot2 graphs",
-    "text": "2.4.3 Combining three ggplot2 graphs\n\n(p1 / p2) | p3"
+    "text": "2.4.3 Combining three ggplot2 graphs\nWe can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:\n“/” operator to stack two ggplot2 graphs, “|” operator to place the plots beside each other, “()” operator the define the sequence of the plotting.\n\n(p1 / p2) | p3"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
     "title": "Hands-on Exercise 2",
     "section": "2.4.4 Creating a composite figure with tag",
-    "text": "2.4.4 Creating a composite figure with tag\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')"
+    "text": "2.4.4 Creating a composite figure with tag\nIn order to identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below.\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
     "title": "Hands-on Exercise 2",
     "section": "2.4.5 Creating figure with insert",
-    "text": "2.4.5 Creating figure with insert\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)"
+    "text": "2.4.5 Creating figure with insert\nBeyond arranging plots side by side, patchwork also lets you overlay plots using inset_element(). This is powerful when you want to highlight a smaller chart inside a larger one, or add contextual information without breaking the main layout.\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
     "title": "Hands-on Exercise 2",
     "section": "2.4.6 Creating a composite figure by using patchwork and ggtheme",
-    "text": "2.4.6 Creating a composite figure by using patchwork and ggtheme\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist()"
+    "text": "2.4.6 Creating a composite figure by using patchwork and ggtheme\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist()"
   }
 ]
