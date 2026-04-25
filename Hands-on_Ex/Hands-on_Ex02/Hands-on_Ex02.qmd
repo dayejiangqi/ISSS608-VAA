@@ -134,7 +134,7 @@ ggplot(data=exam_data, aes(x = MATHS)) +
 ggthemes package extends ggplot2 with a wide variety of additional themes that mimic the visual styles of well-known publications, software, and visualization experts.
 
 | Theme (from ggthemes) | Style Inspiration |
-|------------------------|------------------------------------------------|
+|------------------------|-----------------------------------------------|
 | theme_tufte() | Edward Tufte’s minimalist design — very clean, data-focused, minimal ink. |
 | theme_few() | Stephen Few’s practical, uncluttered style for dashboards and business charts. |
 | theme_fivethirtyeight() | The distinctive look of FiveThirtyEight’s data journalism plots. |
@@ -287,24 +287,69 @@ We can plot more complex composite by using appropriate operators. For example, 
 
 “/” operator to stack two ggplot2 graphs, “\|” operator to place the plots beside each other, “()” operator the define the sequence of the plotting.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+
 (p1 / p2) | p3
 ```
+
+## The code
+
+::: {style="font-size: 1.4em"}
+```{r}
+#| eval: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+
+(p1 / p2) | p3
+```
+:::
+::::
 
 ## 2.4.4 Creating a composite figure with tag
 
 In order to identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below.
 
+:::: panel-tabset
+## The plot
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+
 ((p1 / p2) | p3) + 
   plot_annotation(tag_levels = 'I')
 ```
+
+## The code
+
+::: {style="font-size: 1.4em"}
+```{r}
+#| eval: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+
+((p1 / p2) | p3) + 
+  plot_annotation(tag_levels = 'I')
+```
+:::
+::::
 
 ## 2.4.5 Creating figure with insert
 
 Beyond arranging plots side by side, patchwork also lets you overlay plots using inset_element(). This is powerful when you want to highlight a smaller chart inside a larger one, or add contextual information without breaking the main layout.
 
+:::: panel-tabset
+## The plot
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 p3 + inset_element(p2, 
                    left = 0.02, 
                    bottom = 0.7, 
@@ -312,11 +357,55 @@ p3 + inset_element(p2,
                    top = 1)
 ```
 
+## The code
+
+::: {style="font-size: 1.4em"}
+```{r}
+#| eval: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+p3 + inset_element(p2, 
+                   left = 0.02, 
+                   bottom = 0.7, 
+                   right = 0.5, 
+                   top = 1)
+```
+:::
+::::
+
 ## 2.4.6 Creating a composite figure by using patchwork and ggtheme
 
 Figure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.
 
+:::: panel-tabset
+## The plot
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 patchwork <- (p1 / p2) | p3
-patchwork & theme_economist()
+patchwork & theme_economist() &
+  theme(
+    plot.title = element_text(size = 8, face = "bold", margin = margin(b = 5)),
+    plot.subtitle = element_text(size = 10),
+    plot.caption = element_text(size = 9)
+  )
 ```
+
+## The code
+
+::: {style="font-size: 1.4em"}
+```{r}
+#| eval: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+patchwork <- (p1 / p2) | p3
+patchwork & theme_economist() &
+  theme(
+    plot.title = element_text(size = 8, face = "bold", margin = margin(b = 5)),
+    plot.subtitle = element_text(size = 10),
+    plot.caption = element_text(size = 9)
+  )
+```
+:::
+::::
