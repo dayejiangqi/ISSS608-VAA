@@ -10,22 +10,22 @@ execute:
   freeze: true
 ---
 
-# 4  Programming Animated Statistical Graphics with R
+# 4 Programming Animated Statistical Graphics with R
 
 # 4.1 Overview
+
 When telling a visually-driven data story, animated graphics tends to attract the interest of the audience and make deeper impression than static graphics. In this hands-on exercise, you will learn how to create animated data visualisation by using gganimate and plotly r packages. At the same time, you will also learn how to (i) reshape data by using tidyr package, and (ii) process, wrangle and transform data by using dplyr package.
 
 ## 4.1.1 Basic concepts of animation
+
 When creating animations, the plot does not actually move. Instead, many individual plots are built and then stitched together as movie frames, just like an old-school flip book or cartoon. Each frame is a different plot when conveying motion, which is built using some relevant subset of the aggregate data. The subset drives the flow of the animation when stitched back together.
 
-
-
 ## 4.1.2 Terminology
+
 Before we dive into the steps for creating an animated statistical graph, it’s important to understand some of the key concepts and terminology related to this type of visualization.
 
-Frame: In an animated line graph, each frame represents a different point in time or a different category. When the frame changes, the data points on the graph are updated to reflect the new data.
-
-Animation Attributes: The animation attributes are the settings that control how the animation behaves. For example, you can specify the duration of each frame, the easing function used to transition between frames, and whether to start the animation from the current frame or from the beginning.
+1.  **Frame**: In an animated line graph, each frame represents a different point in time or a different category. When the frame changes, the data points on the graph are updated to reflect the new data.
+2.  **Animation Attributes**: The animation attributes are the settings that control how the animation behaves. For example, you can specify the duration of each frame, the easing function used to transition between frames, and whether to start the animation from the current frame or from the beginning.
 
 # 4.2 Getting Started
 
@@ -33,18 +33,23 @@ Animation Attributes: The animation attributes are the settings that control how
 
 First, write a code chunk to check, install and load the following R packages:
 
-plotly, R library for plotting interactive statistical graphs.
-gganimate, an ggplot extension for creating animated statistical graphs.
-gifski converts video frames to GIF animations using pngquant’s fancy features for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that use thousands of colors per frame.
-gapminder: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.
-tidyverse, a family of modern R packages specially designed to support data science, analysis and communication task including creating static statistical graphs.
+**plotly**, R library for plotting interactive statistical graphs.
+
+**gganimate**, an ggplot extension for creating animated statistical graphs.
+
+**gifski** converts video frames to GIF animations using pngquant’s fancy features for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that use thousands of colors per frame.
+
+**gapminder**: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.
+
+**tidyverse**, a family of modern R packages specially designed to support data science, analysis and communication task including creating static statistical graphs.
 
 ```{r}
 pacman::p_load(readxl, gifski, gapminder,
                plotly, gganimate, tidyverse)
-```               
-               
+```
+
 ## 4.2.2 Importing the data
+
 In this hands-on exercise, the Data worksheet from GlobalPopulation Excel workbook will be used.
 
 Write a code chunk to import Data worksheet from GlobalPopulation Excel workbook by using appropriate R package from tidyverse family.
@@ -57,7 +62,7 @@ globalPop <- read_xls("data/GlobalPopulation.xls",
   mutate(Year = as.integer(Year))
 ```
 
-Unfortunately, mutate_each_() was deprecated in dplyr 0.7.0. and funs() was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using mutate_at() as shown in the code chunk below.
+Unfortunately, mutate_each\_() was deprecated in dplyr 0.7.0. and funs() was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using mutate_at() as shown in the code chunk below.
 
 ```{r}
 col <- c("Country", "Continent")
@@ -79,13 +84,17 @@ globalPop <- read_xls("data/GlobalPopulation.xls",
 
 # 4.3 Animated Data Visualisation: gganimate methods
 
-gganimate extends the grammar of graphics as implemented by ggplot2 to include the description of animation. It does this by providing a range of new grammar classes that can be added to the plot object in order to customise how it should change with time.
+**gganimate** extends the grammar of graphics as implemented by ggplot2 to include the description of animation. It does this by providing a range of new grammar classes that can be added to the plot object in order to customise how it should change with time.
 
-transition_*() defines how the data should be spread out and how it relates to itself across time.
-view_*() defines how the positional scales should change along the animation.
-shadow_*() defines how data from other points in time should be presented in the given point in time.
-enter_*()/exit_*() defines how new data should appear and how old data should disappear during the course of the animation.
-ease_aes() defines how different aesthetics should be eased during transitions.
+**transition\_*()*** *defines how the data should be spread out and how it relates to itself across time.*
+
+***view\_*****()** defines how the positional scales should change along the animation.
+
+**shadow\_*()*** *defines how data from other points in time should be presented in the given point in time.*
+
+***enter\_*****()/exit\_\*()** defines how new data should appear and how old data should disappear during the course of the animation.
+
+**ease_aes()** defines how different aesthetics should be eased during transitions.
 
 ## 4.3.1 Building a static population bubble plot
 
@@ -108,8 +117,11 @@ ggplot(globalPop, aes(x = Old, y = Young,
 
 In the code chunk below,
 
-transition_time() of gganimate is used to create transition through distinct states in time (i.e. Year).
-ease_aes() is used to control easing of aesthetics. The default is linear. Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.
+**transition_time()** of gganimate is used to create transition through distinct states in time (i.e. Year).
+
+**ease_aes()** is used to control easing of aesthetics. The default is **linear**. Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.
+
+The animated bubble chart below:
 
 ```{r}
 ggplot(globalPop, aes(x = Old, y = Young, 
@@ -126,8 +138,6 @@ ggplot(globalPop, aes(x = Old, y = Young,
   ease_aes('linear') 
 ```
 
-The animated bubble chart
-
 # 4.4 Animated Data Visualisation: plotly
 
 In Plotly R package, both ggplotly() and plot_ly() support key frame animations through the frame argument/aesthetic. They also support an ids argument/aesthetic to ensure smooth transitions between objects with the same id (which helps facilitate object constancy).
@@ -135,7 +145,7 @@ In Plotly R package, both ggplotly() and plot_ly() support key frame animations 
 ## 4.4.1 Building an animated bubble plot: ggplotly() method
 
 In this sub-section, you will learn how to create an animated bubble plot by using ggplotly() method.
-  
+
 :::: panel-tabset
 ## The plot
 
@@ -159,8 +169,8 @@ ggplotly(gg)
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 gg <- ggplot(globalPop, 
@@ -207,8 +217,8 @@ ggplotly(gg)
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 gg <- ggplot(globalPop, 
@@ -256,8 +266,8 @@ bp
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 bp <- globalPop %>%
@@ -277,14 +287,3 @@ bp
 ```
 :::
 ::::
-
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
