@@ -15,6 +15,14 @@ website:
             href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html"
           - text: "Hands-on Excercise 3: Programming Animated Statistical Graphics with R"
             href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html"
+          - text: "Hands-on Excercise 4: Visualising Distribution"
+            href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html"
+          - text: "Hands-on Excercise 4: Visual Statistical Analysis"
+            href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html"
+          - text: "Hands-on Excercise 4: Visualising Uncertainty"
+            href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_3.html"
+          - text: "Hands-on Excercise 4: Building Funnel Plot with R"
+            href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html"
     right: 
       - href: index.qmd
         text: Home
