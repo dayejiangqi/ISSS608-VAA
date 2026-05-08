@@ -67,15 +67,33 @@ my_sum <- exam %>%
 
 Next, the code chunk below will be used to display my_sum tibble data frame in an html table format.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
 knitr::kable(head(my_sum), format = 'html')
 ```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+knitr::kable(head(my_sum), format = 'html')
+```
+:::
+::::
 
 ## 11.3.1 Plotting standard error bars of point estimates
 
 Now we are ready to plot the standard error bars of mean maths score by race as shown below.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
 ggplot(my_sum) +
   geom_errorbar(
     aes(x=RACE, 
@@ -95,11 +113,41 @@ ggplot(my_sum) +
   ggtitle("Standard error of mean maths score by rac")
 ```
 
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=RACE, 
+        ymin=mean-se, 
+        ymax=mean+se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    linewidth=0.5) +
+  geom_point(aes
+           (x=RACE, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  ggtitle("Standard error of mean maths score by rac")
+```
+:::
+::::
+
 ## 11.3.2 Plotting confidence interval of point estimates
 
 Instead of plotting the standard error bar of point estimates, we can also plot the confidence intervals of mean maths score by race.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
 ggplot(my_sum) +
   geom_errorbar(
     aes(x=reorder(RACE, -mean), 
@@ -120,11 +168,42 @@ ggplot(my_sum) +
        title = "95% confidence interval of mean maths score by race")
 ```
 
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=reorder(RACE, -mean), 
+        ymin=mean-1.96*se, 
+        ymax=mean+1.96*se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    linewidth=0.5) +
+  geom_point(aes
+           (x=RACE, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  labs(x = "Maths score",
+       title = "95% confidence interval of mean maths score by race")
+```
+:::
+::::
+
 ## 11.3.3 Visualizing the uncertainty of point estimates with interactive error bars
 
 In this section, you will learn how to plot interactive error bars for the 99% confidence interval of mean maths score by race as shown in the figure below.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
 shared_df = SharedData$new(my_sum)
 
 bscols(widths = c(4,8),
@@ -170,6 +249,59 @@ bscols(widths = c(4,8),
          formatRound(columns=c('mean', 'sd', 'se'),
                      digits=2))
 ```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+shared_df = SharedData$new(my_sum)
+
+bscols(widths = c(4,8),
+       ggplotly((ggplot(shared_df) +
+                   geom_errorbar(aes(
+                     x=reorder(RACE, -mean),
+                     ymin=mean-2.58*se, 
+                     ymax=mean+2.58*se), 
+                     width=0.2, 
+                     colour="black", 
+                     alpha=0.9, 
+                     size=0.5) +
+                   geom_point(aes(
+                     x=RACE, 
+                     y=mean, 
+                     text = paste("Race:", `RACE`, 
+                                  "<br>N:", `n`,
+                                  "<br>Avg. Scores:", round(mean, digits = 2),
+                                  "<br>95% CI:[", 
+                                  round((mean-2.58*se), digits = 2), ",",
+                                  round((mean+2.58*se), digits = 2),"]")),
+                     stat="identity", 
+                     color="red", 
+                     size = 1.5, 
+                     alpha=1) + 
+                   xlab("Race") + 
+                   ylab("Average Scores") + 
+                   theme_minimal() + 
+                   theme(axis.text.x = element_text(
+                     angle = 45, vjust = 0.5, hjust=1)) +
+                   ggtitle("99% Confidence interval of average /<br>maths scores by race")), 
+                tooltip = "text"), 
+       DT::datatable(shared_df, 
+                     rownames = FALSE, 
+                     class="compact", 
+                     width="100%", 
+                     options = list(pageLength = 10,
+                                    scrollX=T), 
+                     colnames = c("No. of pupils", 
+                                  "Avg Scores",
+                                  "Std Dev",
+                                  "Std Error")) %>%
+         formatRound(columns=c('mean', 'sd', 'se'),
+                     digits=2))
+```
+:::
+::::
 
 # 11.4 Visualising Uncertainty: ggdist package
 

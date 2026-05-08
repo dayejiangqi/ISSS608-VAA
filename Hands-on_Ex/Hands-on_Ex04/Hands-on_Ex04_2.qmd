@@ -41,7 +41,10 @@ pacman::p_load(ggstatsplot, tidyverse)
 
 ```{r}
 exam <- read_csv("data/Exam_data.csv")
+#| echo: false
+DT::datatable(head(exam, 10), class = "compact")
 ```
+
 
 ## 10.3.3 One-sample test: gghistostats() method
 
