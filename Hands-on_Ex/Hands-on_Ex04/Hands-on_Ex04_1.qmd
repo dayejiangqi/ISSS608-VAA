@@ -20,12 +20,7 @@ Visualising distribution is not new in statistical analysis. In chapter 1 we hav
 
 For the purpose of this exercise, the following R packages will be used, they are:
 
-ggridges, a ggplot2 extension specially designed for plotting ridgeline plots,
-ggdist, a ggplot2 extension spacially desgin for visualising distribution and uncertainty,
-tidyverse, a family of R packages to meet the modern data science and visual communication needs,
-ggthemes, a ggplot extension that provides the user additional themes, scales, and geoms for the ggplots package, and
-colorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.
-The code chunk below will be used load these R packages into RStudio environment.
+ggridges, a ggplot2 extension specially designed for plotting ridgeline plots, ggdist, a ggplot2 extension spacially desgin for visualising distribution and uncertainty, tidyverse, a family of R packages to meet the modern data science and visual communication needs, ggthemes, a ggplot extension that provides the user additional themes, scales, and geoms for the ggplots package, and colorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations. The code chunk below will be used load these R packages into RStudio environment.
 
 ```{r}
 pacman::p_load(ggdist, ggridges, ggthemes,
@@ -65,7 +60,6 @@ ggplot(exam,
   scale_y_discrete(name = NULL, expand = expansion(add = c(0.2, 2.6))) +
   theme_ridges()
 ```
-  
 
 ## 9.3.1 Plotting ridgeline graph: ggridges method
 
@@ -99,8 +93,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam, 
@@ -150,8 +144,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam, 
@@ -172,7 +166,6 @@ ggplot(exam,
 ```
 :::
 ::::
-
 
 ## 9.3.3 Mapping the probabilities directly onto colour
 
@@ -197,8 +190,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam,
@@ -238,8 +231,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam,
@@ -259,7 +252,6 @@ ggplot(exam,
 ::::
 
 Instead of using number to define the quantiles, we can also specify quantiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in the figure below.
-
 
 :::: panel-tabset
 ## The plot
@@ -285,8 +277,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam,
@@ -309,7 +301,6 @@ ggplot(exam,
 :::
 ::::
 
-  
 # 9.4 Visualising Distribution with Raincloud Plot
 
 Raincloud Plot is a data visualisation techniques that produces a half-density to a distribution plot. It gets the name because the density plot is in the shape of a “raincloud”. The raincloud (half-density) plot enhances the traditional box-plot by highlighting multiple modalities (an indicator that groups may exist). The boxplot does not show where densities are clustered, but the raincloud plot does!
@@ -337,8 +328,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam, 
@@ -373,8 +364,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam, 
@@ -415,8 +406,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam, 
@@ -463,8 +454,8 @@ ggplot(exam,
 ```
 
 ## The code
-::: {style="font-size: 1.4em"}
 
+::: {style="font-size: 1.4em"}
 ```{r}
 #| eval: false
 ggplot(exam, 
@@ -485,35 +476,3 @@ ggplot(exam,
 ```
 :::
 ::::
-
-
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
