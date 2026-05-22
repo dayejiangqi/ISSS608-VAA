@@ -33,7 +33,7 @@ pacman::p_load(ggrepel, patchwork,
                ggthemes, hrbrthemes,
                tidyverse, readr, ggdist, 
                ggridges, colorspace, knitr, 
-               forcats, reshape2, png, grid) 
+               forcats, reshape2, png, grid, skimr) 
 ```
 
 ## 2.2 Data Sources

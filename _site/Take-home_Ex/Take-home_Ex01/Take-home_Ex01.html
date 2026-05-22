@@ -237,15 +237,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">3 Data Wrangling</a>
   <ul class="collapse">
-  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">3.1 Importing Data</a></li>
-  <li><a href="#glimpse-of-data-data-overview" id="toc-glimpse-of-data-data-overview" class="nav-link" data-scroll-target="#glimpse-of-data-data-overview">3.2 Glimpse of data (Data Overview)</a></li>
-  <li><a href="#filtering-for-relevant-variables" id="toc-filtering-for-relevant-variables" class="nav-link" data-scroll-target="#filtering-for-relevant-variables">3.3 Filtering for Relevant Variables</a></li>
-  <li><a href="#checking-for-duplicates-and-missing-values" id="toc-checking-for-duplicates-and-missing-values" class="nav-link" data-scroll-target="#checking-for-duplicates-and-missing-values">3.4 Checking for Duplicates and Missing Values</a></li>
-  <li><a href="#renaming-columns-and-replacing-values" id="toc-renaming-columns-and-replacing-values" class="nav-link" data-scroll-target="#renaming-columns-and-replacing-values">3.5 Renaming Columns and Replacing Values</a></li>
-  <li><a href="#data-type-conversion" id="toc-data-type-conversion" class="nav-link" data-scroll-target="#data-type-conversion">3.6 Data Type Conversion</a></li>
+  <li><a href="#importing-and-inspecting-data" id="toc-importing-and-inspecting-data" class="nav-link" data-scroll-target="#importing-and-inspecting-data">3.1 Importing and Inspecting Data</a></li>
+  <li><a href="#cleaning-and-standardization" id="toc-cleaning-and-standardization" class="nav-link" data-scroll-target="#cleaning-and-standardization">3.2 Cleaning and Standardization</a>
+  <ul class="collapse">
+  <li><a href="#check-for-duplicates-and-missing-values" id="toc-check-for-duplicates-and-missing-values" class="nav-link" data-scroll-target="#check-for-duplicates-and-missing-values">3.2.1 Check for Duplicates and Missing values</a></li>
+  <li><a href="#data-type-conversion" id="toc-data-type-conversion" class="nav-link" data-scroll-target="#data-type-conversion">3.2.2 Data Type Conversion</a></li>
+  <li><a href="#consistency" id="toc-consistency" class="nav-link" data-scroll-target="#consistency">3.2.3 Consistency</a></li>
   </ul></li>
-  <li><a href="#univariate-analysis" id="toc-univariate-analysis" class="nav-link" data-scroll-target="#univariate-analysis">4 Univariate Analysis</a></li>
-  <li><a href="#bivariate-analysis" id="toc-bivariate-analysis" class="nav-link" data-scroll-target="#bivariate-analysis">5 Bivariate Analysis</a></li>
+  <li><a href="#reshape-unpivot" id="toc-reshape-unpivot" class="nav-link" data-scroll-target="#reshape-unpivot">3.3 Reshape (Unpivot)</a></li>
+  <li><a href="#recoding" id="toc-recoding" class="nav-link" data-scroll-target="#recoding">3.4 Recoding</a></li>
+  </ul></li>
+  <li><a href="#exploratory-data-analysis---univariate" id="toc-exploratory-data-analysis---univariate" class="nav-link" data-scroll-target="#exploratory-data-analysis---univariate">4 Exploratory Data Analysis - Univariate</a></li>
+  <li><a href="#exploratory-data-analysis---bivariate" id="toc-exploratory-data-analysis---bivariate" class="nav-link" data-scroll-target="#exploratory-data-analysis---bivariate">5 Exploratory Data Analysis - Bivariate</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">6 Summary</a></li>
   <li><a href="#references-and-inspiration" id="toc-references-and-inspiration" class="nav-link" data-scroll-target="#references-and-inspiration">7 References and Inspiration</a></li>
   </ul>
@@ -313,7 +316,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggthemes, hrbrthemes,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               tidyverse, readr, ggdist, </span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               ggridges, colorspace, knitr, </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               forcats, reshape2, png, grid) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               forcats, reshape2, png, grid, skimr) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+The downloaded binary packages are in
+    /var/folders/x3/lfqwf4lx56g80m698p2mqpjh0000gn/T//Rtmpj0dDoj/downloaded_packages</code></pre>
+</div>
 </div>
 </section>
 <section id="data-sources" class="level2">
@@ -323,16 +331,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-wrangling" class="level1">
 <h1>3 Data Wrangling</h1>
-<section id="importing-data" class="level2">
-<h2 class="anchored" data-anchor-id="importing-data">3.1 Importing Data</h2>
+<section id="importing-and-inspecting-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-and-inspecting-data">3.1 Importing and Inspecting Data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/Dataset of motor insurance portfolio.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="glimpse-of-data-data-overview" class="level2">
-<h2 class="anchored" data-anchor-id="glimpse-of-data-data-overview">3.2 Glimpse of data (Data Overview)</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/Dataset of motor insurance portfolio.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 354,140
 Columns: 47
@@ -384,27 +387,1143 @@ $ occupants_incurred          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 $ total_exposure              &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.0000…
 $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.0000…</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   insured_id          year      policy_type        policy_status     
+ Min.   :     1   Min.   :2022   Length:354140      Length:354140     
+ 1st Qu.: 33342   1st Qu.:2023   Class :character   Class :character  
+ Median : 66840   Median :2023   Mode  :character   Mode  :character  
+ Mean   : 76045   Mean   :2023                                        
+ 3rd Qu.:112949   3rd Qu.:2024                                        
+ Max.   :185678   Max.   :2024                                        
+                                                                      
+ business_type      payment_frequency  bonus_score          driver_age   
+ Length:354140      Length:354140      Length:354140      Min.   :18.00  
+ Class :character   Class :character   Class :character   1st Qu.:39.00  
+ Mode  :character   Mode  :character   Mode  :character   Median :48.00  
+                                                          Mean   :49.01  
+                                                          3rd Qu.:58.00  
+                                                          Max.   :90.00  
+                                                                         
+  vehicle_age    age_driving_licence  fuel_type         vehicle_value   
+ Min.   : 0.00   Min.   : 0.00       Length:354140      Min.   :  1630  
+ 1st Qu.:17.00   1st Qu.:19.00       Class :character   1st Qu.: 18608  
+ Median :25.00   Median :20.00       Mode  :character   Median : 24730  
+ Mean   :25.92   Mean   :22.99                          Mean   : 26977  
+ 3rd Qu.:35.00   3rd Qu.:25.00                          3rd Qu.: 32252  
+ Max.   :68.00   Max.   :80.00                          Max.   :374034  
+ NA's   :2       NA's   :2                              NA's   :513     
+     seats       power_to_weight_ratio vehicle_brand      municipality_type 
+ Min.   :2.000   Min.   : 0.00         Length:354140      Length:354140     
+ 1st Qu.:5.000   1st Qu.:10.74         Class :character   Class :character  
+ Median :5.000   Median :12.05         Mode  :character   Mode  :character  
+ Mean   :5.084   Mean   :12.33                                              
+ 3rd Qu.:5.000   3rd Qu.:13.73                                              
+ Max.   :9.000   Max.   :64.81                                              
+                                                                            
+ circulation_area   total_premium    liability_premium property_damage_premium
+ Length:354140      Min.   :   0.0   Min.   :   0.00   Min.   :   0.00        
+ Class :character   1st Qu.: 146.1   1st Qu.:  92.52   1st Qu.:   0.00        
+ Mode  :character   Median : 257.9   Median : 165.78   Median :   0.00        
+                    Mean   : 296.7   Mean   : 180.71   Mean   :  73.52        
+                    3rd Qu.: 385.0   3rd Qu.: 237.83   3rd Qu.:  83.62        
+                    Max.   :5107.6   Max.   :2320.77   Max.   :3736.73        
+                                                                              
+ theft_premium       fire_premium     glass_premium    
+ Min.   :   0.000   Min.   : 0.0000   Min.   :  0.000  
+ 1st Qu.:   1.808   1st Qu.: 0.2889   1st Qu.:  7.417  
+ Median :   5.902   Median : 0.8644   Median : 15.387  
+ Mean   :  11.249   Mean   : 1.5105   Mean   : 19.497  
+ 3rd Qu.:  13.519   3rd Qu.: 1.8182   3rd Qu.: 26.912  
+ Max.   :1047.036   Max.   :72.0891   Max.   :387.608  
+                                                       
+ legal_protection_premium occupants_premium  total_claims     liability_claims
+ Min.   :  0.000          Min.   : 0.0000   Min.   : 0.0000   Min.   :0.0000  
+ 1st Qu.:  3.820          1st Qu.: 0.9441   1st Qu.: 0.0000   1st Qu.:0.0000  
+ Median :  7.262          Median : 1.8261   Median : 0.0000   Median :0.0000  
+ Mean   :  8.268          Mean   : 1.9651   Mean   : 0.2177   Mean   :0.1066  
+ 3rd Qu.: 10.966          3rd Qu.: 2.6200   3rd Qu.: 0.0000   3rd Qu.:0.0000  
+ Max.   :175.056          Max.   :68.6461   Max.   :18.0000   Max.   :8.0000  
+                                                                              
+ liability_property_claims liability_injury_claims property_claims   
+ Min.   :0.00000           Min.   :0.00000         Min.   : 0.00000  
+ 1st Qu.:0.00000           1st Qu.:0.00000         1st Qu.: 0.00000  
+ Median :0.00000           Median :0.00000         Median : 0.00000  
+ Mean   :0.09281           Mean   :0.01376         Mean   : 0.06295  
+ 3rd Qu.:0.00000           3rd Qu.:0.00000         3rd Qu.: 0.00000  
+ Max.   :8.00000           Max.   :3.00000         Max.   :15.00000  
+                                                                     
+  theft_claims       fire_claims         glass_claims    
+ Min.   :0.000000   Min.   :0.0000000   Min.   :0.00000  
+ 1st Qu.:0.000000   1st Qu.:0.0000000   1st Qu.:0.00000  
+ Median :0.000000   Median :0.0000000   Median :0.00000  
+ Mean   :0.005326   Mean   :0.0002824   Mean   :0.03271  
+ 3rd Qu.:0.000000   3rd Qu.:0.0000000   3rd Qu.:0.00000  
+ Max.   :2.000000   Max.   :1.0000000   Max.   :3.00000  
+                                                         
+ legal_protection_claims occupants_claims    total_incurred    
+ Min.   :0.000000        Min.   :0.0000000   Min.   :     0.0  
+ 1st Qu.:0.000000        1st Qu.:0.0000000   1st Qu.:     0.0  
+ Median :0.000000        Median :0.0000000   Median :     0.0  
+ Mean   :0.009753        Mean   :0.0001214   Mean   :   208.6  
+ 3rd Qu.:0.000000        3rd Qu.:0.0000000   3rd Qu.:     0.0  
+ Max.   :2.000000        Max.   :1.0000000   Max.   :571128.3  
+                                                               
+ liability_incurred liability_property_incurred liability_injury_incurred
+ Min.   :     0.0   Min.   :    0.00            Min.   :     0.00        
+ 1st Qu.:     0.0   1st Qu.:    0.00            1st Qu.:     0.00        
+ Median :     0.0   Median :    0.00            Median :     0.00        
+ Mean   :   133.7   Mean   :   65.75            Mean   :    67.96        
+ 3rd Qu.:     0.0   3rd Qu.:    0.00            3rd Qu.:     0.00        
+ Max.   :561759.8   Max.   :34553.88            Max.   :560025.59        
+                                                                         
+ property_incurred  theft_incurred      fire_incurred       glass_incurred   
+ Min.   :    0.00   Min.   :    0.000   Min.   :0.000e+00   Min.   :   0.00  
+ 1st Qu.:    0.00   1st Qu.:    0.000   1st Qu.:0.000e+00   1st Qu.:   0.00  
+ Median :    0.00   Median :    0.000   Median :0.000e+00   Median :   0.00  
+ Mean   :   52.66   Mean   :    4.511   Mean   :7.629e-01   Mean   :  12.59  
+ 3rd Qu.:    0.00   3rd Qu.:    0.000   3rd Qu.:0.000e+00   3rd Qu.:   0.00  
+ Max.   :27542.43   Max.   :40324.888   Max.   :2.827e+04   Max.   :4533.40  
+                                                                             
+ legal_protection_incurred occupants_incurred  total_exposure  
+ Min.   :   0.000          Min.   :    0.000   Min.   :0.0000  
+ 1st Qu.:   0.000          1st Qu.:    0.000   1st Qu.:0.4438  
+ Median :   0.000          Median :    0.000   Median :0.8384  
+ Mean   :   3.323          Mean   :    1.013   Mean   :0.7069  
+ 3rd Qu.:   0.000          3rd Qu.:    0.000   3rd Qu.:1.0000  
+ Max.   :9889.851          Max.   :69000.000   Max.   :1.0000  
+                                                               
+ liability_exposure
+ Min.   :0.0000    
+ 1st Qu.:0.4438    
+ Median :0.8384    
+ Mean   :0.7069    
+ 3rd Qu.:1.0000    
+ Max.   :1.0000    
+                   </code></pre>
+</div>
 </div>
 </section>
-<section id="filtering-for-relevant-variables" class="level2">
-<h2 class="anchored" data-anchor-id="filtering-for-relevant-variables">3.3 Filtering for Relevant Variables</h2>
+<section id="cleaning-and-standardization" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-and-standardization">3.2 Cleaning and Standardization</h2>
+<section id="check-for-duplicates-and-missing-values" class="level3">
+<h3 class="anchored" data-anchor-id="check-for-duplicates-and-missing-values">3.2.1 Check for Duplicates and Missing values</h3>
+<p>Identify with is.na() or skimr::skim(). Decide whether to impute, drop, or flag.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>portfolio[<span class="fu">duplicated</span>(portfolio),]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 47
+# ℹ 47 variables: insured_id &lt;dbl&gt;, year &lt;dbl&gt;, policy_type &lt;chr&gt;,
+#   policy_status &lt;chr&gt;, business_type &lt;chr&gt;, payment_frequency &lt;chr&gt;,
+#   bonus_score &lt;chr&gt;, driver_age &lt;dbl&gt;, vehicle_age &lt;dbl&gt;,
+#   age_driving_licence &lt;dbl&gt;, fuel_type &lt;chr&gt;, vehicle_value &lt;dbl&gt;,
+#   seats &lt;dbl&gt;, power_to_weight_ratio &lt;dbl&gt;, vehicle_brand &lt;chr&gt;,
+#   municipality_type &lt;chr&gt;, circulation_area &lt;chr&gt;, total_premium &lt;dbl&gt;,
+#   liability_premium &lt;dbl&gt;, property_damage_premium &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">portfolio</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">354140</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 11%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">policy_type</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">policy_status</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">business_type</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">payment_frequency</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bonus_score</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fuel_type</td>
+<td style="text-align: right;">1287</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">vehicle_brand</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">municipality_type</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">circulation_area</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">insured_id</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">76044.50</td>
+<td style="text-align: right;">51272.26</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">33342.00</td>
+<td style="text-align: right;">66840.00</td>
+<td style="text-align: right;">112949.00</td>
+<td style="text-align: right;">185678.00</td>
+<td style="text-align: left;">▇▇▆▃▃</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">year</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2023.29</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">2022.00</td>
+<td style="text-align: right;">2023.00</td>
+<td style="text-align: right;">2023.00</td>
+<td style="text-align: right;">2024.00</td>
+<td style="text-align: right;">2024.00</td>
+<td style="text-align: left;">▃▁▆▁▇</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">driver_age</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">49.01</td>
+<td style="text-align: right;">12.07</td>
+<td style="text-align: right;">18.00</td>
+<td style="text-align: right;">39.00</td>
+<td style="text-align: right;">48.00</td>
+<td style="text-align: right;">58.00</td>
+<td style="text-align: right;">90.00</td>
+<td style="text-align: left;">▂▇▇▃▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vehicle_age</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">25.92</td>
+<td style="text-align: right;">11.62</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">17.00</td>
+<td style="text-align: right;">25.00</td>
+<td style="text-align: right;">35.00</td>
+<td style="text-align: right;">68.00</td>
+<td style="text-align: left;">▃▇▆▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age_driving_licence</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">22.99</td>
+<td style="text-align: right;">6.36</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">19.00</td>
+<td style="text-align: right;">20.00</td>
+<td style="text-align: right;">25.00</td>
+<td style="text-align: right;">80.00</td>
+<td style="text-align: left;">▁▇▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vehicle_value</td>
+<td style="text-align: right;">513</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">26977.44</td>
+<td style="text-align: right;">12326.09</td>
+<td style="text-align: right;">1630.12</td>
+<td style="text-align: right;">18607.58</td>
+<td style="text-align: right;">24729.60</td>
+<td style="text-align: right;">32252.32</td>
+<td style="text-align: right;">374034.21</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">seats</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.08</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">9.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">power_to_weight_ratio</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12.33</td>
+<td style="text-align: right;">2.48</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">10.74</td>
+<td style="text-align: right;">12.05</td>
+<td style="text-align: right;">13.73</td>
+<td style="text-align: right;">64.81</td>
+<td style="text-align: left;">▇▅▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">total_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">296.72</td>
+<td style="text-align: right;">227.85</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">146.14</td>
+<td style="text-align: right;">257.90</td>
+<td style="text-align: right;">384.98</td>
+<td style="text-align: right;">5107.64</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">liability_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">180.71</td>
+<td style="text-align: right;">129.72</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">92.52</td>
+<td style="text-align: right;">165.78</td>
+<td style="text-align: right;">237.83</td>
+<td style="text-align: right;">2320.77</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">property_damage_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">73.52</td>
+<td style="text-align: right;">155.80</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">83.62</td>
+<td style="text-align: right;">3736.73</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theft_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11.25</td>
+<td style="text-align: right;">18.99</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">1.81</td>
+<td style="text-align: right;">5.90</td>
+<td style="text-align: right;">13.52</td>
+<td style="text-align: right;">1047.04</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fire_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.51</td>
+<td style="text-align: right;">2.25</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">1.82</td>
+<td style="text-align: right;">72.09</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">glass_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19.50</td>
+<td style="text-align: right;">16.93</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">7.42</td>
+<td style="text-align: right;">15.39</td>
+<td style="text-align: right;">26.91</td>
+<td style="text-align: right;">387.61</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">legal_protection_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8.27</td>
+<td style="text-align: right;">6.04</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">3.82</td>
+<td style="text-align: right;">7.26</td>
+<td style="text-align: right;">10.97</td>
+<td style="text-align: right;">175.06</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">occupants_premium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.97</td>
+<td style="text-align: right;">1.32</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">1.83</td>
+<td style="text-align: right;">2.62</td>
+<td style="text-align: right;">68.65</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">total_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">18.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">liability_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">8.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">liability_property_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">8.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">liability_injury_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">3.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">property_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">15.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theft_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fire_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">glass_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">3.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">legal_protection_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">occupants_claims</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">total_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">208.58</td>
+<td style="text-align: right;">2274.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">571128.32</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">liability_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">133.71</td>
+<td style="text-align: right;">2120.43</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">561759.79</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">liability_property_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">65.74</td>
+<td style="text-align: right;">406.86</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">34553.88</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">liability_injury_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">67.96</td>
+<td style="text-align: right;">2031.21</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">560025.59</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">property_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">52.66</td>
+<td style="text-align: right;">420.99</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">27542.43</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">theft_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4.51</td>
+<td style="text-align: right;">193.74</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">40324.89</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fire_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">82.03</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">28267.13</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">glass_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12.59</td>
+<td style="text-align: right;">83.80</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">4533.40</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">legal_protection_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.32</td>
+<td style="text-align: right;">59.97</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">9889.85</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">occupants_incurred</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">201.06</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">69000.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">total_exposure</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">▂▂▂▂▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">liability_exposure</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">▂▂▂▂▇</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(portfolio))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 insured_id                        year 
+                          0                           0 
+                policy_type               policy_status 
+                          0                           0 
+              business_type           payment_frequency 
+                          0                           0 
+                bonus_score                  driver_age 
+                          0                           0 
+                vehicle_age         age_driving_licence 
+                          2                           2 
+                  fuel_type               vehicle_value 
+                       1287                         513 
+                      seats       power_to_weight_ratio 
+                          0                           0 
+              vehicle_brand           municipality_type 
+                          0                           0 
+           circulation_area               total_premium 
+                          0                           0 
+          liability_premium     property_damage_premium 
+                          0                           0 
+              theft_premium                fire_premium 
+                          0                           0 
+              glass_premium    legal_protection_premium 
+                          0                           0 
+          occupants_premium                total_claims 
+                          0                           0 
+           liability_claims   liability_property_claims 
+                          0                           0 
+    liability_injury_claims             property_claims 
+                          0                           0 
+               theft_claims                 fire_claims 
+                          0                           0 
+               glass_claims     legal_protection_claims 
+                          0                           0 
+           occupants_claims              total_incurred 
+                          0                           0 
+         liability_incurred liability_property_incurred 
+                          0                           0 
+  liability_injury_incurred           property_incurred 
+                          0                           0 
+             theft_incurred               fire_incurred 
+                          0                           0 
+             glass_incurred   legal_protection_incurred 
+                          0                           0 
+         occupants_incurred              total_exposure 
+                          0                           0 
+         liability_exposure 
+                          0 </code></pre>
+</div>
+</div>
 </section>
-<section id="checking-for-duplicates-and-missing-values" class="level2">
-<h2 class="anchored" data-anchor-id="checking-for-duplicates-and-missing-values">3.4 Checking for Duplicates and Missing Values</h2>
+<section id="data-type-conversion" class="level3">
+<h3 class="anchored" data-anchor-id="data-type-conversion">3.2.2 Data Type Conversion</h3>
+<p>Convert categorical variables (policy_type, fuel_type, etc.) into factors.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 25%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Data Type</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>insured_id</td>
+<td>integer</td>
+<td>Unique identifier, sequential ID.</td>
+</tr>
+<tr class="even">
+<td>year</td>
+<td>integer</td>
+<td>Calendar year, discrete not continuous.</td>
+</tr>
+<tr class="odd">
+<td>policy_type</td>
+<td>factor</td>
+<td>Categorical (COMP_E, COMP_N, TP, etc.).</td>
+</tr>
+<tr class="even">
+<td>policy_status</td>
+<td>factor</td>
+<td>Categorical (A = active, C = cancelled).</td>
+</tr>
+<tr class="odd">
+<td>business_type</td>
+<td>factor</td>
+<td>Categorical (NB = new business, P = portfolio).</td>
+</tr>
+<tr class="even">
+<td>payment_frequency</td>
+<td>factor</td>
+<td>Categorical (A, S, Q).</td>
+</tr>
+<tr class="odd">
+<td>bonus_score</td>
+<td>factor</td>
+<td>Categorical (G, N, B).</td>
+</tr>
+<tr class="even">
+<td>driver_age</td>
+<td>integer</td>
+<td>Age in years.</td>
+</tr>
+<tr class="odd">
+<td>vehicle_age</td>
+<td>integer</td>
+<td>Age in years.</td>
+</tr>
+<tr class="even">
+<td>age_driving_licence</td>
+<td>integer</td>
+<td>Year of licence issuance (discrete year).</td>
+</tr>
+<tr class="odd">
+<td>fuel_type</td>
+<td>factor</td>
+<td>Categorical (D = diesel, G = gasoline).</td>
+</tr>
+<tr class="even">
+<td>vehicle_value</td>
+<td>numeric</td>
+<td>Continuous monetary value.</td>
+</tr>
+<tr class="odd">
+<td>seats</td>
+<td>integer</td>
+<td>Count of seats.</td>
+</tr>
+<tr class="even">
+<td>power_to_weight_ratio</td>
+<td>numeric</td>
+<td>Continuous ratio.</td>
+</tr>
+<tr class="odd">
+<td>vehicle_brand</td>
+<td>factor</td>
+<td>Categorical brand names.</td>
+</tr>
+<tr class="even">
+<td>municipality_type</td>
+<td>factor</td>
+<td>Categorical (I, C, IS).</td>
+</tr>
+<tr class="odd">
+<td>circulation_area</td>
+<td>factor</td>
+<td>Categorical (U, R).</td>
+</tr>
+<tr class="even">
+<td>*<em>Premiums (all _premium)</em></td>
+<td>numeric</td>
+<td>Continuous monetary values.</td>
+</tr>
+<tr class="odd">
+<td>*<em>Claims (all _claims)</em></td>
+<td>integer</td>
+<td>Count of claims (discrete).</td>
+</tr>
+<tr class="even">
+<td>*<em>Incurred (all _incurred)</em></td>
+<td>numeric</td>
+<td>Continuous monetary values.</td>
+</tr>
+<tr class="odd">
+<td>*<em>Exposure (all _exposure)</em></td>
+<td>numeric</td>
+<td>Continuous, fractional values (0–1 or &gt;1).</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">insured_id =</span> <span class="fu">as.integer</span>(insured_id),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">as.integer</span>(year),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">driver_age =</span> <span class="fu">as.integer</span>(driver_age),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">vehicle_age =</span> <span class="fu">as.integer</span>(vehicle_age),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_driving_licence =</span> <span class="fu">as.integer</span>(age_driving_licence),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">seats =</span> <span class="fu">as.integer</span>(seats),</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">policy_type =</span> <span class="fu">factor</span>(policy_type),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">policy_status =</span> <span class="fu">factor</span>(policy_status),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">business_type =</span> <span class="fu">factor</span>(business_type),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">payment_frequency =</span> <span class="fu">factor</span>(payment_frequency),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">bonus_score =</span> <span class="fu">factor</span>(bonus_score),</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fuel_type =</span> <span class="fu">factor</span>(fuel_type),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">vehicle_brand =</span> <span class="fu">factor</span>(vehicle_brand),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">municipality_type =</span> <span class="fu">factor</span>(municipality_type),</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">circulation_area =</span> <span class="fu">factor</span>(circulation_area)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
-<section id="renaming-columns-and-replacing-values" class="level2">
-<h2 class="anchored" data-anchor-id="renaming-columns-and-replacing-values">3.5 Renaming Columns and Replacing Values</h2>
+<section id="consistency" class="level3">
+<h3 class="anchored" data-anchor-id="consistency">3.2.3 Consistency</h3>
+<p>Ensure numeric columns (e.g., vehicle_value, total_premium) are properly parsed as numeric.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(portfolio, class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 insured_id                        year 
+                  "integer"                   "integer" 
+                policy_type               policy_status 
+                   "factor"                    "factor" 
+              business_type           payment_frequency 
+                   "factor"                    "factor" 
+                bonus_score                  driver_age 
+                   "factor"                   "integer" 
+                vehicle_age         age_driving_licence 
+                  "integer"                   "integer" 
+                  fuel_type               vehicle_value 
+                   "factor"                   "numeric" 
+                      seats       power_to_weight_ratio 
+                  "integer"                   "numeric" 
+              vehicle_brand           municipality_type 
+                   "factor"                    "factor" 
+           circulation_area               total_premium 
+                   "factor"                   "numeric" 
+          liability_premium     property_damage_premium 
+                  "numeric"                   "numeric" 
+              theft_premium                fire_premium 
+                  "numeric"                   "numeric" 
+              glass_premium    legal_protection_premium 
+                  "numeric"                   "numeric" 
+          occupants_premium                total_claims 
+                  "numeric"                   "numeric" 
+           liability_claims   liability_property_claims 
+                  "numeric"                   "numeric" 
+    liability_injury_claims             property_claims 
+                  "numeric"                   "numeric" 
+               theft_claims                 fire_claims 
+                  "numeric"                   "numeric" 
+               glass_claims     legal_protection_claims 
+                  "numeric"                   "numeric" 
+           occupants_claims              total_incurred 
+                  "numeric"                   "numeric" 
+         liability_incurred liability_property_incurred 
+                  "numeric"                   "numeric" 
+  liability_injury_incurred           property_incurred 
+                  "numeric"                   "numeric" 
+             theft_incurred               fire_incurred 
+                  "numeric"                   "numeric" 
+             glass_incurred   legal_protection_incurred 
+                  "numeric"                   "numeric" 
+         occupants_incurred              total_exposure 
+                  "numeric"                   "numeric" 
+         liability_exposure 
+                  "numeric" </code></pre>
+</div>
+</div>
 </section>
-<section id="data-type-conversion" class="level2">
-<h2 class="anchored" data-anchor-id="data-type-conversion">3.6 Data Type Conversion</h2>
+</section>
+<section id="reshape-unpivot" class="level2">
+<h2 class="anchored" data-anchor-id="reshape-unpivot">3.3 Reshape (Unpivot)</h2>
+<p>Keep identifiers and descriptors (insured_id, year, policy_type, driver_age, etc.) wide.</p>
+<p>Unpivot Premiums into Premium_Type + Premium_Value.</p>
+<p>Unpivot Claims into Claim_Type + Claim_Count.</p>
+<p>Unpivot Incurred into Incurred_Type + Incurred_Value.</p>
+<p>Unpivot Exposure into Exposure_Type + Exposure_Value.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>portfolio_l <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">matches</span>(<span class="st">"_premium$|_claims$|_incurred$|_exposure$"</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"Metric_Type"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"Value"</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Metric_Group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"premium"</span>, Metric_Type) <span class="sc">~</span> <span class="st">"Premiums"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"claims"</span>, Metric_Type) <span class="sc">~</span> <span class="st">"Claims"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"incurred"</span>, Metric_Type) <span class="sc">~</span> <span class="st">"Incurred"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"exposure"</span>, Metric_Type) <span class="sc">~</span> <span class="st">"Exposure"</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(portfolio_l)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 20
+  insured_id  year policy_type policy_status business_type payment_frequency
+       &lt;int&gt; &lt;int&gt; &lt;fct&gt;       &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;            
+1          1  2022 COMP_E      C             NB            A                
+2          1  2022 COMP_E      C             NB            A                
+3          1  2022 COMP_E      C             NB            A                
+4          1  2022 COMP_E      C             NB            A                
+5          1  2022 COMP_E      C             NB            A                
+6          1  2022 COMP_E      C             NB            A                
+# ℹ 14 more variables: bonus_score &lt;fct&gt;, driver_age &lt;int&gt;, vehicle_age &lt;int&gt;,
+#   age_driving_licence &lt;int&gt;, fuel_type &lt;fct&gt;, vehicle_value &lt;dbl&gt;,
+#   seats &lt;int&gt;, power_to_weight_ratio &lt;dbl&gt;, vehicle_brand &lt;fct&gt;,
+#   municipality_type &lt;fct&gt;, circulation_area &lt;fct&gt;, Metric_Type &lt;chr&gt;,
+#   Value &lt;dbl&gt;, Metric_Group &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="recoding" class="level2">
+<h2 class="anchored" data-anchor-id="recoding">3.4 Recoding</h2>
+<p>Create ratios: e.g., claims_per_exposure = total_claims / total_exposure.</p>
+<p>Derive flags: e.g., has_claim = ifelse(total_claims &gt; 0, 1, 0).</p>
+<p>Normalize monetary values (premiums, incurred) by exposure to get comparable risk measures.</p>
+<p>Bucket ages (driver_age, vehicle_age) into categories for actuarial modeling.</p>
 </section>
 </section>
-<section id="univariate-analysis" class="level1">
-<h1>4 Univariate Analysis</h1>
+<section id="exploratory-data-analysis---univariate" class="level1">
+<h1>4 Exploratory Data Analysis - Univariate</h1>
 <p>Apply suitable univariate visual analytics techniques to explore the distributions and characteristics of numerical and categorical variables.</p>
 </section>
-<section id="bivariate-analysis" class="level1">
-<h1>5 Bivariate Analysis</h1>
+<section id="exploratory-data-analysis---bivariate" class="level1">
+<h1>5 Exploratory Data Analysis - Bivariate</h1>
 <p>Apply suitable bivariate visual analytics techniques to investigate and statistically validate factors influencing the profitability and volatility of the insurance portfolio.</p>
 </section>
 <section id="summary" class="level1">
