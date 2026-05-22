@@ -245,6 +245,33 @@ corrplot(wine.cor,
          tl.col = "black")
 ```
 
+If we want to visually de-emphasize strong correlations instead of removing them.
+
+```{r}
+corrplot(wine.cor,
+         method = "ellipse",
+         type = "lower",
+         diag = FALSE,
+         tl.col = "black",
+         cl.lim = c(-0.9, 0.9))
+```
+
+If to hide correlations above a certain threshold (like ∣𝑟∣ < 0.5), we can use the corrplot argument cl.lim or, more flexibly, set unwanted correlations to NA before plotting. corrplot automatically skips NA values.
+
+```{r}
+# Copy correlation matrix
+wine.cor.filtered <- wine.cor
+
+# Replace correlations with NA if |r| < 0.5
+wine.cor.filtered[abs(wine.cor.filtered) < 0.5] <- NA
+
+# Plot with ellipses, lower triangle, no diagonal
+corrplot(wine.cor.filtered,
+         method = "ellipse",
+         type = "lower",
+         diag = FALSE,
+         tl.col = "black")
+```
 
 Please feel free to experiment with other layout design argument such as tl.pos, tl.cex, tl.offset, cl.pos, cl.cex and cl.offset, just to mention a few of them.
 
