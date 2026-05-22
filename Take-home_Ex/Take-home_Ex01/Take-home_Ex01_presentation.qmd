@@ -1,0 +1,14 @@
+---
+title: "Take-home_Exercise 1 Presentation"
+format: revealjs
+---
+
+## Introduction
+
+## Data Source
+
+## Data Wrangling
+
+## EDA
+
+

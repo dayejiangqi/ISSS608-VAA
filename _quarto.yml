@@ -35,8 +35,10 @@ website:
             href: "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05_5.html"
       - text: "Take-home Exercise"
         menu: 
-          - text: "Take-home Exercise 1"
+          - text: "Take-home Exercise 1 Technical Report"
             href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html"      
+          - text: "Take-home Exercise 1 Presentation"
+            href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html"  
 
     right: 
       - href: index.qmd
