@@ -1,0 +1,177 @@
+---
+title: "Take-home Exercise 1"
+author: "Jiang Yuxi"
+date: "May 22, 2026"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# 1 Overview
+
+## 1.1 Background
+
+Using a real-world open-access motor vehicle insurance portfolio dataset and appropriate visual analytics libraries in R, this applied visual anaytics investigation requires you to demonstrate the potential value of visual analytics techniques for exploring and analysing numerical, categorical, and temporal variables. The objective is to gain deeper insights into data distributions and identifying key factors influencing the profitability and volatility of the insurance portfolio.
+
+## 1.2 The Task
+
+The specific tasks of this study are:
+
+Apply suitable univariate visual analytics techniques to explore the distributions and characteristics of numerical and categorical variables.
+
+Apply suitable bivariate visual analytics techniques to investigate and statistically validate factors influencing the profitability and volatility of the insurance portfolio.
+
+# 2 Getting Started
+
+## 2.1 Loading Packages
+
+```{r}
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse, readr, ggdist, 
+               ggridges, colorspace, knitr, 
+               forcats, reshape2, png, grid) 
+```
+
+## 2.2 Data Sources
+
+A real world motor vehicle insurance portfolio data set from a Spanish insurance company specialised in non-life insurance will be used in this study. The data set and its cookbook are available for download at Mendeley Data.
+
+# 3 Data Wrangling
+
+## 3.1 Importing and Inspecting Data
+
+```{r}
+portfolio <- read_delim("data/Dataset of motor insurance portfolio.csv", delim = ";")
+glimpse(portfolio)
+summary(portfolio)
+```
+
+## 3.2 Cleaning and Standardization
+
+### 3.2.1 Check for Duplicates and Missing values
+
+Identify with is.na() or skimr::skim(). Decide whether to impute, drop, or flag.
+
+```{r}
+portfolio[duplicated(portfolio),]
+```
+
+```{r}
+skim(portfolio)
+colSums(is.na(portfolio))
+```
+
+### 3.2.2 Data Type Conversion
+
+Convert categorical variables (policy_type, fuel_type, etc.) into factors.
+
+| Variable | Data Type | Reason |
+|---------------------|------------------|---------------------------------|
+| insured_id | integer | Unique identifier, sequential ID. |
+| year | integer | Calendar year, discrete not continuous. |
+| policy_type | factor | Categorical (COMP_E, COMP_N, TP, etc.). |
+| policy_status | factor | Categorical (A = active, C = cancelled). |
+| business_type | factor | Categorical (NB = new business, P = portfolio). |
+| payment_frequency | factor | Categorical (A, S, Q). |
+| bonus_score | factor | Categorical (G, N, B). |
+| driver_age | integer | Age in years. |
+| vehicle_age | integer | Age in years. |
+| age_driving_licence | integer | Year of licence issuance (discrete year). |
+| fuel_type | factor | Categorical (D = diesel, G = gasoline). |
+| vehicle_value | numeric | Continuous monetary value. |
+| seats | integer | Count of seats. |
+| power_to_weight_ratio | numeric | Continuous ratio. |
+| vehicle_brand | factor | Categorical brand names. |
+| municipality_type | factor | Categorical (I, C, IS). |
+| circulation_area | factor | Categorical (U, R). |
+| \**Premiums (all \_premium)* | numeric | Continuous monetary values. |
+| \**Claims (all \_claims)* | integer | Count of claims (discrete). |
+| \**Incurred (all \_incurred)* | numeric | Continuous monetary values. |
+| \**Exposure (all \_exposure)* | numeric | Continuous, fractional values (0–1 or \>1). |
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    insured_id = as.integer(insured_id),
+    year = as.integer(year),
+    driver_age = as.integer(driver_age),
+    vehicle_age = as.integer(vehicle_age),
+    age_driving_licence = as.integer(age_driving_licence),
+    seats = as.integer(seats),
+
+    policy_type = factor(policy_type),
+    policy_status = factor(policy_status),
+    business_type = factor(business_type),
+    payment_frequency = factor(payment_frequency),
+    bonus_score = factor(bonus_score),
+    fuel_type = factor(fuel_type),
+    vehicle_brand = factor(vehicle_brand),
+    municipality_type = factor(municipality_type),
+    circulation_area = factor(circulation_area)
+  )
+```
+
+### 3.2.3 Consistency
+
+Ensure numeric columns (e.g., vehicle_value, total_premium) are properly parsed as numeric.
+
+```{r}
+sapply(portfolio, class)
+```
+
+## 3.3 Reshape (Unpivot)
+
+Keep identifiers and descriptors (insured_id, year, policy_type, driver_age, etc.) wide.
+
+Unpivot Premiums into Premium_Type + Premium_Value.
+
+Unpivot Claims into Claim_Type + Claim_Count.
+
+Unpivot Incurred into Incurred_Type + Incurred_Value.
+
+Unpivot Exposure into Exposure_Type + Exposure_Value.
+
+```{r}
+portfolio_l <- portfolio %>%
+  pivot_longer(
+    cols = matches("_premium$|_claims$|_incurred$|_exposure$"),
+    names_to = "Metric_Type",
+    values_to = "Value"
+  ) %>%
+  mutate(
+    Metric_Group = case_when(
+      grepl("premium", Metric_Type) ~ "Premiums",
+      grepl("claims", Metric_Type) ~ "Claims",
+      grepl("incurred", Metric_Type) ~ "Incurred",
+      grepl("exposure", Metric_Type) ~ "Exposure"
+    )
+  )
+
+head(portfolio_l)
+```
+
+## 3.4 Recoding
+
+Create ratios: e.g., claims_per_exposure = total_claims / total_exposure.
+
+Derive flags: e.g., has_claim = ifelse(total_claims \> 0, 1, 0).
+
+Normalize monetary values (premiums, incurred) by exposure to get comparable risk measures.
+
+Bucket ages (driver_age, vehicle_age) into categories for actuarial modeling.
+
+# 4 Exploratory Data Analysis - Univariate
+
+Apply suitable univariate visual analytics techniques to explore the distributions and characteristics of numerical and categorical variables.
+
+# 5 Exploratory Data Analysis - Bivariate
+
+Apply suitable bivariate visual analytics techniques to investigate and statistically validate factors influencing the profitability and volatility of the insurance portfolio.
+
+# 6 Summary
+
+# 7 References and Inspiration
