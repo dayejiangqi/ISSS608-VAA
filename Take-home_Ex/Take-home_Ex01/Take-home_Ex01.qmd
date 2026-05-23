@@ -29,7 +29,7 @@ Apply suitable bivariate visual analytics techniques to investigate and statisti
 ## 2.1 Loading Packages
 
 ```{r}
-pacman::p_load(tidyverse, readr, dplyr, ggrepel, patchwork, 
+pacman::p_load(tidyverse, readr, dplyr, patchwork, 
                ggthemes, hrbrthemes, ggdist, ggridges, knitr, 
                forcats, skimr, scales, corrplot, ggiraph) 
 ```
