@@ -539,10 +539,16 @@ Correlation heatmap → between numeric variables (premiums, claims, incurred, e
 
 ```{r}
 # Premium vs Incurred (profitability)
-ggplot(portfolio_drop, aes(x = total_premium, y = total_incurred)) +
-  geom_point(alpha = 0.3, color="steelblue") +
-  theme_minimal() +
-  labs(title="Profitability: Premium vs Incurred")
+ggplot(data = portfolio_drop, 
+       aes(x = total_premium, y = total_incurred)) +
+  geom_point(alpha = 0.6, size = 1.5, color = "steelblue") +
+  geom_smooth(method = lm, size = 0.5, color = "black") +   # regression line
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") + # y=x line
+  geom_label_repel(aes(label = insured_id), fontface = "bold") +        # optional: label policies
+  coord_cartesian(xlim = c(0, 100000), ylim = c(0, 100000)) +   # adjust ranges to your data
+  labs(title = "Profitability: Premium vs Incurred",
+       x = "Total Premium", y = "Total Incurred") +
+  theme_minimal()
 ```
 
 ```{r}
@@ -617,3 +623,11 @@ Correlation / regression models → numeric vs numeric (e.g., vehicle_value vs t
 # 6 Summary
 
 # 7 References and Inspiration
+
+
+
+
+
+
+
+
