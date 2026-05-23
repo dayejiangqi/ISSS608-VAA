@@ -2,37 +2,16 @@
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#take-home-exercise-1",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#take-home-exercise-1",
-    "title": "Take-home_Exercise 1 Presentation",
+    "title": "Take-home_Exercise 1 Excecutive Summary",
     "section": "Take-home Exercise 1",
     "text": "Take-home Exercise 1\nJiang Yuxi April Term 2026"
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#introduction",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#introduction",
-    "title": "Take-home_Exercise 1 Presentation",
-    "section": "Introduction",
-    "text": "Introduction"
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#data-source",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#data-source",
-    "title": "Take-home_Exercise 1 Presentation",
-    "section": "Data Source",
-    "text": "Data Source"
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#data-wrangling",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#data-wrangling",
-    "title": "Take-home_Exercise 1 Presentation",
-    "section": "Data Wrangling",
-    "text": "Data Wrangling"
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#eda",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#eda",
-    "title": "Take-home_Exercise 1 Presentation",
-    "section": "EDA",
-    "text": "EDA\nInsight 1\nInsight 2\nInsight 3\nInsight 4\nInsight 5"
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#contents",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_presentation.html#contents",
+    "title": "Take-home_Exercise 1 Excecutive Summary",
+    "section": "Contents",
+    "text": "Contents\nInsight 1\nInsight 2\nInsight 3\nInsight 4\nInsight 5"
   },
   {
     "objectID": "about.html",
@@ -1201,7 +1180,7 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#loading-packages",
     "title": "Take-home Exercise 1",
     "section": "2.1 Loading Packages",
-    "text": "2.1 Loading Packages\n\npacman::p_load(tidyverse, readr, dplyr, patchwork, \n               ggthemes, hrbrthemes, ggdist, ggridges, knitr, \n               forcats, skimr, scales, corrplot, ggiraph)"
+    "text": "2.1 Loading Packages\n\npacman::p_load(tidyverse, readr, dplyr, patchwork, zoo,\n               ggthemes, hrbrthemes, ggridges, plotly,\n               forcats, skimr, scales, corrplot, ggiraph)"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#data-sources",
@@ -1281,31 +1260,38 @@
     "text": "4.5 Categorical variables\nBar charts → for policy_type, fuel_type, municipality_type, circulation_area, bonus_score.\nPie charts (optional) → for simple categorical distributions like policy_status.\nFrequency tables → to confirm counts and proportions.\n\n# Categorical variables: bar charts\n# Select categorical variables\ncat_long &lt;- portfolio %&gt;%\n  select(\n    policy_type,\n    policy_status,\n    business_type,\n    payment_frequency,\n    bonus_score,\n    fuel_type,\n    municipality_type,\n    circulation_area\n  ) %&gt;%\n  pivot_longer(\n    cols = everything(),\n    names_to = \"variable\",\n    values_to = \"value\"\n  )\n\n# Create percentage table within each variable\nplot_data &lt;- cat_long %&gt;%\n  group_by(variable, value) %&gt;%\n  summarise(count = n(), .groups = \"drop\") %&gt;%\n  group_by(variable) %&gt;%\n  mutate(\n    percent = count / sum(count),\n    value = fct_reorder(value, percent)\n  )\n\n# Plot\nggplot(plot_data,\n       aes(x = percent,\n           y = value)) +\n  geom_col(fill = \"steelblue\") +\n  facet_wrap(~variable,\n             scales = \"free_y\") +\n  scale_x_continuous(labels = percent_format()) +\n  labs(\n    title = \"Distribution of Categorical Variables\",\n    x = \"Percentage\",\n    y = NULL\n  ) +\n  theme_minimal() +\n  theme(\n    strip.text = element_text(face = \"bold\"),\n    axis.text.y = element_text(size = 9)\n  )"
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#profitability-premium-vs-incurred",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#profitability-premium-vs-incurred",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#profitability-vs-risk-metrics",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#profitability-vs-risk-metrics",
     "title": "Take-home Exercise 1",
-    "section": "5.1 Profitability (premium vs incurred)",
-    "text": "5.1 Profitability (premium vs incurred)\nScatter plots → total_premium vs total_incurred to see profitability spread.\nBoxplots by category → incurred costs grouped by policy_type, fuel_type, bonus_score.\nCorrelation heatmap → between numeric variables (premiums, claims, incurred, exposures).\n\n# Premium vs Incurred (profitability)\nggplot(portfolio_drop, aes(x = total_premium, y = total_incurred)) +\n  geom_point(alpha = 0.3, color=\"steelblue\") +\n  theme_minimal() +\n  labs(title=\"Profitability: Premium vs Incurred\")\n\n\n\n\n\n\n\n\n\n# Incurred by Policy Type\np1 &lt;- ggplot(portfolio, aes(x = policy_type, y = total_incurred)) +\n  geom_boxplot(fill=\"lightgreen\") +\n  theme_minimal() +\n  labs(title=\"Total Incurred by Policy Type\")\n\n# Incurred by Fuel Type\np2 &lt;- ggplot(portfolio, aes(x = fuel_type, y = total_incurred)) +\n  geom_boxplot(fill=\"lightblue\") +\n  theme_minimal() +\n  labs(title=\"Total Incurred by Fuel Type\")\n\np1+p2"
+    "section": "5.1 Profitability vs Risk Metrics",
+    "text": "5.1 Profitability vs Risk Metrics\n\n5.1.1 Premium vs Incurred\nScatter plot with smoothing line to see how incurred costs relate to premiums, highlighting profitability patterns.\n\n# Premium vs Incurred (profitability)\n\nportfolio_clean &lt;- portfolio %&gt;%\n  filter(total_incurred &gt; 0, total_premium &gt;= 0)\n\nggplot(portfolio, aes(x = total_premium, y = total_incurred)) +\n  geom_point(alpha = 0.5, color = \"steelblue\") +\n  scale_y_log10() +\n  coord_cartesian(xlim = c(0, 3000), ylim = c(1, 500000)) +  \n  geom_smooth(method = \"lm\", se = TRUE, color = \"darkred\") +\n  labs(\n    title = \"Premium vs Incurred Costs\",\n    x = \"Total Premium\",\n    y = \"Total Incurred\"\n  ) +\n  theme_minimal(base_size = 14)\n\n\n\n\n\n\n\n\n\n\n5.1.2 Loss Ratio vs Claim frequency\nScatter plot with smoothing line to see if higher claim frequency drives higher loss ratios. The regression line gives a quick statistical validation.\n\nggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +\n  geom_point(alpha = 0.4, color = \"steelblue\") +   # scatter points\n  coord_cartesian(xlim = c(0, 300), ylim = c(0, 3000)) +\n  geom_smooth(method = \"lm\", se = TRUE, color = \"darkred\") +  # regression line\n  labs(\n    title = \"Loss Ratio vs Claim Frequency\",\n    x = \"Claim Frequency (claims per exposure)\",\n    y = \"Loss Ratio\"\n  ) +\n  theme_minimal(base_size = 14) +\n  theme(plot.title = element_text(face = \"bold\"))\n\n\n\n\n\n\n\n\n\n\n5.1.3 Profit vs Claim Severity\nBoxplots grouped by severity bins to check if extreme claims erode profitability.\n\n# Step 1: Create severity bins\nportfolio_sev &lt;- portfolio %&gt;%\n  mutate(\n    severity_bin = case_when(\n      claim_severity &lt; 1000 ~ \"&lt;1k\",\n      claim_severity &gt;= 1000 & claim_severity &lt; 5000 ~ \"1k-5k\",\n      claim_severity &gt;= 5000 & claim_severity &lt; 20000 ~ \"5k-20k\",\n      claim_severity &gt;= 20000 ~ \"&gt;20k\",\n      TRUE ~ NA_character_\n    )\n  )\n\n# Step 2: Compute median profit per severity bin\nsummary_stats &lt;- portfolio_sev %&gt;%\n  filter(!is.na(severity_bin)) %&gt;%\n  group_by(severity_bin) %&gt;%\n  summarise(median_profit = median(profit, na.rm = TRUE))\n\n# Step 3: Boxplot with summary labels\nggplot(portfolio_sev %&gt;% filter(!is.na(severity_bin)),\n       aes(x = severity_bin, y = profit, fill = severity_bin)) +\n  geom_boxplot(alpha = 0.7, outlier.alpha = 0.3) +\n  coord_cartesian(ylim = c(-400000 , 200000 )) +\n  geom_text(data = summary_stats,\n            aes(x = severity_bin, y = median_profit,\n                label = scales::comma(round(median_profit, 0))),\n            vjust = -0.5, fontface = \"bold\", color = \"darkred\") +\n  scale_y_continuous(labels = scales::comma) +\n  labs(\n    title = \"Profit vs Claim Severity\",\n    x = \"Claim Severity Bin\",\n    y = \"Profit\"\n  ) +\n  theme_minimal() +\n  theme(\n    legend.position = \"none\",\n    plot.title = element_text(face = \"bold\")\n  )"
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#volatility-claims-frequency-severity",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#volatility-claims-frequency-severity",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#policy-vehicle-characteristics",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#policy-vehicle-characteristics",
     "title": "Take-home Exercise 1",
-    "section": "5.2 Volatility (claims frequency & severity)",
-    "text": "5.2 Volatility (claims frequency & severity)\nClaims frequency analysis → average claims per policy type, per fuel type, per circulation area.\nSeverity analysis → mean incurred per claim across categories.\nExposure vs claims → scatter plot or regression to validate exposure as a driver of volatility.\n\n# Claims frequency by Fuel Type\nportfolio %&gt;%\n  group_by(fuel_type) %&gt;%\n  summarise(avg_claims = mean(total_claims, na.rm = TRUE)) %&gt;%\n  ggplot(aes(x = fuel_type, y = avg_claims)) +\n  geom_col(fill=\"orange\") +\n  theme_minimal() +\n  labs(title=\"Average Claims Frequency by Fuel Type\")\n\n\n\n\n\n\n\n\n\nportfolio %&gt;%\n  group_by(circulation_area) %&gt;%\n  summarise(severity = mean(total_incurred / pmax(total_claims,1), na.rm = TRUE)) %&gt;%\n  ggplot(aes(x = circulation_area, y = severity)) +\n  geom_col(fill=\"red\") +\n  theme_minimal() +\n  labs(title=\"Claims Severity by Circulation Area\")\n\n\n\n\n\n\n\n\n\n# Exposure vs Claims\nggplot(portfolio, aes(x = total_exposure, y = total_claims)) +\n  geom_point(alpha = 0.3, color=\"purple\") +\n  theme_minimal() +\n  labs(title=\"Exposure vs Claims\")"
+    "section": "5.2 Policy & Vehicle Characteristics",
+    "text": "5.2 Policy & Vehicle Characteristics\n\n5.2.1 Policy & Vehicle Characteristics\nBar chart showing mean profit per policy type, with confidence intervals. This shows average profitability across policy types (e.g., COMP_E, COMP_N, TP), with bootstrapped confidence intervals.\n\n# Mean profit per policy type with confidence intervals\nggplot(portfolio, aes(x = policy_type, y = profit, fill = policy_type)) +\n  stat_summary(fun = mean, geom = \"bar\", alpha = 0.7) +\n  stat_summary(fun.data = mean_cl_boot, geom = \"errorbar\", width = 0.2) +\n  scale_y_continuous(labels = scales::comma) +\n  labs(\n    title = \"Mean Profit by Policy Type\",\n    x = \"Policy Type\",\n    y = \"Mean Profit\"\n  ) +\n  theme_minimal() +\n  theme(\n    legend.position = \"none\",\n    plot.title = element_text(face = \"bold\")\n  )\n\n\n\n\n\n\n\n\n\n\n5.2.2 Fuel type vs loss ratio\nViolin plots to compare distributions across Diesel, Gasoline, Unknown. Violin plots show the full distribution shape, while the embedded boxplot highlights median and quartiles.\n\n# Violin plot: Loss ratio by fuel type\nggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +\n  geom_violin(trim = FALSE, alpha = 0.6) +\n  coord_cartesian(ylim = c(0 , 5000)) +\n  geom_boxplot(width = 0.1, fill = \"white\", outlier.alpha = 0.3) +\n  labs(\n    title = \"Loss Ratio Distribution by Fuel Type\",\n    x = \"Fuel Type\",\n    y = \"Loss Ratio\"\n  ) +\n  theme_minimal() +\n  theme(\n    legend.position = \"none\",\n    plot.title = element_text(face = \"bold\")\n  )\n\n\n\n\n\n\n\n\n\n\n5.2.3 Vehicle Age vs Claim Frequency\nScatter plot with regression line to test if older vehicles have higher claim frequency. This reveals whether older vehicles tend to have higher claim frequency. The regression line provides a statistical trend.\n\n# Scatter plot: Vehicle age vs Claim frequency\nggplot(portfolio, aes(x = vehicle_age, y = claim_frequency)) +\n  geom_point(alpha = 0.4, color = \"steelblue\") +\n  labs(\n    title = \"Vehicle Age vs Claim Frequency\",\n    x = \"Vehicle Age (years)\",\n    y = \"Claim Frequency (claims per exposure)\"\n  ) +\n  theme_minimal() +\n  theme(plot.title = element_text(face = \"bold\"))"
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#correlation",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#correlation",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#driver-age-vs-loss-ratio",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#driver-age-vs-loss-ratio",
     "title": "Take-home Exercise 1",
-    "section": "5.3 Correlation",
-    "text": "5.3 Correlation\n\n# Correlation heatmap for numeric variables\nnum_vars &lt;- portfolio %&gt;% select(where(is.numeric))\ncorrplot(cor(num_vars, use = \"pairwise.complete.obs\"), method = \"circle\")"
+    "section": "5.3 Driver Age vs Loss Ratio",
+    "text": "5.3 Driver Age vs Loss Ratio\nThis compares the distribution of loss ratios across age bands. This highlights which age groups tend to have higher or lower loss ratios.\n\n# Create age bands\nportfolio_age &lt;- portfolio %&gt;%\n  mutate(\n    age_band = cut(driver_age,\n                   breaks = seq(18, 80, by = 10),\n                   include.lowest = TRUE)\n  ) %&gt;%\n  group_by(age_band) %&gt;%\n  mutate(\n    q1 = quantile(loss_ratio, 0.25, na.rm = TRUE),\n    q3 = quantile(loss_ratio, 0.75, na.rm = TRUE),\n    iqr = q3 - q1,\n    lower = q1 - 1.5 * iqr,\n    upper = q3 + 1.5 * iqr\n  ) %&gt;%\n  ungroup() %&gt;%\n  filter(loss_ratio &gt;= lower, loss_ratio &lt;= upper)\n\n# Ridge plot of loss ratio by age band\nggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +\n  ggridges::geom_density_ridges(alpha = 0.6) +\n  labs(\n    title = \"Loss Ratio Distribution by Driver Age Band\",\n    x = \"Loss Ratio\",\n    y = \"Driver Age Band\"\n  ) +\n  theme_minimal() +\n  theme(legend.position = \"none\")"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#volatility",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#volatility",
+    "title": "Take-home Exercise 1",
+    "section": "5.4 Volatility",
+    "text": "5.4 Volatility\nClaims frequency analysis → average claims per policy type, per fuel type, per circulation area.\nSeverity analysis → mean incurred per claim across categories.\nExposure vs claims → scatter plot or regression to validate exposure as a driver of volatility.\n\n5.4.1 Loss ratio variability\nMeasures how much the ratio of incurred to premium fluctuates across policies. High variance = unstable underwriting results.\n\n# Variance of loss ratio by policy type\nportfolio %&gt;%\n  group_by(policy_type) %&gt;%\n  summarise(\n    mean_lr = mean(loss_ratio, na.rm = TRUE),\n    sd_lr   = sd(loss_ratio, na.rm = TRUE),\n    var_lr  = var(loss_ratio, na.rm = TRUE)\n  )\n\n# A tibble: 5 × 4\n  policy_type mean_lr sd_lr var_lr\n  &lt;fct&gt;         &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 CC            0.709 12.0   145. \n2 COMP_E        0.919 39.0  1520. \n3 COMP_N        0.993  4.26   18.2\n4 TP            0.737  9.50   90.3\n5 TPG           0.809 17.4   304. \n\n\n\n\n5.4.2 Coefficient of Variation\nCV = sd/mean, useful for claim frequency and severity because it normalizes volatility relative to the mean.\n\n# CV for claim frequency and severity\nportfolio %&gt;%\n  summarise(\n    mean_freq = mean(claim_frequency, na.rm = TRUE),\n    sd_freq   = sd(claim_frequency, na.rm = TRUE),\n    cv_freq   = sd_freq / mean_freq,\n    \n    mean_sev = mean(claim_severity, na.rm = TRUE),\n    sd_sev   = sd(claim_severity, na.rm = TRUE),\n    cv_sev   = sd_sev / mean_sev\n  )\n\n# A tibble: 1 × 6\n  mean_freq sd_freq cv_freq mean_sev sd_sev cv_sev\n      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;\n1     0.323    1.99    6.17     848.  2927.   3.45\n\n\n\n\n5.4.3 Levene’s Test\nStatistically validate whether variance differs across groups (e.g., urban vs rural, diesel vs gasoline).\n\nlibrary(car)\n\n# Levene’s test for loss ratio variance across circulation areas\nleveneTest(loss_ratio ~ circulation_area, data = portfolio)\n\nLevene's Test for Homogeneity of Variance (center = median)\n          Df F value Pr(&gt;F)\ngroup      1  0.8296 0.3624\n      354087               \n\n# Levene’s test for claim severity variance across fuel types\nleveneTest(claim_severity ~ fuel_type, data = portfolio)\n\nLevene's Test for Homogeneity of Variance (center = median)\n         Df F value Pr(&gt;F)\ngroup     2  0.3341  0.716\n      50803               \n\n\n\n\n5.4.4 Premium vs Incurred Volatility by Year\nAn animated bubble chart template to show Premium vs Incurred volatility by year.\n\n# Animated bubble chart: Premium vs Incurred by Year\ngg &lt;- ggplot(portfolio, \n       aes(x = total_premium, \n           y = total_incurred, \n           size = total_exposure,   # bubble size\n           colour = policy_type)) + # bubble color\n  geom_point(aes(frame = year), alpha = 0.7) +\n  scale_size(range = c(2, 12)) +\n  labs(\n    title = \"Premium vs Incurred Volatility by Year\",\n    x = \"Total Premium\",\n    y = \"Total Incurred\"\n  ) +\n  theme_minimal()\n\n# Convert to interactive animated plot\nggplotly(gg)"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#statistical-validation",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#statistical-validation",
     "title": "Take-home Exercise 1",
-    "section": "5.4 Statistical validation",
-    "text": "5.4 Statistical validation\nChi-square tests → categorical vs categorical (e.g., policy_type vs policy_status).\nt-tests / ANOVA → numeric vs categorical (e.g., total_incurred across fuel_type).\nCorrelation / regression models → numeric vs numeric (e.g., vehicle_value vs total_premium)."
+    "section": "5.5 Statistical validation",
+    "text": "5.5 Statistical validation\n\n5.5.1 Chi-square tests → categorical vs categorical (e.g., policy_type vs policy_status).\n\n\n5.5.2 t-tests / ANOVA → numeric vs categorical (e.g., total_incurred across fuel_type).\n\n\n5.5.3 Correlation / regression models → numeric vs numeric (e.g., vehicle_value vs total_premium).\nTo detect relationships among numeric drivers (premium, incurred, claims, profit, loss ratio).\n\n# Correlation heatmap for numeric variables\nnum_vars &lt;- portfolio %&gt;% select(where(is.numeric))\ncorrplot(cor(num_vars, use = \"pairwise.complete.obs\"), method = \"circle\")"
   }
 ]

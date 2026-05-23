@@ -1,22 +1,12 @@
 ---
-title: "Take-home_Exercise 1 Presentation"
+title: "Take-home_Exercise 1 Excecutive Summary"
 format: revealjs
 ---
 ## Take-home Exercise 1
 
 Jiang Yuxi April Term 2026 
 
-## Introduction
-
-
-
-## Data Source
-
-
-
-## Data Wrangling
-
-## EDA
+## Contents
 
 ### Insight 1
 
