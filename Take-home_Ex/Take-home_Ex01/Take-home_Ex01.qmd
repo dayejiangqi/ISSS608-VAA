@@ -31,7 +31,7 @@ Apply suitable bivariate visual analytics techniques to investigate and statisti
 ## 2.1 Loading Packages
 
 | **Package** | **Category** | **Purpose / Usage** |
-|--------------------------|-------------------------------------|----------|
+|----|----|----|
 | **tidyverse** | Data wrangling + visualization | Core suite (ggplot2 for plots, dplyr for mutate, summarise, group_by). |
 | **readr** | Data import | Reading CSV/flat files. |
 | **dplyr** | Data manipulation | Filtering, mutating, summarising, grouping. |
@@ -68,12 +68,12 @@ portfolio <- read_delim("data/Dataset of motor insurance portfolio.csv", delim =
 glimpse(portfolio)
 ```
 
-### 3.2 Data Type Conversion
+## 3.2 Data Type Conversion
 
 Convert categorical variables (policy_type, fuel_type, etc.) into factors.
 
 | Variable | Data Type | Reason |
-|---------------------|-------------------|--------------------------------|
+|----|----|----|
 | insured_id | integer | Unique identifier, sequential ID. |
 | year | integer | Calendar year, discrete not continuous. |
 | policy_type | factor | Categorical (COMP_E, COMP_N, TP, etc.). |
@@ -132,7 +132,7 @@ portfolio <- portfolio %>%
   )
 ```
 
-### 3.3 Check Consistency
+## 3.3 Check Consistency
 
 sapply(portfolio, class) is used to verify that numeric and categorical columns are correctly parsed.
 
@@ -197,7 +197,7 @@ portfolio <- portfolio %>%
   )
 ```
 
-### 3.5 Check for Duplicates and Missing values
+## 3.5 Check for Duplicates and Missing values
 
 duplicated() is used to check whether an entire row (all columns) is repeated.
 
@@ -207,23 +207,17 @@ portfolio[duplicated(portfolio),]
 
 No rows in this dataset are exact duplicates across all 56 columns.
 
+colSums(is.na(...)) together with imputation code is used to identify missing data, fill vehicle values using brand‑specific medians, assign “Unknown” to missing fuel types, and drop rows missing driver or vehicle age.
+
 ```{r}
 colSums(is.na(portfolio))
 ```
 
-Vehicle age & Age driving licence → Only 2 missing each → you can safely drop those rows
+Vehicle age & Age driving licence: Only 2 missing each → we can safely drop those rows
 
-Fuel type: 1,287 missing (\~0.36% of dataset) → create a new category "Unknown" to preserve those rows.
+Fuel type: 1,287 missing (\~0.36% of dataset) → we can create a new category "Unknown" to preserve those rows.
 
-Vehicle value: 513 missing (\~0.15% of dataset) → use brand-specific median (e.g., median value per vehicle_brand)
-
-Loss ratio → NA when total_premium = 0 (division undefined).
-
-Claim severity → NA when total_claims = 0 (no claims to divide by).
-
-Exposure-adjusted metrics → NA when total_exposure = 0.
-
-colSums(is.na(...)) together with imputation code is used to identify missing data, fill vehicle values using brand‑specific medians, assign “Unknown” to missing fuel types, and drop rows missing driver or vehicle age.
+Vehicle value: 513 missing (\~0.15% of dataset) → we can use brand-specific median (e.g., median value per vehicle_brand)
 
 ```{r}
 portfolio <- portfolio %>%
@@ -243,6 +237,14 @@ portfolio <- portfolio %>%
   filter(!is.na(vehicle_age), !is.na(age_driving_licence))
 ```
 
+Loss ratio → NA when total_premium = 0 (division undefined).
+
+Claim severity → NA when total_claims = 0 (no claims to divide by).
+
+Exposure-adjusted metrics → NA when total_exposure = 0.
+
+We will flag missing value for these three variables. We can filter data with has_premium, has_exposure or has_claims in the later analysis.
+
 ```{r}
 portfolio <- portfolio %>%
   mutate(
@@ -254,6 +256,8 @@ portfolio <- portfolio %>%
 ```
 
 ## 3.6 Check for Outliers
+
+Here we use skim() to quick dataset summaries for outliers checking.
 
 ```{r}
 skim(portfolio)
@@ -1467,6 +1471,7 @@ ggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +
 
 ::: callout-note
 ## Insight:
+
 Claim severity patterns vary across age bands, but differences are modest once extreme outliers are removed.
 
 Younger drivers (18–28) show slightly higher severity risk.
@@ -1482,7 +1487,7 @@ Overall, claim severity is most stable in mid‑age groups, while both younger a
 
 To measure how stable or unstable underwriting results are by analyzing claim frequency, claim severity, exposure relationships, and variance metrics. This helps identify which segments of the portfolio contribute most to volatility.
 
-### 5.5.1 Loss ratio variability
+### 5.5.1 Loss Ratio Variability
 
 The code chunk uses summarise() to calculate the mean, standard deviation, and variance of the loss ratio by policy type. This measures how much the ratio of incurred to premium fluctuates across policies, where high variance indicates unstable underwriting results.
 
@@ -1518,6 +1523,19 @@ portfolio %>%
 ```
 :::
 ::::
+
+```{r}
+portfolio %>%
+  group_by(policy_type) %>%
+  summarise(var_lr = var(loss_ratio, na.rm = TRUE)) %>%
+  arrange(desc(var_lr)) %>%   # reorder by variance
+  ggplot(aes(x = reorder(policy_type, -var_lr), y = var_lr, fill = policy_type)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = round(var_lr, 1)), vjust = -0.5, size = 3) +  # add labels
+  labs(title = "Loss Ratio Variance by Policy Type",
+       y = "Variance") +
+  theme_minimal()
+```
 
 ::: callout-note
 ## Insight:
@@ -1574,6 +1592,21 @@ portfolio %>%
 :::
 ::::
 
+```{r}
+cv_df <- portfolio %>%
+  summarise(
+    cv_freq = sd(claim_frequency, na.rm = TRUE) / mean(claim_frequency, na.rm = TRUE),
+    cv_sev  = sd(claim_severity, na.rm = TRUE) / mean(claim_severity, na.rm = TRUE)
+  ) %>%
+  pivot_longer(everything(), names_to = "metric", values_to = "cv")
+
+ggplot(cv_df, aes(x = metric, y = cv, fill = metric)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Coefficient of Variation",
+       x = "Measure", y = "CV") +
+  theme_minimal()
+```
+
 ::: callout-note
 ## Insight:
 
@@ -1620,6 +1653,24 @@ leveneTest(claim_severity ~ fuel_type, data = portfolio)
 :::
 ::::
 
+```{r}
+p1 <- ggplot(portfolio, aes(x = circulation_area, y = loss_ratio, fill = circulation_area)) +
+  geom_boxplot() +
+  labs(title = "Loss Ratio by Circulation Area",
+       y = "Loss Ratio") +
+  scale_y_continuous(limits = c(0, 4000)) + 
+  theme_minimal()
+
+p2 <- ggplot(portfolio, aes(x = fuel_type, y = claim_severity, fill = fuel_type)) +
+  geom_boxplot() +
+  labs(title = "Claim Severity by Fuel Type",
+       y = "Claim Severity") +
+  scale_y_continuous(limits = c(0, 200000)) + 
+  theme_minimal()
+
+p1+p2
+```
+
 ::: callout-note
 ## Insight:
 
@@ -1647,6 +1698,7 @@ portfolio_ts <- portfolio %>%
   summarise(ratio = mean(total_incurred / total_premium, na.rm = TRUE))
 
 portfolio_ts$rolling_sd <- rollapply(portfolio_ts$ratio, width = 3, FUN = sd, fill = NA, align = "right")
+portfolio_ts
 ```
 
 ## The code
@@ -1659,6 +1711,7 @@ portfolio_ts <- portfolio %>%
   summarise(ratio = mean(total_incurred / total_premium, na.rm = TRUE))
 
 portfolio_ts$rolling_sd <- rollapply(portfolio_ts$ratio, width = 3, FUN = sd, fill = NA, align = "right")
+portfolio_ts
 ```
 :::
 ::::
@@ -1673,11 +1726,9 @@ Peaks indicate claim shocks or seasonal effects.
 Confirms that volatility is not constant — portfolio risk fluctuates across years.
 :::
 
-## 5.6 Hypothesis Testing
+### 5.5.5 Chi-square tests
 
 To statistically validate whether differences in profitability, claims, or loss ratios across categories are significant. This ensures observed patterns are not due to random variation.
-
-### 5.6.1 Chi-square tests
 
 The code chunk runs chisq.test() on contingency tables to test independence between categorical variables (policy type, bonus score, circulation area) and outcomes (profitability, claim occurrence). This validates whether distributions differ significantly across categories.
 
@@ -1713,44 +1764,6 @@ Policy type vs profitability: Highly significant (p \< 2.2e‑16) → profitabil
 Bonus score vs profitability: Significant → Good/Neutral/Bad scores matter for outcomes.
 
 Circulation area vs has_claim: Significant → urban vs rural differ in claim occurrence.
-:::
-
-### 5.6.2 ANOVA
-
-The code chunk applies aov() and TukeyHSD() to compare mean loss ratios across fuel types. This tests whether continuous outcomes differ significantly between categorical groups.
-
-:::: panel-tabset
-## The plot
-
-```{r}
-#| echo: false
-#｜ fig-width: 12
-#｜ fig_height: 8
-anova_result <- aov(loss_ratio ~ fuel_type, data = portfolio)
-summary(anova_result)
-TukeyHSD(anova_result)
-```
-
-## The code
-
-::: {style="font-size: 1.4em"}
-```{r}
-#| eval: false
-anova_result <- aov(loss_ratio ~ fuel_type, data = portfolio)
-summary(anova_result)
-TukeyHSD(anova_result)
-```
-:::
-::::
-
-::: callout-note
-## Insight:
-
-Loss ratio vs fuel type: Not significant (p = 0.38) → no mean difference across Diesel/Gasoline/Unknown.
-
-Profit vs business type: Useful for comparing New Business vs Portfolio profitability.
-
-Claim severity vs municipality type: ANOVA compares Inland vs Coastal vs Islands; differences highlight geographic claim risk.
 :::
 
 # 6 Key Insight Summary

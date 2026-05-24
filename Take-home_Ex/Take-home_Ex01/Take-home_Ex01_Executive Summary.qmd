@@ -33,11 +33,13 @@ format: revealjs
 
 9.  Driver Age vs Claim Severity
 
-10. Executive Summary
+10. Volatility Analysis
+
+11. Executive Summary
 :::
 
 ```{r}
-pacman::p_load(tidyverse, readr, dplyr, patchwork, zoo, ggridges, plotly,
+pacman::p_load(tidyverse, readr, dplyr, patchwork, zoo, ggridges, plotly, grid,
                forcats, skimr, scales, corrplot, ggiraph) 
 ```
 
@@ -485,13 +487,12 @@ Structurally, most policies are active, annual payments are common, and bonus sc
 ## 6. Correlation Analysis
 
 :::: {.columns}
-
 ::: {.column width="50%"}
 ```{r}
 #| echo: false
-#｜ fig-width: 8
-#｜ fig_height: 6
-#| out.width: "100%"
+#| fig-width: 6
+#| fig-height: 4
+#| out.width: "150%"
 # Select numeric variables
 num_vars <- portfolio %>%
   select(total_premium, total_incurred, profit, loss_ratio,
@@ -512,11 +513,12 @@ corrplot.mixed(cor_matrix,
                tl.pos = "lt",
                diag = "l",
                tl.col = "black",
-               na.label = " ")   
+               na.label = " ") 
 ```
 :::
 
 ::: {.column width="50%"}
+
 ```{r}
 #| echo: false
 cor_df <- cor_matrix %>%
@@ -708,9 +710,91 @@ ggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +
 Claim severity varies by driver age. Middle-aged drivers are the most stable, while younger and older drivers show more volatility. This pattern suggests that age bands influence risk, with mid-age groups offering more predictable outcomes.
 :::
 
-## 10. Executive Summary
+## 10. Volatility Analysis
 
-::: {style="font-size:0.5em; line-height:1.1"}
+```{r}
+#| echo: false
+#｜ fig-width: 6
+#｜ fig_height: 4
+#| out.width: "120%"
+# Plot 1: Loss ratio variance
+p1 <- portfolio %>%
+  group_by(policy_type) %>%
+  summarise(var_lr = var(loss_ratio, na.rm = TRUE)) %>%
+  arrange(desc(var_lr)) %>%
+  ggplot(aes(x = reorder(policy_type, -var_lr), y = var_lr, fill = policy_type)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = round(var_lr, 1)), vjust = -0.5, size = 3) +
+  labs(title = "Loss Ratio Variance by Policy Type",
+       y = "Variance") +
+  theme_minimal()
+
+# Plot 2: Coefficient of Variation
+cv_df <- portfolio %>%
+  summarise(
+    cv_freq = sd(claim_frequency, na.rm = TRUE) / mean(claim_frequency, na.rm = TRUE),
+    cv_sev  = sd(claim_severity, na.rm = TRUE) / mean(claim_severity, na.rm = TRUE)
+  ) %>%
+  pivot_longer(everything(), names_to = "metric", values_to = "cv")
+
+p2 <- ggplot(cv_df, aes(x = metric, y = cv, fill = metric)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Coefficient of Variation",
+       x = "Measure", y = "CV") +
+  theme_minimal()
+
+# Plot 3a: Loss ratio by circulation area
+p3 <- ggplot(portfolio, aes(x = circulation_area, y = loss_ratio, fill = circulation_area)) +
+  geom_boxplot() +
+  labs(title = "Loss Ratio by Circulation Area",
+       y = "Loss Ratio") +
+  scale_y_continuous(limits = c(0, 4000)) +
+  theme_minimal()
+
+# Plot 3b: Claim severity by fuel type
+p4 <- ggplot(portfolio, aes(x = fuel_type, y = claim_severity, fill = fuel_type)) +
+  geom_boxplot() +
+  labs(title = "Claim Severity by Fuel Type",
+       y = "Claim Severity") +
+  scale_y_continuous(limits = c(0, 200000)) +
+  theme_minimal()
+
+(p1 | p2) / (p3 | p4)
+```
+
+:::: {.columns}
+::: {.column width="33%"}
+::: {style="font-size:0.3em; margin-top:10px"}
+**Loss Ratio Variability**  
+Loss ratio outcomes are highly unstable for COMP_E policies, indicating unpredictable underwriting results. In contrast, COMP_N policies are much more stable, with consistent performance. Variance highlights which product types contribute most to portfolio volatility.
+:::
+:::
+
+::: {.column width="33%"}
+::: {style="font-size:0.3em; margin-top:10px"}
+**Coefficient of Variation (CV)**  
+Claim frequency is extremely volatile relative to its mean, far more unstable than severity. This shows that how often claims occur is the dominant driver of portfolio volatility, while severity adds risk but is less extreme.
+:::
+:::
+
+::: {.column width="33%"}
+::: {style="font-size:0.3em; margin-top:10px"}
+**Levene’s Test**  
+Variance is statistically similar across geography and fuel type categories. This means volatility is not explained by location or fuel type, but instead by claim behavior itself (frequency and severity).
+:::
+:::
+::::
+
+::: notes
+On this slide we’re looking at the volatility drivers in our motor insurance portfolio.
+First, policy type is the strongest differentiator. COMP_E policies show the highest loss ratio variance, meaning their results are highly unstable, while COMP_N policies are the most predictable with very low variance.
+Second, claim frequency dominates portfolio risk. The coefficient of variation for frequency is extremely high compared to severity, which tells us that instability in how often claims occur is the main source of volatility, more than the size of claims.
+Finally, external factors such as geography and fuel type do not explain variance. Statistical tests show no significant differences across these categories, so volatility is really driven by product design and claim dynamics rather than external segmentation.
+:::
+
+## 11. Executive Summary
+
+::: {style="font-size:0.4em; line-height:1.1"}
 **Key Findings:**
 
 **Claims behavior drives volatility.** Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.
@@ -721,9 +805,11 @@ Claim severity varies by driver age. Middle-aged drivers are the most stable, wh
 
 **Portfolio risk is dynamic over time.** Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant and requires ongoing monitoring.
 
+**The volatility analysis shows that portfolio risk is mainly driven by policy type and claim behavior.** COMP_E policies are highly unstable with the largest loss ratio variance, while COMP_N policies are the most predictable. Claim frequency is the dominant source of volatility, with a coefficient of variation far higher than claim severity, highlighting instability in how often claims occur rather than their size. 
+
 **Visual analytics adds measurable value.** Univariate plots highlight skewness and outliers, bivariate analyses reveal correlations between premiums, incurred costs, and claims, while statistical tests validate which categorical differences are meaningful.
 
-**Conclusion:**\
+**Conclusion:**
 The investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.
 :::
 

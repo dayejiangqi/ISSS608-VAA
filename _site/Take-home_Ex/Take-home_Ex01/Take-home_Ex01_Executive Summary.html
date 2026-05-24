@@ -154,6 +154,7 @@
 <li><p>Profitability vs Risk Metrics</p></li>
 <li><p>Policy &amp; Vehicle Characteristics</p></li>
 <li><p>Driver Age vs Claim Severity</p></li>
+<li><p>Volatility Analysis</p></li>
 <li><p>Executive Summary</p></li>
 </ol>
 </div>
@@ -266,7 +267,7 @@
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-14-1.png" width="960"></p>
+<p><img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:150.0%"></p>
 </figure>
 </div>
 </div>
@@ -375,17 +376,51 @@ Frequent claims push loss ratios up. Even small claims erode profitability when 
           display:block!important;
       }</style></aside>
 </section>
+<section id="volatility-analysis" class="slide level2">
+<h2>10. Volatility Analysis</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"><div class="columns">
+<div class="column" style="width:33%;">
+<div style="font-size:0.3em; margin-top:10px">
+<p><strong>Loss Ratio Variability</strong><br>
+Loss ratio outcomes are highly unstable for COMP_E policies, indicating unpredictable underwriting results. In contrast, COMP_N policies are much more stable, with consistent performance. Variance highlights which product types contribute most to portfolio volatility.</p>
+</div>
+</div><div class="column" style="width:33%;">
+<div style="font-size:0.3em; margin-top:10px">
+<p><strong>Coefficient of Variation (CV)</strong><br>
+Claim frequency is extremely volatile relative to its mean, far more unstable than severity. This shows that how often claims occur is the dominant driver of portfolio volatility, while severity adds risk but is less extreme.</p>
+</div>
+</div><div class="column" style="width:33%;">
+<div style="font-size:0.3em; margin-top:10px">
+<p><strong>Levene’s Test</strong><br>
+Variance is statistically similar across geography and fuel type categories. This means volatility is not explained by location or fuel type, but instead by claim behavior itself (frequency and severity).</p>
+</div>
+</div></div>
+<aside class="notes">
+<p>On this slide we’re looking at the volatility drivers in our motor insurance portfolio. First, policy type is the strongest differentiator. COMP_E policies show the highest loss ratio variance, meaning their results are highly unstable, while COMP_N policies are the most predictable with very low variance. Second, claim frequency dominates portfolio risk. The coefficient of variation for frequency is extremely high compared to severity, which tells us that instability in how often claims occur is the main source of volatility, more than the size of claims. Finally, external factors such as geography and fuel type do not explain variance. Statistical tests show no significant differences across these categories, so volatility is really driven by product design and claim dynamics rather than external segmentation.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="executive-summary" class="slide level2">
-<h2>10. Executive Summary</h2>
-<div style="font-size:0.5em; line-height:1.1">
+<h2>11. Executive Summary</h2>
+<div style="font-size:0.4em; line-height:1.1">
 <p><strong>Key Findings:</strong></p>
 <p><strong>Claims behavior drives volatility.</strong> Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.</p>
 <p><strong>Policy type and bonus score are critical differentiators.</strong> COMP_E policies show the highest loss ratio variance, indicating unstable underwriting results, while COMP_N policies are more predictable. Bonus scores significantly influence profitability outcomes.</p>
 <p><strong>Geography and fuel type play a limited role.</strong> Statistical tests show no significant differences in variance or mean loss ratios across circulation areas or fuel types, suggesting these variables are less impactful in explaining volatility.</p>
 <p><strong>Portfolio risk is dynamic over time.</strong> Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant and requires ongoing monitoring.</p>
+<p><strong>The volatility analysis shows that portfolio risk is mainly driven by policy type and claim behavior.</strong> COMP_E policies are highly unstable with the largest loss ratio variance, while COMP_N policies are the most predictable. Claim frequency is the dominant source of volatility, with a coefficient of variation far higher than claim severity, highlighting instability in how often claims occur rather than their size.</p>
 <p><strong>Visual analytics adds measurable value.</strong> Univariate plots highlight skewness and outliers, bivariate analyses reveal correlations between premiums, incurred costs, and claims, while statistical tests validate which categorical differences are meaningful.</p>
-<p><strong>Conclusion:</strong><br>
-The investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.</p>
+<p><strong>Conclusion:</strong> The investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.</p>
 </div>
 <aside class="notes">
 <p>To conclude: claims frequency and severity are the main drivers of volatility. Policy type and bonus score are critical differentiators, while geography and fuel type play limited roles. Risk is dynamic over time, requiring ongoing monitoring. Visual analytics adds measurable value by turning descriptive reporting into actionable insights. The strategic takeaway is clear: manage claim drivers, target unstable product types, leverage bonus scores, and monitor volatility trends to anticipate shocks.</p>
