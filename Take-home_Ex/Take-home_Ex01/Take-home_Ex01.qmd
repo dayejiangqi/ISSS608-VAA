@@ -296,7 +296,13 @@ Apply suitable univariate visual analytics techniques to explore the distributio
 
 ## 4.1 Cost Distribution 
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Reshape incurred cost data into long format
 incurred_clean <- portfolio %>%
   select(
@@ -345,9 +351,70 @@ ggplot(cdf_data, aes(x = cum_pct, y = cost, color = claim_type)) +
   )
 ```
 
-## 4.2 Premium Distribution
+## The code
+::: {style="font-size: 1.4em"}
 
 ```{r}
+#| eval: false
+# Reshape incurred cost data into long format
+incurred_clean <- portfolio %>%
+  select(
+    liability_incurred,
+    liability_property_incurred,
+    liability_injury_incurred,
+    property_incurred,
+    theft_incurred,
+    fire_incurred,
+    glass_incurred,
+    legal_protection_incurred,
+    occupants_incurred
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "claim_type",
+    values_to = "cost"
+  ) %>%
+  filter(is.finite(cost), cost > 0)
+
+# ECDF transformation per claim type
+cdf_data <- incurred_clean %>%
+  group_by(claim_type) %>%
+  arrange(cost) %>%
+  mutate(
+    cum_pct = row_number() / n() * 100
+  ) %>%
+  ungroup()
+
+# Plot cumulative distribution
+ggplot(cdf_data, aes(x = cum_pct, y = cost, color = claim_type)) +
+  geom_line(linewidth = 1, alpha = 0.8) +
+  scale_y_log10(
+    labels = scales::comma,
+    limits = c(1.0, NA) ) +
+  labs(
+    title = "Cumulative Distribution of Incurred Costs by Claim Type",
+    x = "Cumulative Percentage of Claims (%)",
+    y = "Incurred Cost (log scale)",
+    color = "Claim Type"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold")
+  )
+```
+:::
+::::
+
+## 4.2 Premium Distribution
+
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Reshape incurred cost data into long format
 incurred_long <- portfolio %>%
   select(
@@ -382,9 +449,58 @@ ggplot(incurred_long %>% filter(!is.na(premium), premium > 0),
   )
 ```
 
-## 4.3 Claim Distribution
+## The code
+::: {style="font-size: 1.4em"}
 
 ```{r}
+#| eval: false
+# Reshape incurred cost data into long format
+incurred_long <- portfolio %>%
+  select(
+    liability_premium,
+    property_damage_premium,
+    theft_premium,
+    fire_premium,
+    glass_premium,
+    legal_protection_premium,
+    occupants_premium
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "insurance_type",
+    values_to = "premium"
+  )
+
+# Stacked density plot
+ggplot(incurred_long %>% filter(!is.na(premium), premium > 0),
+       aes(x = premium, fill = insurance_type)) +
+  geom_density(alpha = 0.6, position = "stack") +
+  scale_x_log10(labels = comma) +   # log scale to handle skewness
+  theme_minimal() +
+  labs(
+    title = "Stacked Density Plot of Premium",
+    x = "Premuim (log scale)",
+    y = "Density"
+  ) +
+  theme(
+    strip.text = element_text(face = "bold"),
+    legend.title = element_blank()
+  )
+```
+
+:::
+::::
+
+## 4.3 Claim Distribution
+
+
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Reshape claim count columns into long format
 claims_long <- portfolio %>%
   select(
@@ -421,6 +537,49 @@ ggplot(claims_long, aes(x = claim_type, y = claim_count, fill = claim_type)) +
   )
 ```
 
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+# Reshape claim count columns into long format
+claims_long <- portfolio %>%
+  select(
+    liability_claims,
+    liability_property_claims,
+    liability_injury_claims,
+    property_claims,
+    theft_claims,
+    fire_claims,
+    glass_claims,
+    legal_protection_claims,
+    occupants_claims
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "claim_type",
+    values_to = "claim_count"
+  ) %>%
+  filter(is.finite(claim_count))
+
+# Plot boxplots
+ggplot(claims_long, aes(x = claim_type, y = claim_count, fill = claim_type)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.4) +
+  labs(
+    title = "Distribution of Claim Counts by Type",
+    x = "Claim Type",
+    y = "Number of Claims"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold")
+  )
+```
+:::
+::::
+
 ## 4.4 Profitability Metrics
 
 loss_ratio = total_incurred / total_premium  
@@ -429,7 +588,13 @@ loss_ratio = total_incurred / total_premium
 profit = total_premium - total_incurred  
 → The net financial result per policy. Positive = profitable, negative = loss.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 portfolio_bin <- portfolio %>%
   mutate(
     # Loss ratio bins
@@ -467,6 +632,51 @@ p2 <- ggplot(portfolio_bin, aes(x = profit_bin, fill = profit_bin)) +
 p1 + p2
 ```
 
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+portfolio_bin <- portfolio %>%
+  mutate(
+    # Loss ratio bins
+    loss_ratio_bin = case_when(
+      loss_ratio == 0 ~ "=0",
+      loss_ratio > 0 & loss_ratio <= 1 ~ "0-1",
+      loss_ratio > 1 ~ ">1",
+      TRUE ~ NA_character_
+    ),
+    # Profit bins
+    profit_bin = case_when(
+      profit < 0 ~ "Negative",
+      profit >= 0 & profit < 250 ~ "0-250",
+      profit >= 250 & profit < 500 ~ "250-500",
+      profit >= 500 ~ ">500",
+      TRUE ~ NA_character_
+    )
+  )
+
+p1 <- ggplot(portfolio_bin, aes(x = loss_ratio_bin, fill = loss_ratio_bin)) +
+  geom_bar(alpha = 0.7) +
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Loss Ratio Bins", x = "Loss Ratio Category", y = "Count") +
+  scale_x_discrete(drop = TRUE) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p2 <- ggplot(portfolio_bin, aes(x = profit_bin, fill = profit_bin)) +
+  geom_bar(alpha = 0.7) +
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Profit Bins", x = "Profit Category", y = "Count") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p1 + p2
+```
+
+:::
+::::
+
 ## 4.5 Categorical variables
 
 Bar charts → for policy_type, fuel_type, municipality_type, circulation_area, bonus_score.
@@ -475,7 +685,13 @@ Pie charts (optional) → for simple categorical distributions like policy_statu
 
 Frequency tables → to confirm counts and proportions.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Categorical variables: bar charts
 # Select categorical variables
 cat_long <- portfolio %>%
@@ -525,17 +741,194 @@ ggplot(plot_data,
   )
 ```
 
-# 5 Exploratory Data Analysis - Bivariate
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+# Categorical variables: bar charts
+# Select categorical variables
+cat_long <- portfolio %>%
+  select(
+    policy_type,
+    policy_status,
+    business_type,
+    payment_frequency,
+    bonus_score,
+    fuel_type,
+    municipality_type,
+    circulation_area
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  )
+
+# Create percentage table within each variable
+plot_data <- cat_long %>%
+  group_by(variable, value) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(variable) %>%
+  mutate(
+    percent = count / sum(count),
+    value = fct_reorder(value, percent)
+  )
+
+# Plot
+ggplot(plot_data,
+       aes(x = percent,
+           y = value)) +
+  geom_col(fill = "steelblue") +
+  facet_wrap(~variable,
+             scales = "free_y") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(
+    title = "Distribution of Categorical Variables",
+    x = "Percentage",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    axis.text.y = element_text(size = 9)
+  )
+```
+
+:::
+::::
+
+# 5 Exploratory Data Analysis
 
 Apply suitable bivariate visual analytics techniques to investigate and statistically validate factors influencing the profitability and volatility of the insurance portfolio.
 
-## 5.1 Profitability vs Risk Metrics
+### 5.1 Correlation Analysis
 
-### 5.1.1 Premium vs Incurred
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+# Select numeric variables
+num_vars <- portfolio %>%
+  select(total_premium, total_incurred, profit, loss_ratio,
+         claim_frequency, claim_severity, total_claims,
+         premium_per_exposure, incurred_per_exposure,
+         driver_age, vehicle_age, power_to_weight_ratio, vehicle_value)
+
+# Correlation matrix
+cor_matrix <- cor(num_vars, use = "complete.obs", method = "spearman")
+
+# Visualize
+corrplot.mixed(cor_matrix,
+               lower = "ellipse",
+               upper = "number",
+               number.cex = 0.5,
+               tl.cex = 0.8,
+               order = "hclust",
+               tl.pos = "lt",
+               diag = "l",
+               tl.col = "black",
+               na.label = " ")   
+
+# Example correlation test
+cor.test(portfolio$claim_frequency, portfolio$loss_ratio, method = "spearman")
+```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+# Select numeric variables
+num_vars <- portfolio %>%
+  select(total_premium, total_incurred, profit, loss_ratio,
+         claim_frequency, claim_severity, total_claims,
+         premium_per_exposure, incurred_per_exposure,
+         driver_age, vehicle_age, power_to_weight_ratio, vehicle_value)
+
+# Correlation matrix
+cor_matrix <- cor(num_vars, use = "complete.obs", method = "spearman")
+
+# Visualize
+corrplot.mixed(cor_matrix,
+               lower = "ellipse",
+               upper = "number",
+               number.cex = 0.5,
+               tl.cex = 0.8,
+               order = "hclust",
+               tl.pos = "lt",
+               diag = "l",
+               tl.col = "black",
+               na.label = " ")   
+
+# Example correlation test
+cor.test(portfolio$claim_frequency, portfolio$loss_ratio, method = "spearman")
+```
+:::
+::::
+
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+cor_df <- cor_matrix %>%
+  as.data.frame() %>%
+  rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "correlation") %>%
+  filter(var1 < var2, abs(correlation) >= 0.5) %>%
+  arrange(desc(abs(correlation)))
+
+print(cor_df)
+```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+cor_df <- cor_matrix %>%
+  as.data.frame() %>%
+  rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "correlation") %>%
+  filter(var1 < var2, abs(correlation) >= 0.5) %>%
+  arrange(desc(abs(correlation)))
+
+print(cor_df)
+```
+:::
+::::
+
+::: {.callout-note}
+## Insight:
+
+Profitability is dominated by loss ratio → controlling incurred relative to premium is key.
+
+Volatility is driven more by claim severity than frequency → catastrophic claims destabilize the portfolio.
+
+Exposure-adjusted metrics (premium/incurred per exposure) are excellent volatility indicators.
+
+Vehicle and driver demographics show moderate effects, but not as strong as financial ratios.
+:::
+
+## 5.2 Profitability vs Risk Metrics
+
+### 5.2.1 Premium vs Incurred
 
 Scatter plot with smoothing line to see how incurred costs relate to premiums, highlighting profitability patterns.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Premium vs Incurred (profitability)
 
 portfolio_clean <- portfolio %>%
@@ -554,11 +947,42 @@ ggplot(portfolio, aes(x = total_premium, y = total_incurred)) +
   theme_minimal(base_size = 14)
 ```
 
-### 5.1.2 Loss Ratio vs Claim frequency
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+portfolio_clean <- portfolio %>%
+  filter(total_incurred > 0, total_premium >= 0)
+
+ggplot(portfolio, aes(x = total_premium, y = total_incurred)) +
+  geom_point(alpha = 0.5, color = "steelblue") +
+  scale_y_log10() +
+  coord_cartesian(xlim = c(0, 3000), ylim = c(1, 500000)) +  
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(
+    title = "Premium vs Incurred Costs",
+    x = "Total Premium",
+    y = "Total Incurred"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+:::
+::::
+
+
+### 5.2.2 Loss Ratio vs Claim frequency
 
 Scatter plot with smoothing line to see if higher claim frequency drives higher loss ratios. The regression line gives a quick statistical validation.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 ggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +
   geom_point(alpha = 0.4, color = "steelblue") +   # scatter points
   coord_cartesian(xlim = c(0, 300), ylim = c(0, 3000)) +
@@ -572,11 +996,38 @@ ggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +
   theme(plot.title = element_text(face = "bold"))
 ```
 
-### 5.1.3 Profit vs Claim Severity
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+ggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +
+  geom_point(alpha = 0.4, color = "steelblue") +   # scatter points
+  coord_cartesian(xlim = c(0, 300), ylim = c(0, 3000)) +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +  # regression line
+  labs(
+    title = "Loss Ratio vs Claim Frequency",
+    x = "Claim Frequency (claims per exposure)",
+    y = "Loss Ratio"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+:::
+::::
+
+### 5.2.3 Profit vs Claim Severity
 
 Boxplots grouped by severity bins to check if extreme claims erode profitability.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Step 1: Create severity bins
 portfolio_sev <- portfolio %>%
   mutate(
@@ -617,13 +1068,67 @@ ggplot(portfolio_sev %>% filter(!is.na(severity_bin)),
   )
 ```
 
-## 5.2 Policy & Vehicle Characteristics
+## The code
+::: {style="font-size: 1.4em"}
 
-### 5.2.1 Policy & Vehicle Characteristics
+```{r}
+#| eval: false
+# Step 1: Create severity bins
+portfolio_sev <- portfolio %>%
+  mutate(
+    severity_bin = case_when(
+      claim_severity < 1000 ~ "<1k",
+      claim_severity >= 1000 & claim_severity < 5000 ~ "1k-5k",
+      claim_severity >= 5000 & claim_severity < 20000 ~ "5k-20k",
+      claim_severity >= 20000 ~ ">20k",
+      TRUE ~ NA_character_
+    )
+  )
+
+# Step 2: Compute median profit per severity bin
+summary_stats <- portfolio_sev %>%
+  filter(!is.na(severity_bin)) %>%
+  group_by(severity_bin) %>%
+  summarise(median_profit = median(profit, na.rm = TRUE))
+
+# Step 3: Boxplot with summary labels
+ggplot(portfolio_sev %>% filter(!is.na(severity_bin)),
+       aes(x = severity_bin, y = profit, fill = severity_bin)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.3) +
+  coord_cartesian(ylim = c(-400000 , 200000 )) +
+  geom_text(data = summary_stats,
+            aes(x = severity_bin, y = median_profit,
+                label = scales::comma(round(median_profit, 0))),
+            vjust = -0.5, fontface = "bold", color = "darkred") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Profit vs Claim Severity",
+    x = "Claim Severity Bin",
+    y = "Profit"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold")
+  )
+```
+:::
+::::
+
+
+## 5.3 Policy & Vehicle Characteristics
+
+### 5.3.1 Policy & Vehicle Characteristics
 
 Bar chart showing mean profit per policy type, with confidence intervals. This shows average profitability across policy types (e.g., COMP_E, COMP_N, TP), with bootstrapped confidence intervals.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Mean profit per policy type with confidence intervals
 ggplot(portfolio, aes(x = policy_type, y = profit, fill = policy_type)) +
   stat_summary(fun = mean, geom = "bar", alpha = 0.7) +
@@ -641,11 +1146,41 @@ ggplot(portfolio, aes(x = policy_type, y = profit, fill = policy_type)) +
   )
 ```
 
-### 5.2.2 Fuel type vs loss ratio
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+ggplot(portfolio, aes(x = policy_type, y = profit, fill = policy_type)) +
+  stat_summary(fun = mean, geom = "bar", alpha = 0.7) +
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", width = 0.2) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Mean Profit by Policy Type",
+    x = "Policy Type",
+    y = "Mean Profit"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold")
+  )
+```
+
+:::
+::::
+
+### 5.3.2 Fuel type vs loss ratio
 
 Violin plots to compare distributions across Diesel, Gasoline, Unknown. Violin plots show the full distribution shape, while the embedded boxplot highlights median and quartiles.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Violin plot: Loss ratio by fuel type
 ggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
   geom_violin(trim = FALSE, alpha = 0.6) +
@@ -663,11 +1198,40 @@ ggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
   )
 ```
 
-### 5.2.3 Vehicle Age vs Claim Frequency
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+ggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
+  geom_violin(trim = FALSE, alpha = 0.6) +
+  coord_cartesian(ylim = c(0 , 5000)) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.alpha = 0.3) +
+  labs(
+    title = "Loss Ratio Distribution by Fuel Type",
+    x = "Fuel Type",
+    y = "Loss Ratio"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold")
+  )
+```
+:::
+::::
+
+### 5.3.3 Vehicle Age vs Claim Frequency
 
 Scatter plot with regression line to test if older vehicles have higher claim frequency. This reveals whether older vehicles tend to have higher claim frequency. The regression line provides a statistical trend.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Scatter plot: Vehicle age vs Claim frequency
 ggplot(portfolio, aes(x = vehicle_age, y = claim_frequency)) +
   geom_point(alpha = 0.4, color = "steelblue") +
@@ -680,11 +1244,35 @@ ggplot(portfolio, aes(x = vehicle_age, y = claim_frequency)) +
   theme(plot.title = element_text(face = "bold"))
 ```
 
-## 5.3 Driver Age vs Loss Ratio
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+ggplot(portfolio, aes(x = vehicle_age, y = claim_frequency)) +
+  geom_point(alpha = 0.4, color = "steelblue") +
+  labs(
+    title = "Vehicle Age vs Claim Frequency",
+    x = "Vehicle Age (years)",
+    y = "Claim Frequency (claims per exposure)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
+```
+:::
+::::
+
+## 5.4 Driver Age vs Loss Ratio
 
 This compares the distribution of loss ratios across age bands. This highlights which age groups tend to have higher or lower loss ratios.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Create age bands
 portfolio_age <- portfolio %>%
   mutate(
@@ -715,7 +1303,44 @@ ggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +
   theme(legend.position = "none")
 ```
 
-## 5.4 Volatility 
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+# Create age bands
+portfolio_age <- portfolio %>%
+  mutate(
+    age_band = cut(driver_age,
+                   breaks = seq(18, 80, by = 10),
+                   include.lowest = TRUE)
+  ) %>%
+  group_by(age_band) %>%
+  mutate(
+    q1 = quantile(loss_ratio, 0.25, na.rm = TRUE),
+    q3 = quantile(loss_ratio, 0.75, na.rm = TRUE),
+    iqr = q3 - q1,
+    lower = q1 - 1.5 * iqr,
+    upper = q3 + 1.5 * iqr
+  ) %>%
+  ungroup() %>%
+  filter(loss_ratio >= lower, loss_ratio <= upper)
+
+# Ridge plot of loss ratio by age band
+ggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +
+  ggridges::geom_density_ridges(alpha = 0.6) +
+  labs(
+    title = "Loss Ratio Distribution by Driver Age Band",
+    x = "Loss Ratio",
+    y = "Driver Age Band"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+:::
+::::
+
+## 5.5 Volatility 
 
 Claims frequency analysis → average claims per policy type, per fuel type, per circulation area.
 
@@ -723,11 +1348,17 @@ Severity analysis → mean incurred per claim across categories.
 
 Exposure vs claims → scatter plot or regression to validate exposure as a driver of volatility.
 
-### 5.4.1 Loss ratio variability  
+### 5.5.1 Loss ratio variability  
 
 Measures how much the ratio of incurred to premium fluctuates across policies. High variance = unstable underwriting results.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # Variance of loss ratio by policy type
 portfolio %>%
   group_by(policy_type) %>%
@@ -738,11 +1369,33 @@ portfolio %>%
   )
 ```
 
-### 5.4.2 Coefficient of Variation 
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+portfolio %>%
+  group_by(policy_type) %>%
+  summarise(
+    mean_lr = mean(loss_ratio, na.rm = TRUE),
+    sd_lr   = sd(loss_ratio, na.rm = TRUE),
+    var_lr  = var(loss_ratio, na.rm = TRUE)
+  )
+```
+:::
+::::
+
+### 5.5.2 Coefficient of Variation 
 
 CV = sd/mean, useful for claim frequency and severity because it normalizes volatility relative to the mean.
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 # CV for claim frequency and severity
 portfolio %>%
   summarise(
@@ -756,11 +1409,36 @@ portfolio %>%
   )
 ```
 
-### 5.4.3 Levene's Test
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+portfolio %>%
+  summarise(
+    mean_freq = mean(claim_frequency, na.rm = TRUE),
+    sd_freq   = sd(claim_frequency, na.rm = TRUE),
+    cv_freq   = sd_freq / mean_freq,
+    
+    mean_sev = mean(claim_severity, na.rm = TRUE),
+    sd_sev   = sd(claim_severity, na.rm = TRUE),
+    cv_sev   = sd_sev / mean_sev
+  )
+```
+:::
+::::
+
+### 5.5.3 Levene's Test
 
 Statistically validate whether variance differs across groups (e.g., urban vs rural, diesel vs gasoline).
 
+:::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
 library(car)
 
 # Levene’s test for loss ratio variance across circulation areas
@@ -770,45 +1448,121 @@ leveneTest(loss_ratio ~ circulation_area, data = portfolio)
 leveneTest(claim_severity ~ fuel_type, data = portfolio)
 ```
 
-### 5.4.4 Premium vs Incurred Volatility by Year 
-
-An animated bubble chart template to show Premium vs Incurred volatility by year. 
-
-```{r}
-# Animated bubble chart: Premium vs Incurred by Year
-gg <- ggplot(portfolio, 
-       aes(x = total_premium, 
-           y = total_incurred, 
-           size = total_exposure,   # bubble size
-           colour = policy_type)) + # bubble color
-  geom_point(aes(frame = year), alpha = 0.7) +
-  scale_size(range = c(2, 12)) +
-  labs(
-    title = "Premium vs Incurred Volatility by Year",
-    x = "Total Premium",
-    y = "Total Incurred"
-  ) +
-  theme_minimal()
-
-# Convert to interactive animated plot
-ggplotly(gg)
-```
-
-## 5.5 Statistical validation
-
-### 5.5.1 Chi-square tests → categorical vs categorical (e.g., policy_type vs policy_status).
-
-### 5.5.2 t-tests / ANOVA → numeric vs categorical (e.g., total_incurred across fuel_type).
-
-### 5.5.3 Correlation / regression models → numeric vs numeric (e.g., vehicle_value vs total_premium).
-
-To detect relationships among numeric drivers (premium, incurred, claims, profit, loss ratio).
+## The code
+::: {style="font-size: 1.4em"}
 
 ```{r}
-# Correlation heatmap for numeric variables
-num_vars <- portfolio %>% select(where(is.numeric))
-corrplot(cor(num_vars, use = "pairwise.complete.obs"), method = "circle")
+#| eval: false
+# Levene’s test for loss ratio variance across circulation areas
+leveneTest(loss_ratio ~ circulation_area, data = portfolio)
+
+# Levene’s test for claim severity variance across fuel types
+leveneTest(claim_severity ~ fuel_type, data = portfolio)
 ```
+:::
+::::
+
+### 5.5.4 Time-series Volatility
+
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+library(zoo)
+portfolio_ts <- portfolio %>%
+  group_by(year) %>%
+  summarise(ratio = mean(total_incurred / total_premium, na.rm = TRUE))
+
+portfolio_ts$rolling_sd <- rollapply(portfolio_ts$ratio, width = 3, FUN = sd, fill = NA, align = "right")
+```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+portfolio_ts <- portfolio %>%
+  group_by(year) %>%
+  summarise(ratio = mean(total_incurred / total_premium, na.rm = TRUE))
+
+portfolio_ts$rolling_sd <- rollapply(portfolio_ts$ratio, width = 3, FUN = sd, fill = NA, align = "right")
+```
+:::
+::::
+
+## 5.6 Hypothesis Testing
+
+
+### 5.6.1 Chi-square tests → categorical vs categorical (e.g., policy_type vs policy_status).
+
+Use for categorical vs categorical relationships:
+
+Policy type vs profitability → Is profitability distribution independent of policy type?
+
+Bonus score vs profitability → Are Good/Neutral/Bad scores associated with different profitability outcomes?
+
+Circulation area vs has_claim → Do urban vs rural areas differ in claim occurrence?
+
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+chisq.test(table(portfolio$policy_type, portfolio$profitable_policy))
+chisq.test(table(portfolio$bonus_score, portfolio$profitable_policy))
+chisq.test(table(portfolio$circulation_area, portfolio$has_claim))
+```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+chisq.test(table(portfolio$policy_type, portfolio$profitable_policy))
+chisq.test(table(portfolio$bonus_score, portfolio$profitable_policy))
+chisq.test(table(portfolio$circulation_area, portfolio$has_claim))
+```
+:::
+::::
+
+### 5.6.2 t-tests / ANOVA → numeric vs categorical (e.g., total_incurred across fuel_type).
+
+Use for continuous vs categorical comparisons:
+
+Loss ratio vs fuel type → Do Diesel, Gasoline, Unknown differ in mean loss ratio?
+
+Profit vs business type → Compare mean profit between New Business vs Portfolio.
+
+Claim severity vs municipality type → Inland vs Coastal vs Islands.
+
+:::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#｜ fig-width: 12
+#｜ fig_height: 8
+anova_result <- aov(loss_ratio ~ fuel_type, data = portfolio)
+summary(anova_result)
+TukeyHSD(anova_result)
+```
+
+## The code
+::: {style="font-size: 1.4em"}
+
+```{r}
+#| eval: false
+anova_result <- aov(loss_ratio ~ fuel_type, data = portfolio)
+summary(anova_result)
+TukeyHSD(anova_result)
+```
+:::
+::::
 
 # 6 Summary
 

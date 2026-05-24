@@ -72,7 +72,6 @@ ggplot(data=exam_data,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 ggplot(data=exam_data, 
@@ -118,7 +117,6 @@ ggplot(data=exam_data,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 ggplot(data=exam_data, 
@@ -173,7 +171,6 @@ ggplot(data=exam_data,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 ggplot(data=exam_data, 
@@ -213,7 +210,7 @@ ggplot(data=exam_data, aes(x = MATHS)) +
 ggthemes package extends ggplot2 with a wide variety of additional themes that mimic the visual styles of well-known publications, software, and visualization experts.
 
 | Theme (from ggthemes) | Style Inspiration |
-|------------------------|-----------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | theme_tufte() | Edward Tufte’s minimalist design — very clean, data-focused, minimal ink. |
 | theme_few() | Stephen Few’s practical, uncluttered style for dashboards and business charts. |
 | theme_fivethirtyeight() | The distinctive look of FiveThirtyEight’s data journalism plots. |
@@ -228,6 +225,7 @@ It’s especially useful when you want your plots to look like they came from a 
 
 :::: panel-tabset
 ## The plot
+
 ```{r}
 #| echo: false
 #｜ fig-width: 12
@@ -245,7 +243,6 @@ ggplot(data=exam_data,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 ggplot(data=exam_data, 
@@ -307,7 +304,6 @@ ggplot(data=exam_data,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 ggplot(data=exam_data, 
@@ -346,7 +342,6 @@ ggplot(data=exam_data,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 ggplot(data=exam_data, 
@@ -393,7 +388,6 @@ print(p1)
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 p1 <- ggplot(data=exam_data, 
@@ -434,7 +428,6 @@ print(p2)
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 p2 <- ggplot(data=exam_data, 
@@ -476,7 +469,6 @@ print(p3)
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 p3 <- ggplot(data=exam_data, 
@@ -521,7 +513,6 @@ p1 + p2
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 p1 + p2
@@ -549,7 +540,6 @@ We can plot more complex composite by using appropriate operators. For example, 
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 #｜ fig-width: 12
@@ -579,7 +569,6 @@ In order to identify subplots in text, patchwork also provides auto-tagging capa
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 #｜ fig-width: 12
@@ -612,7 +601,6 @@ p3 + inset_element(p2,
 ## The code
 
 ::: {style="font-size: 1.4em"}
-
 ```{r}
 #| eval: false
 #｜ fig-width: 12
