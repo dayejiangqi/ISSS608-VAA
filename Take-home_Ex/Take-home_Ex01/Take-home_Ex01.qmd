@@ -1467,6 +1467,15 @@ ggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +
 
 ::: callout-note
 ## Insight:
+Claim severity patterns vary across age bands, but differences are modest once extreme outliers are removed.
+
+Younger drivers (18–28) show slightly higher severity risk.
+
+Middle‑aged drivers (38–58) are more stable and predictable.
+
+Older drivers (68–78) again show wider variability.
+
+Overall, claim severity is most stable in mid‑age groups, while both younger and older drivers add more volatility.
 :::
 
 ## 5.5 Volatility

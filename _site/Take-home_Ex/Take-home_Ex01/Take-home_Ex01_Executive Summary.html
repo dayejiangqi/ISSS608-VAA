@@ -135,50 +135,249 @@
 </div>
 
 </section>
-<section id="take-home-exercise-1" class="slide level2">
-<h2>Take-home Exercise 1</h2>
-<h3 id="exploring-profitability-and-volatility-in-motor-insurance">Exploring Profitability and Volatility in Motor Insurance</h3>
+<section id="exploring-profitability-and-volatility-in-motor-insurance" class="slide level2">
+<h2>Exploring Profitability and Volatility in Motor Insurance</h2>
 <p><br><br><br><br><br></p>
-<pre><code>                    Jiang Yuxi April Term 2026 </code></pre>
+<pre><code>                               Jiang Yuxi 
+                             April Term 2026 </code></pre>
 </section>
 <section id="contents" class="slide level2">
 <h2>Contents</h2>
-<p>Insight 1:</p>
-<p>Insight 2:</p>
-<p>Insight 3:</p>
-<p>Insight 4:</p>
-<p>Insight 5:</p>
-<p>Executive Summary</p>
-</section>
-<section id="insight-1-cost-distribution" class="slide level2">
-<h2>Insight 1: Cost Distribution</h2>
-
-<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"><div style="font-size:0.9em; margin-top:10px">
-<p><strong>Insight:</strong> Heavier cars tend to have lower fuel efficiency, as shown by the negative correlation between weight and mpg.</p>
+<div style="font-size:0.8em; line-height:1.1">
+<ol type="1">
+<li><p>Cost Distribution</p></li>
+<li><p>Premium Distribution</p></li>
+<li><p>Claim Distribution</p></li>
+<li><p>Profitability Metrics</p></li>
+<li><p>Factor Distribution</p></li>
+<li><p>Correlation Analysis</p></li>
+<li><p>Profitability vs Risk Metrics</p></li>
+<li><p>Policy &amp; Vehicle Characteristics</p></li>
+<li><p>Driver Age vs Claim Severity</p></li>
+<li><p>Executive Summary</p></li>
+</ol>
 </div>
 </section>
-<section id="insight-2-premium-distribution" class="slide level2">
-<h2>Insight 2: Premium Distribution</h2>
+<section id="cost-distribution" class="slide level2">
+<h2>1. Cost Distribution</h2>
 
-<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
-<section id="insight-3-claim-distribution" class="slide level2">
-<h2>Insight 3: Claim Distribution</h2>
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> The plot reveals that certain claim types, such as liability injury and fire claims, have much higher incurred costs at the upper end of the distribution compared to others. This indicates that while most claims are relatively small, a small proportion of catastrophic claims drive portfolio volatility and can heavily impact profitability.</p>
+</div>
+<aside class="notes">
+<p>Here we see the distribution of incurred costs across claim types. Most claims are relatively small, but liability injury and fire claims stand out with much higher costs at the upper end. This tells us that while everyday claims are manageable, catastrophic ones are the real drivers of volatility and profitability risk.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="premium-distribution" class="slide level2">
+<h2>2. Premium Distribution</h2>
 
-<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
-<section id="insight-4-profitability-metrics" class="slide level2">
-<h2>Insight 4: Profitability Metrics</h2>
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> The plot shows that most premiums cluster at lower values, but the log scale reveals long tails where certain insurance types extend into higher premium ranges. Liability and property damage premiums dominate the distribution, while niche coverages like glass or legal protection appear less frequent and concentrated. This highlights that core coverages drive the bulk of premium income, whereas specialized coverages contribute smaller but distinct segments.</p>
+</div>
+<aside class="notes">
+<p>Premiums are mostly concentrated at lower values. However, liability and property damage premiums dominate the portfolio, while niche coverages like glass or legal protection are smaller but distinct. This highlights that core coverages generate the bulk of income, while specialized ones add diversity.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="claim-distribution" class="slide level2">
+<h2>3. Claim Distribution</h2>
 
-<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
-<section id="insight-5-categorical-variables-distribution" class="slide level2">
-<h2>Insight 5: Categorical Variables Distribution</h2>
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> The plot shows that most claim types have relatively low counts, with the majority clustering near zero, but property claims and liability‑related claims tend to have higher variability and more frequent occurrences. This indicates that property and liability claims are a major driver of claim activity, while categories like fire or glass are less common but still contribute to overall portfolio risk.</p>
+</div>
+<aside class="notes">
+<p>Looking at claim counts, most categories cluster near zero. But property and liability claims show higher variability and frequency. These are the main drivers of claim activity, while categories like fire or glass are less common but still contribute to overall risk.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="profitability-metrics" class="slide level2">
+<h2>4. Profitability Metrics</h2>
 
-<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"><pre><code>::: Speaker Notes
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> The charts show that a large majority of policies have a loss ratio of zero, meaning no claims were made, while a smaller but significant group has loss ratios greater than one, indicating unprofitable policies where claims exceeded premiums. On the profit side, most policies fall into moderate profit ranges (0–250 and 250–500), but there is also a notable share of highly profitable policies (&gt;500). This highlights that while many policies generate steady profits, a subset of high‑loss policies erodes overall portfolio performance.</p>
+</div>
+<aside class="notes">
+<p>On the profitability side, many policies have no claims at all, but some exceed premiums, making them unprofitable. Most policies generate moderate profits, yet a subset of high-loss policies erodes overall performance. This mix of steady profits and risky outliers is a key challenge.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="categorical-variables-distribution" class="slide level2">
+<h2>5. Categorical Variables Distribution</h2>
 
-:::</code></pre>
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> The charts show that most policies are active and concentrated in portfolio business rather than new business, with annual payment frequency being the most common. Bonus scores lean heavily toward “Good,” while fuel types are dominated by gasoline, though a notable share is marked “Unknown.” Urban circulation areas and coastal municipalities are more prevalent, reflecting demographic and geographic concentration. These distributions highlight the portfolio’s structural composition and help explain underlying profitability and risk patterns.</p>
+</div>
+<aside class="notes">
+<p>Structurally, most policies are active, annual payments are common, and bonus scores lean toward ‘Good.’ Gasoline dominates fuel type, though some are marked ‘Unknown.’ Urban and coastal areas are more prevalent. These distributions give us a snapshot of the portfolio’s composition.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="correlation-analysis" class="slide level2">
+<h2>6. Correlation Analysis</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-14-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-15-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> Profitability is most negatively affected by high incurred costs and loss ratios (ρ ≈ –0.93 to –0.94), showing that claims relative to premiums directly erode profits. Claim severity is strongly correlated with incurred costs and loss ratio (ρ ≈ 0.87–0.91), highlighting that catastrophic claims destabilize the portfolio more than claim frequency. Claim frequency is highly correlated with loss ratio (ρ ≈ 0.90, p &lt; 2.2e‑16), confirming that frequent claims drive unprofitability. Demographic factors like driver age and vehicle age show moderate correlation (ρ ≈ 0.86), but financial ratios remain the dominant drivers of portfolio performance.</p>
+</div>
+<aside class="notes">
+<p>Correlation analysis shows that profitability is most negatively affected by incurred costs and loss ratios. Claim severity destabilizes the portfolio more than frequency, but frequent claims still drive unprofitability. Demographics like driver and vehicle age matter moderately, yet financial ratios remain the dominant drivers.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="profitability-vs-risk-metrics" class="slide level2">
+<h2>7. Profitability vs Risk Metrics</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"><div class="columns">
+<div class="column" style="width:50%;">
+<div style="font-size:0.5em; line-height:1.0">
+<p><strong>Insight (Premiums vs Costs)</strong><br>
+Higher premiums are linked to higher incurred costs. Most policies stay low, but a few high‑premium ones drive large claims and greater volatility.</p>
+</div>
+</div><div class="column" style="width:50%;">
+<div style="font-size:0.5em; line-height:1.0">
+<p><strong>Insight (Claims vs Loss)</strong><br>
+Frequent claims push loss ratios up. Even small claims erode profitability when they occur often, making claim frequency a key driver of portfolio stability.</p>
+</div>
+</div></div>
+<aside class="notes">
+<p>Here we compare premiums with incurred costs and claim frequency with loss ratios. Higher premiums are linked to higher incurred costs, with volatility driven by large claims. Frequent claims push loss ratios up, even when individual claims are small. Both relationships confirm the key drivers of portfolio risk.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="policy-vehicle-characteristics" class="slide level2">
+<h2>8. Policy &amp; Vehicle Characteristics</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong></p>
+<p>- COMP_E policies generate the highest mean profit, suggesting they are the most financially favorable product line.</p>
+<p>- COMP_N policies show the lowest mean profit, indicating weaker performance and potential risk to overall profitability.</p>
+<p>- Other policy types (CC, TP, TPG) fall in between, with moderate profitability compared to COMP_E.</p>
+<p>- The confidence intervals highlight variability, but the overall ranking of policy types remains consistent, guiding strategic focus toward more profitable products.</p>
+</div>
+<aside class="notes">
+<p>Policy type matters. COMP_E policies generate the highest mean profit, making them the most favorable. COMP_N policies show the weakest performance, while others fall in between. Despite variability, the ranking is consistent, guiding us toward focusing on profitable product lines.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="driver-age-vs-claim-severity" class="slide level2">
+<h2>9. Driver Age vs Claim Severity</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"><div style="font-size:0.5em; margin-top:10px">
+<p><strong>Insight:</strong> Claim severity is most stable in mid‑age groups, while both younger and older drivers add more volatility.</p>
+<p>- Younger drivers (18–28) show slightly higher severity risk</p>
+<p>- Middle‑aged drivers (38–58) are more stable and predictable.</p>
+<p>- Older drivers (68–78) again show wider variability.</p>
+</div>
+<aside class="notes">
+<p>Claim severity varies by driver age. Middle-aged drivers are the most stable, while younger and older drivers show more volatility. This pattern suggests that age bands influence risk, with mid-age groups offering more predictable outcomes.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="executive-summary" class="slide level2">
-<h2>Executive Summary</h2>
-<div style="font-size:0.8em; line-height:1.3">
+<h2>10. Executive Summary</h2>
+<div style="font-size:0.5em; line-height:1.1">
 <p><strong>Key Findings:</strong></p>
 <p><strong>Claims behavior drives volatility.</strong> Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.</p>
 <p><strong>Policy type and bonus score are critical differentiators.</strong> COMP_E policies show the highest loss ratio variance, indicating unstable underwriting results, while COMP_N policies are more predictable. Bonus scores significantly influence profitability outcomes.</p>
@@ -188,9 +387,19 @@
 <p><strong>Conclusion:</strong><br>
 The investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.</p>
 </div>
-<pre><code>::: Speaker Notes
-
-:::</code></pre>
+<aside class="notes">
+<p>To conclude: claims frequency and severity are the main drivers of volatility. Policy type and bonus score are critical differentiators, while geography and fuel type play limited roles. Risk is dynamic over time, requiring ongoing monitoring. Visual analytics adds measurable value by turning descriptive reporting into actionable insights. The strategic takeaway is clear: manage claim drivers, target unstable product types, leverage bonus scores, and monitor volatility trends to anticipate shocks.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 
 
 </section>

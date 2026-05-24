@@ -1,59 +1,87 @@
 [
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#take-home-exercise-1",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#take-home-exercise-1",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#exploring-profitability-and-volatility-in-motor-insurance",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#exploring-profitability-and-volatility-in-motor-insurance",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Take-home Exercise 1",
-    "text": "Take-home Exercise 1\nExploring Profitability and Volatility in Motor Insurance\n\n                    Jiang Yuxi April Term 2026"
+    "section": "Exploring Profitability and Volatility in Motor Insurance",
+    "text": "Exploring Profitability and Volatility in Motor Insurance\n\n                               Jiang Yuxi \n                             April Term 2026"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#contents",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#contents",
     "title": "Take-home_Exercise 1 Excecutive Summary",
     "section": "Contents",
-    "text": "Contents\nInsight 1:\nInsight 2:\nInsight 3:\nInsight 4:\nInsight 5:\nExecutive Summary"
+    "text": "Contents\n\n\nCost Distribution\nPremium Distribution\nClaim Distribution\nProfitability Metrics\nFactor Distribution\nCorrelation Analysis\nProfitability vs Risk Metrics\nPolicy & Vehicle Characteristics\nDriver Age vs Claim Severity\nExecutive Summary"
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-1-cost-distribution",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-1-cost-distribution",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#cost-distribution",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#cost-distribution",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Insight 1: Cost Distribution",
-    "text": "Insight 1: Cost Distribution\n\n\nInsight: Heavier cars tend to have lower fuel efficiency, as shown by the negative correlation between weight and mpg."
+    "section": "1. Cost Distribution",
+    "text": "1. Cost Distribution\n\n\nInsight: The plot reveals that certain claim types, such as liability injury and fire claims, have much higher incurred costs at the upper end of the distribution compared to others. This indicates that while most claims are relatively small, a small proportion of catastrophic claims drive portfolio volatility and can heavily impact profitability.\n\n\nHere we see the distribution of incurred costs across claim types. Most claims are relatively small, but liability injury and fire claims stand out with much higher costs at the upper end. This tells us that while everyday claims are manageable, catastrophic ones are the real drivers of volatility and profitability risk."
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-2-premium-distribution",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-2-premium-distribution",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#premium-distribution",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#premium-distribution",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Insight 2: Premium Distribution",
-    "text": "Insight 2: Premium Distribution"
+    "section": "2. Premium Distribution",
+    "text": "2. Premium Distribution\n\n\nInsight: The plot shows that most premiums cluster at lower values, but the log scale reveals long tails where certain insurance types extend into higher premium ranges. Liability and property damage premiums dominate the distribution, while niche coverages like glass or legal protection appear less frequent and concentrated. This highlights that core coverages drive the bulk of premium income, whereas specialized coverages contribute smaller but distinct segments.\n\n\nPremiums are mostly concentrated at lower values. However, liability and property damage premiums dominate the portfolio, while niche coverages like glass or legal protection are smaller but distinct. This highlights that core coverages generate the bulk of income, while specialized ones add diversity."
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-3-claim-distribution",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-3-claim-distribution",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#claim-distribution",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#claim-distribution",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Insight 3: Claim Distribution",
-    "text": "Insight 3: Claim Distribution"
+    "section": "3. Claim Distribution",
+    "text": "3. Claim Distribution\n\n\nInsight: The plot shows that most claim types have relatively low counts, with the majority clustering near zero, but property claims and liability‑related claims tend to have higher variability and more frequent occurrences. This indicates that property and liability claims are a major driver of claim activity, while categories like fire or glass are less common but still contribute to overall portfolio risk.\n\n\nLooking at claim counts, most categories cluster near zero. But property and liability claims show higher variability and frequency. These are the main drivers of claim activity, while categories like fire or glass are less common but still contribute to overall risk."
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-4-profitability-metrics",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-4-profitability-metrics",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#profitability-metrics",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#profitability-metrics",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Insight 4: Profitability Metrics",
-    "text": "Insight 4: Profitability Metrics"
+    "section": "4. Profitability Metrics",
+    "text": "4. Profitability Metrics\n\n\nInsight: The charts show that a large majority of policies have a loss ratio of zero, meaning no claims were made, while a smaller but significant group has loss ratios greater than one, indicating unprofitable policies where claims exceeded premiums. On the profit side, most policies fall into moderate profit ranges (0–250 and 250–500), but there is also a notable share of highly profitable policies (&gt;500). This highlights that while many policies generate steady profits, a subset of high‑loss policies erodes overall portfolio performance.\n\n\nOn the profitability side, many policies have no claims at all, but some exceed premiums, making them unprofitable. Most policies generate moderate profits, yet a subset of high-loss policies erodes overall performance. This mix of steady profits and risky outliers is a key challenge."
   },
   {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-5-categorical-variables-distribution",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#insight-5-categorical-variables-distribution",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#categorical-variables-distribution",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#categorical-variables-distribution",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Insight 5: Categorical Variables Distribution",
-    "text": "Insight 5: Categorical Variables Distribution\n\n::: Speaker Notes\n\n:::"
+    "section": "5. Categorical Variables Distribution",
+    "text": "5. Categorical Variables Distribution\n\n\nInsight: The charts show that most policies are active and concentrated in portfolio business rather than new business, with annual payment frequency being the most common. Bonus scores lean heavily toward “Good,” while fuel types are dominated by gasoline, though a notable share is marked “Unknown.” Urban circulation areas and coastal municipalities are more prevalent, reflecting demographic and geographic concentration. These distributions highlight the portfolio’s structural composition and help explain underlying profitability and risk patterns.\n\n\nStructurally, most policies are active, annual payments are common, and bonus scores lean toward ‘Good.’ Gasoline dominates fuel type, though some are marked ‘Unknown.’ Urban and coastal areas are more prevalent. These distributions give us a snapshot of the portfolio’s composition."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#correlation-analysis",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#correlation-analysis",
+    "title": "Take-home_Exercise 1 Excecutive Summary",
+    "section": "6. Correlation Analysis",
+    "text": "6. Correlation Analysis\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nInsight: Profitability is most negatively affected by high incurred costs and loss ratios (ρ ≈ –0.93 to –0.94), showing that claims relative to premiums directly erode profits. Claim severity is strongly correlated with incurred costs and loss ratio (ρ ≈ 0.87–0.91), highlighting that catastrophic claims destabilize the portfolio more than claim frequency. Claim frequency is highly correlated with loss ratio (ρ ≈ 0.90, p &lt; 2.2e‑16), confirming that frequent claims drive unprofitability. Demographic factors like driver age and vehicle age show moderate correlation (ρ ≈ 0.86), but financial ratios remain the dominant drivers of portfolio performance.\n\n\nCorrelation analysis shows that profitability is most negatively affected by incurred costs and loss ratios. Claim severity destabilizes the portfolio more than frequency, but frequent claims still drive unprofitability. Demographics like driver and vehicle age matter moderately, yet financial ratios remain the dominant drivers."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#profitability-vs-risk-metrics",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#profitability-vs-risk-metrics",
+    "title": "Take-home_Exercise 1 Excecutive Summary",
+    "section": "7. Profitability vs Risk Metrics",
+    "text": "7. Profitability vs Risk Metrics\n\n\n\n\nInsight (Premiums vs Costs)\nHigher premiums are linked to higher incurred costs. Most policies stay low, but a few high‑premium ones drive large claims and greater volatility.\n\n\n\nInsight (Claims vs Loss)\nFrequent claims push loss ratios up. Even small claims erode profitability when they occur often, making claim frequency a key driver of portfolio stability.\n\n\n\nHere we compare premiums with incurred costs and claim frequency with loss ratios. Higher premiums are linked to higher incurred costs, with volatility driven by large claims. Frequent claims push loss ratios up, even when individual claims are small. Both relationships confirm the key drivers of portfolio risk."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#policy-vehicle-characteristics",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#policy-vehicle-characteristics",
+    "title": "Take-home_Exercise 1 Excecutive Summary",
+    "section": "8. Policy & Vehicle Characteristics",
+    "text": "8. Policy & Vehicle Characteristics\n\n\nInsight:\n- COMP_E policies generate the highest mean profit, suggesting they are the most financially favorable product line.\n- COMP_N policies show the lowest mean profit, indicating weaker performance and potential risk to overall profitability.\n- Other policy types (CC, TP, TPG) fall in between, with moderate profitability compared to COMP_E.\n- The confidence intervals highlight variability, but the overall ranking of policy types remains consistent, guiding strategic focus toward more profitable products.\n\n\nPolicy type matters. COMP_E policies generate the highest mean profit, making them the most favorable. COMP_N policies show the weakest performance, while others fall in between. Despite variability, the ranking is consistent, guiding us toward focusing on profitable product lines."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#driver-age-vs-claim-severity",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#driver-age-vs-claim-severity",
+    "title": "Take-home_Exercise 1 Excecutive Summary",
+    "section": "9. Driver Age vs Claim Severity",
+    "text": "9. Driver Age vs Claim Severity\n\n\nInsight: Claim severity is most stable in mid‑age groups, while both younger and older drivers add more volatility.\n- Younger drivers (18–28) show slightly higher severity risk\n- Middle‑aged drivers (38–58) are more stable and predictable.\n- Older drivers (68–78) again show wider variability.\n\n\nClaim severity varies by driver age. Middle-aged drivers are the most stable, while younger and older drivers show more volatility. This pattern suggests that age bands influence risk, with mid-age groups offering more predictable outcomes."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#executive-summary",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html#executive-summary",
     "title": "Take-home_Exercise 1 Excecutive Summary",
-    "section": "Executive Summary",
-    "text": "Executive Summary\n\nKey Findings:\nClaims behavior drives volatility. Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.\nPolicy type and bonus score are critical differentiators. COMP_E policies show the highest loss ratio variance, indicating unstable underwriting results, while COMP_N policies are more predictable. Bonus scores significantly influence profitability outcomes.\nGeography and fuel type play a limited role. Statistical tests show no significant differences in variance or mean loss ratios across circulation areas or fuel types, suggesting these variables are less impactful in explaining volatility.\nPortfolio risk is dynamic over time. Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant and requires ongoing monitoring.\nVisual analytics adds measurable value. Univariate plots highlight skewness and outliers, bivariate analyses reveal correlations between premiums, incurred costs, and claims, while statistical tests validate which categorical differences are meaningful.\nConclusion:\nThe investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.\n\n::: Speaker Notes\n\n:::"
+    "section": "10. Executive Summary",
+    "text": "10. Executive Summary\n\nKey Findings:\nClaims behavior drives volatility. Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.\nPolicy type and bonus score are critical differentiators. COMP_E policies show the highest loss ratio variance, indicating unstable underwriting results, while COMP_N policies are more predictable. Bonus scores significantly influence profitability outcomes.\nGeography and fuel type play a limited role. Statistical tests show no significant differences in variance or mean loss ratios across circulation areas or fuel types, suggesting these variables are less impactful in explaining volatility.\nPortfolio risk is dynamic over time. Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant and requires ongoing monitoring.\nVisual analytics adds measurable value. Univariate plots highlight skewness and outliers, bivariate analyses reveal correlations between premiums, incurred costs, and claims, while statistical tests validate which categorical differences are meaningful.\nConclusion:\nThe investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.\n\n\nTo conclude: claims frequency and severity are the main drivers of volatility. Policy type and bonus score are critical differentiators, while geography and fuel type play limited roles. Risk is dynamic over time, requiring ongoing monitoring. Visual analytics adds measurable value by turning descriptive reporting into actionable insights. The strategic takeaway is clear: manage claim drivers, target unstable product types, leverage bonus scores, and monitor volatility trends to anticipate shocks."
   },
   {
     "objectID": "about.html",
@@ -1306,7 +1334,7 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#driver-age-vs-claim-severity",
     "title": "Take-home Exercise 1",
     "section": "5.4 Driver Age vs Claim Severity",
-    "text": "5.4 Driver Age vs Claim Severity\nThis compares the distribution of loss ratios across age bands. This highlights which age groups tend to have higher or lower loss ratios.\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Create age bands\nportfolio_age &lt;- portfolio %&gt;% \n  mutate(\n    age_band = cut(driver_age,\n                   breaks = seq(18, 80, by = 10),\n                   include.lowest = TRUE)\n  ) %&gt;%\n  filter(!is.na(age_band)) %&gt;%   # &lt;-- remove NA age bands\n  group_by(age_band) %&gt;%\n  mutate(\n    p25   = quantile(claim_severity, 0.25, na.rm = TRUE),\n    q3    = quantile(claim_severity, 0.75, na.rm = TRUE),\n    iqr   = q3 - p25,\n    lower = p25,                  \n    upper = q3 + 1.5 * iqr        \n  ) %&gt;%\n  ungroup() %&gt;%\n  filter(claim_severity &gt;= lower, claim_severity &lt;= upper)\n\n# Ridge plot of loss ratio by age band (log scale, NA removed)\nggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +\n  ggridges::geom_density_ridges(alpha = 0.6) +\n  scale_x_log10() +\n  labs(\n    title = \"Claim Severity Distribution by Driver Age Band (P25 cutoff, log scale)\",\n    x = \"Log Claim Severity\",\n    y = \"Driver Age Band\"\n  ) +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\n\n\n\n\n\n\n\n\n\nNoteInsight:"
+    "text": "5.4 Driver Age vs Claim Severity\nThis compares the distribution of loss ratios across age bands. This highlights which age groups tend to have higher or lower loss ratios.\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Create age bands\nportfolio_age &lt;- portfolio %&gt;% \n  mutate(\n    age_band = cut(driver_age,\n                   breaks = seq(18, 80, by = 10),\n                   include.lowest = TRUE)\n  ) %&gt;%\n  filter(!is.na(age_band)) %&gt;%   # &lt;-- remove NA age bands\n  group_by(age_band) %&gt;%\n  mutate(\n    p25   = quantile(claim_severity, 0.25, na.rm = TRUE),\n    q3    = quantile(claim_severity, 0.75, na.rm = TRUE),\n    iqr   = q3 - p25,\n    lower = p25,                  \n    upper = q3 + 1.5 * iqr        \n  ) %&gt;%\n  ungroup() %&gt;%\n  filter(claim_severity &gt;= lower, claim_severity &lt;= upper)\n\n# Ridge plot of loss ratio by age band (log scale, NA removed)\nggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +\n  ggridges::geom_density_ridges(alpha = 0.6) +\n  scale_x_log10() +\n  labs(\n    title = \"Claim Severity Distribution by Driver Age Band (P25 cutoff, log scale)\",\n    x = \"Log Claim Severity\",\n    y = \"Driver Age Band\"\n  ) +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\n\n\n\n\n\n\n\n\n\nNoteInsight:\n\n\n\nClaim severity patterns vary across age bands, but differences are modest once extreme outliers are removed.\nYounger drivers (18–28) show slightly higher severity risk.\nMiddle‑aged drivers (38–58) are more stable and predictable.\nOlder drivers (68–78) again show wider variability.\nOverall, claim severity is most stable in mid‑age groups, while both younger and older drivers add more volatility."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#volatility",
