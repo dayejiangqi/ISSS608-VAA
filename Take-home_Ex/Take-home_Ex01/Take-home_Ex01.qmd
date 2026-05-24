@@ -47,9 +47,7 @@ portfolio <- read_delim("data/Dataset of motor insurance portfolio.csv", delim =
 glimpse(portfolio)
 ```
 
-## 3.2 Cleaning and Standardization
-
-### 3.2.1 Data Type Conversion
+### 3.2 Data Type Conversion
 
 Convert categorical variables (policy_type, fuel_type, etc.) into factors.
 
@@ -111,7 +109,7 @@ portfolio <- portfolio %>%
   )
 ```
 
-### 3.2.2 Consistency
+### 3.3 Check Consistency
 
 Ensure numeric columns (e.g., vehicle_value, total_premium) are properly parsed as numeric.
 
@@ -119,46 +117,7 @@ Ensure numeric columns (e.g., vehicle_value, total_premium) are properly parsed 
 sapply(portfolio, class)
 ```
 
-### 3.2.3 Check for Duplicates and Missing values
-
-The below code chunk is used to check whether an entire row (all columns) is repeated.
-
-```{r}
-portfolio[duplicated(portfolio),]
-```
-
-No rows in this dataset are exact duplicates across all 47 columns.
-
-```{r}
-colSums(is.na(portfolio))
-```
-
-Vehicle age & Age driving licence → Only 2 missing each → you can safely drop those rows
-
-Fuel type: 1,287 missing (\~0.36% of dataset) → create a new category "Unknown" to preserve those rows.
-
-Vehicle value: 513 missing (\~0.15% of dataset) → use brand-specific median (e.g., median value per vehicle_brand)
-
-```{r}
-portfolio <- portfolio %>%
-  mutate(
-    # Impute vehicle_value with brand-specific median
-    vehicle_value = ifelse(is.na(vehicle_value),
-                           ave(vehicle_value, vehicle_brand,
-                               FUN = function(x) median(x, na.rm = TRUE)),
-                           vehicle_value),
-    
-    # Impute fuel_type with "Unknown"
-    fuel_type = fct_explicit_na(factor(fuel_type), na_level = "Unknown")
-  )
-
-# Drop rows with missing driver/vehicle age
-portfolio <- portfolio %>%
-  filter(!is.na(vehicle_age), !is.na(age_driving_licence))
-
-```
-
-## 3.3 Recoding New Columns
+## 3.4 Recoding New Columns
 
 To enhance analytical capability and support profitability and risk analysis, several derived variables were created.
 
@@ -189,6 +148,9 @@ high_cost_claim
 profitable_policy
 
 ```{r}
+# Precompute threshold for high-cost claims
+threshold_incurred <- quantile(portfolio$total_incurred, 0.95, na.rm = TRUE)
+
 portfolio <- portfolio %>%
   mutate(
     # Profitability measures
@@ -196,21 +158,75 @@ portfolio <- portfolio %>%
     profit = total_premium - total_incurred,
     
     # Risk metrics
-    claim_frequency = ifelse(total_exposure > 0, total_claims / total_exposure, NA_real_),
+    claim_frequency = ifelse(total_exposure > 0, total_claims / total_exposure, 0),  # set 0 if exposure=0
     claim_severity = ifelse(total_claims > 0, total_incurred / total_claims, NA_real_),
     
     # Exposure-adjusted metrics
     premium_per_exposure = ifelse(total_exposure > 0, total_premium / total_exposure, NA_real_),
     incurred_per_exposure = ifelse(total_exposure > 0, total_incurred / total_exposure, NA_real_),
     
-    # Binary indicators
-    has_claim = ifelse(total_claims > 0, 1, 0),
-    high_cost_claim = ifelse(total_incurred > quantile(total_incurred, 0.95, na.rm = TRUE), 1, 0),
-    profitable_policy = ifelse(profit > 0, 1, 0)
+    # Binary indicators as factors
+    has_claim = factor(ifelse(total_claims > 0, 1, 0), levels = c(0,1), labels = c("No Claim","Has Claim")),
+    high_cost_claim = factor(ifelse(total_incurred > threshold_incurred, 1, 0), levels = c(0,1), labels = c("Normal","High Cost")),
+    profitable_policy = factor(ifelse(profit > 0, 1, 0), levels = c(0,1), labels = c("Not Profitable","Profitable"))
   )
 ```
 
-## 3.4 Check for Outliers
+### 3.5 Check for Duplicates and Missing values
+
+The below code chunk is used to check whether an entire row (all columns) is repeated.
+
+```{r}
+portfolio[duplicated(portfolio),]
+```
+
+No rows in this dataset are exact duplicates across all 47 columns.
+
+```{r}
+colSums(is.na(portfolio))
+```
+
+Vehicle age & Age driving licence → Only 2 missing each → you can safely drop those rows
+
+Fuel type: 1,287 missing (\~0.36% of dataset) → create a new category "Unknown" to preserve those rows.
+
+Vehicle value: 513 missing (\~0.15% of dataset) → use brand-specific median (e.g., median value per vehicle_brand)
+
+Loss ratio → NA when total_premium = 0 (division undefined).
+
+Claim severity → NA when total_claims = 0 (no claims to divide by).
+
+Exposure-adjusted metrics → NA when total_exposure = 0.
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    # Impute vehicle_value with brand-specific median
+    vehicle_value = ifelse(is.na(vehicle_value),
+                           ave(vehicle_value, vehicle_brand,
+                               FUN = function(x) median(x, na.rm = TRUE)),
+                           vehicle_value),
+    
+    # Impute fuel_type with "Unknown"
+    fuel_type = fct_explicit_na(factor(fuel_type), na_level = "Unknown")
+  )
+    
+# Drop rows with missing driver/vehicle age
+portfolio <- portfolio %>%
+  filter(!is.na(vehicle_age), !is.na(age_driving_licence))
+```
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    # Flags for structural NA cases
+    has_premium = total_premium > 0,
+    has_exposure = total_exposure > 0,
+    has_claims = total_claims > 0
+  )
+```
+
+## 3.6 Check for Outliers
 
 ```{r}
 skim(portfolio)
@@ -241,7 +257,7 @@ portfolio_drop <- portfolio %>%
 ```
 
 
-## 3.4 Recoding Category
+## 3.7 Recoding Category
 
 ```{r}
 portfolio <- portfolio %>%
@@ -596,6 +612,7 @@ profit = total_premium - total_incurred
 #｜ fig-width: 12
 #｜ fig_height: 8
 portfolio_bin <- portfolio %>%
+  filter(has_premium) %>%
   mutate(
     # Loss ratio bins
     loss_ratio_bin = case_when(
@@ -638,6 +655,7 @@ p1 + p2
 ```{r}
 #| eval: false
 portfolio_bin <- portfolio %>%
+  filter(has_premium) %>%
   mutate(
     # Loss ratio bins
     loss_ratio_bin = case_when(
@@ -983,7 +1001,7 @@ Scatter plot with smoothing line to see if higher claim frequency drives higher 
 #| echo: false
 #｜ fig-width: 12
 #｜ fig_height: 8
-ggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +
+ggplot(portfolio %>% filter(has_premium), aes(x = claim_frequency, y = loss_ratio)) +
   geom_point(alpha = 0.4, color = "steelblue") +   # scatter points
   coord_cartesian(xlim = c(0, 300), ylim = c(0, 3000)) +
   geom_smooth(method = "lm", se = TRUE, color = "darkred") +  # regression line
@@ -1001,7 +1019,7 @@ ggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +
 
 ```{r}
 #| eval: false
-ggplot(portfolio, aes(x = claim_frequency, y = loss_ratio)) +
+ggplot(portfolio  %>% filter(has_premium), aes(x = claim_frequency, y = loss_ratio)) +
   geom_point(alpha = 0.4, color = "steelblue") +   # scatter points
   coord_cartesian(xlim = c(0, 300), ylim = c(0, 3000)) +
   geom_smooth(method = "lm", se = TRUE, color = "darkred") +  # regression line
@@ -1182,7 +1200,7 @@ Violin plots to compare distributions across Diesel, Gasoline, Unknown. Violin p
 #｜ fig-width: 12
 #｜ fig_height: 8
 # Violin plot: Loss ratio by fuel type
-ggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
+ggplot(portfolio %>% filter(has_premium), aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
   geom_violin(trim = FALSE, alpha = 0.6) +
   coord_cartesian(ylim = c(0 , 5000)) +
   geom_boxplot(width = 0.1, fill = "white", outlier.alpha = 0.3) +
@@ -1203,7 +1221,7 @@ ggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
 
 ```{r}
 #| eval: false
-ggplot(portfolio, aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
+ggplot(portfolio %>% filter(has_premium), aes(x = fuel_type, y = loss_ratio, fill = fuel_type)) +
   geom_violin(trim = FALSE, alpha = 0.6) +
   coord_cartesian(ylim = c(0 , 5000)) +
   geom_boxplot(width = 0.1, fill = "white", outlier.alpha = 0.3) +
@@ -1274,7 +1292,8 @@ This compares the distribution of loss ratios across age bands. This highlights 
 #｜ fig-width: 12
 #｜ fig_height: 8
 # Create age bands
-portfolio_age <- portfolio %>%
+portfolio_age <- portfolio %>% 
+  filter(has_premium) %>%
   mutate(
     age_band = cut(driver_age,
                    breaks = seq(18, 80, by = 10),
@@ -1309,7 +1328,8 @@ ggplot(portfolio_age, aes(x = loss_ratio, y = age_band, fill = age_band)) +
 ```{r}
 #| eval: false
 # Create age bands
-portfolio_age <- portfolio %>%
+portfolio_age <- portfolio %>% 
+  filter(has_premium) %>%
   mutate(
     age_band = cut(driver_age,
                    breaks = seq(18, 80, by = 10),
