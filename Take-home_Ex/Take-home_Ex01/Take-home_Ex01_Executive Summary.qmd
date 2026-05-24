@@ -2,19 +2,468 @@
 title: "Take-home_Exercise 1 Excecutive Summary"
 format: revealjs
 ---
+
 ## Take-home Exercise 1
 
-Jiang Yuxi April Term 2026 
+### Exploring Profitability and Volatility in Motor Insurance
+
+<br><br><br><br><br>
+
+```         
+                    Jiang Yuxi April Term 2026 
+```
 
 ## Contents
 
-### Insight 1
+Insight 1:
 
-### Insight 2
+Insight 2:
 
-### Insight 3
+Insight 3:
 
-### Insight 4
+Insight 4:
 
-### Insight 5
+Insight 5:
 
+Executive Summary
+
+```{r}
+pacman::p_load(tidyverse, readr, dplyr, patchwork, zoo, ggridges, plotly,
+               forcats, skimr, scales, corrplot, ggiraph) 
+```
+
+```{r}
+portfolio <- read_delim("data/Dataset of motor insurance portfolio.csv", delim = ";")
+```
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    # columns → integer
+    insured_id = as.integer(insured_id),
+    year = as.integer(year),
+    driver_age = as.integer(driver_age),
+    vehicle_age = as.integer(vehicle_age),
+    age_driving_licence = as.integer(age_driving_licence),
+    seats = as.integer(seats),
+    total_claims = as.integer(total_claims),
+    liability_claims = as.integer(liability_claims),
+    liability_property_claims = as.integer(liability_property_claims),
+    liability_injury_claims = as.integer(liability_injury_claims),
+    property_claims = as.integer(property_claims),
+    theft_claims = as.integer(theft_claims),
+    fire_claims = as.integer(fire_claims),
+    glass_claims = as.integer(glass_claims),
+    legal_protection_claims = as.integer(legal_protection_claims),
+    occupants_claims = as.integer(occupants_claims),
+    
+    # columns → factor
+    policy_type = factor(policy_type),
+    policy_status = factor(policy_status),
+    business_type = factor(business_type),
+    payment_frequency = factor(payment_frequency),
+    bonus_score = factor(bonus_score),
+    vehicle_brand = factor(vehicle_brand),
+    fuel_type = factor(fuel_type),
+    municipality_type = factor(municipality_type),
+    circulation_area = factor(circulation_area)
+  )
+```
+
+```{r}
+# Precompute threshold for high-cost claims
+threshold_incurred <- quantile(portfolio$total_incurred, 0.95, na.rm = TRUE)
+
+portfolio <- portfolio %>%
+  mutate(
+    # Profitability measures
+    loss_ratio = ifelse(total_premium > 0, total_incurred / total_premium, NA_real_),
+    profit = total_premium - total_incurred,
+    
+    # Risk metrics
+    claim_frequency = ifelse(total_exposure > 0, total_claims / total_exposure, 0),  # set 0 if exposure=0
+    claim_severity = ifelse(total_claims > 0, total_incurred / total_claims, NA_real_),
+    
+    # Exposure-adjusted metrics
+    premium_per_exposure = ifelse(total_exposure > 0, total_premium / total_exposure, NA_real_),
+    incurred_per_exposure = ifelse(total_exposure > 0, total_incurred / total_exposure, NA_real_),
+    
+    # Binary indicators as factors
+    has_claim = factor(ifelse(total_claims > 0, 1, 0), levels = c(0,1), labels = c("No Claim","Has Claim")),
+    high_cost_claim = factor(ifelse(total_incurred > threshold_incurred, 1, 0), levels = c(0,1), labels = c("Normal","High Cost")),
+    profitable_policy = factor(ifelse(profit > 0, 1, 0), levels = c(0,1), labels = c("Not Profitable","Profitable"))
+  )
+```
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    # Impute vehicle_value with brand-specific median
+    vehicle_value = ifelse(is.na(vehicle_value),
+                           ave(vehicle_value, vehicle_brand,
+                               FUN = function(x) median(x, na.rm = TRUE)),
+                           vehicle_value),
+    
+    # Impute fuel_type with "Unknown"
+    fuel_type = fct_explicit_na(factor(fuel_type), na_level = "Unknown")
+  )
+    
+# Drop rows with missing driver/vehicle age
+portfolio <- portfolio %>%
+  filter(!is.na(vehicle_age), !is.na(age_driving_licence))
+```
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    # Flags for structural NA cases
+    has_premium = total_premium > 0,
+    has_exposure = total_exposure > 0,
+    has_claims = total_claims > 0
+  )
+```
+
+```{r}
+# Step 1: Compute IQR thresholds for loss_ratio
+Q1_lr <- quantile(portfolio$loss_ratio, 0.25, na.rm = TRUE)
+Q3_lr <- quantile(portfolio$loss_ratio, 0.75, na.rm = TRUE)
+IQR_lr <- Q3_lr - Q1_lr
+
+# Step 2: Compute IQR thresholds for profit
+Q1_pf <- quantile(portfolio$profit, 0.25, na.rm = TRUE)
+Q3_pf <- quantile(portfolio$profit, 0.75, na.rm = TRUE)
+IQR_pf <- Q3_pf - Q1_pf
+
+# Step 3: Flag outliers for these two columns
+portfolio <- portfolio %>%
+  mutate(
+    is_outlier_loss_ratio = loss_ratio < (Q1_lr - 1.5 * IQR_lr) | loss_ratio > (Q3_lr + 1.5 * IQR_lr),
+    is_outlier_profit     = profit < (Q1_pf - 1.5 * IQR_pf) | profit > (Q3_pf + 1.5 * IQR_pf),
+    is_outlier            = is_outlier_loss_ratio | is_outlier_profit
+  )
+
+# Step 4: Drop rows flagged as outliers
+portfolio_drop <- portfolio %>%
+  filter(!is_outlier)
+```
+
+```{r}
+portfolio <- portfolio %>%
+  mutate(
+    policy_status = recode(policy_status,
+      "A" = "Active",
+      "C" = "Cancelled"
+    ),
+
+    business_type = recode(business_type,
+      "NB" = "New Business",
+      "P" = "Portfolio"
+    ),
+
+    payment_frequency = recode(payment_frequency,
+      "S" = "Semi-annual",
+      "Q" = "Quarterly",
+      "A" = "Annual"
+    ),
+
+    bonus_score = recode(bonus_score,
+      "G" = "Good",
+      "N" = "Neutral",
+      "B" = "Bad"
+    ),
+
+    fuel_type = recode(fuel_type,
+      "D" = "Diesel",
+      "G" = "Gasoline"
+    ),
+
+    municipality_type = recode(municipality_type,
+      "IS" = "Islands",
+      "I" = "Inland",
+      "C" = "Coastal"
+    ),
+
+    circulation_area = recode(circulation_area,
+      "U" = "Urban",
+      "R" = "Rural"
+    )
+  )
+```
+
+## Insight 1: Cost Distribution
+
+```{r}
+#| echo: false
+#｜ fig-width: 6
+#｜ fig_height: 4
+#| out.width: "60%"
+# Reshape incurred cost data into long format
+incurred_clean <- portfolio %>%
+  select(
+    liability_incurred,
+    liability_property_incurred,
+    liability_injury_incurred,
+    property_incurred,
+    theft_incurred,
+    fire_incurred,
+    glass_incurred,
+    legal_protection_incurred,
+    occupants_incurred
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "claim_type",
+    values_to = "cost"
+  ) %>%
+  filter(is.finite(cost), cost > 0)
+
+# ECDF transformation per claim type
+cdf_data <- incurred_clean %>%
+  group_by(claim_type) %>%
+  arrange(cost) %>%
+  mutate(
+    cum_pct = row_number() / n() * 100
+  ) %>%
+  ungroup()
+
+# Plot cumulative distribution
+ggplot(cdf_data, aes(x = cum_pct, y = cost, color = claim_type)) +
+  geom_line(linewidth = 1, alpha = 0.8) +
+  scale_y_log10(
+    labels = scales::comma,
+    limits = c(1.0, NA) ) +
+  labs(
+    title = "Cumulative Distribution of Incurred Costs by Claim Type",
+    x = "Cumulative Percentage of Claims (%)",
+    y = "Incurred Cost (log scale)",
+    color = "Claim Type"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 8),
+    plot.title = element_text(face = "bold"),
+    plot.margin = margin(10, 10, 30, 10)
+  ) +
+  guides(color = guide_legend(nrow = 3, ncol = 3, byrow = TRUE))
+```
+
+::: {style="font-size:0.9em; margin-top:10px"}
+**Insight:** Heavier cars tend to have lower fuel efficiency, as shown by the negative correlation between weight and mpg.
+:::
+
+## Insight 2: Premium Distribution
+
+```{r}
+#| echo: false
+#｜ fig-width: 6
+#｜ fig_height: 4
+#| out.width: "60%"
+# Reshape incurred cost data into long format
+incurred_long <- portfolio %>%
+  select(
+    liability_premium,
+    property_damage_premium,
+    theft_premium,
+    fire_premium,
+    glass_premium,
+    legal_protection_premium,
+    occupants_premium
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "insurance_type",
+    values_to = "premium"
+  )
+
+# Stacked density plot
+ggplot(incurred_long %>% filter(!is.na(premium), premium > 0),
+       aes(x = premium, fill = insurance_type)) +
+  geom_density(alpha = 0.6, position = "stack") +
+  scale_x_log10(labels = comma) +   # log scale to handle skewness
+  theme_minimal() +
+  labs(
+    title = "Stacked Density Plot of Premium",
+    x = "Premuim (log scale)",
+    y = "Density"
+  ) +
+  theme(
+    strip.text = element_text(face = "bold"),
+    legend.title = element_blank()
+  )
+```
+
+## Insight 3: Claim Distribution
+
+```{r}
+#| echo: false
+#｜ fig-width: 6
+#｜ fig_height: 4
+#| out.width: "60%"
+# Reshape claim count columns into long format
+claims_long <- portfolio %>%
+  select(
+    liability_claims,
+    liability_property_claims,
+    liability_injury_claims,
+    property_claims,
+    theft_claims,
+    fire_claims,
+    glass_claims,
+    legal_protection_claims,
+    occupants_claims
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "claim_type",
+    values_to = "claim_count"
+  ) %>%
+  filter(is.finite(claim_count))
+
+# Plot boxplots
+ggplot(claims_long, aes(x = claim_type, y = claim_count, fill = claim_type)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.4) +
+  labs(
+    title = "Distribution of Claim Counts by Type",
+    x = "Claim Type",
+    y = "Number of Claims"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold")
+  )
+```
+
+## Insight 4: Profitability Metrics
+
+```{r}
+#| echo: false
+#｜ fig-width: 6
+#｜ fig_height: 4
+#| out.width: "60%"
+portfolio_bin <- portfolio %>%
+  filter(has_premium) %>%
+  mutate(
+    # Loss ratio bins
+    loss_ratio_bin = case_when(
+      loss_ratio == 0 ~ "=0",
+      loss_ratio > 0 & loss_ratio <= 1 ~ "0-1",
+      loss_ratio > 1 ~ ">1",
+      TRUE ~ NA_character_
+    ),
+    # Profit bins
+    profit_bin = case_when(
+      profit < 0 ~ "Negative",
+      profit >= 0 & profit < 250 ~ "0-250",
+      profit >= 250 & profit < 500 ~ "250-500",
+      profit >= 500 ~ ">500",
+      TRUE ~ NA_character_
+    )
+  )
+
+p1 <- ggplot(portfolio_bin, aes(x = loss_ratio_bin, fill = loss_ratio_bin)) +
+  geom_bar(alpha = 0.7) +
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Loss Ratio Bins", x = "Loss Ratio Category", y = "Count") +
+  scale_x_discrete(drop = TRUE) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p2 <- ggplot(portfolio_bin, aes(x = profit_bin, fill = profit_bin)) +
+  geom_bar(alpha = 0.7) +
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Profit Bins", x = "Profit Category", y = "Count") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p1 + p2
+```
+
+## Insight 5: Categorical Variables Distribution
+
+```{r}
+#| echo: false
+#｜ fig-width: 6
+#｜ fig_height: 4
+#| out.width: "60%"
+# Categorical variables: bar charts
+# Select categorical variables
+cat_long <- portfolio %>%
+  select(
+    policy_type,
+    policy_status,
+    business_type,
+    payment_frequency,
+    bonus_score,
+    fuel_type,
+    municipality_type,
+    circulation_area
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  )
+
+# Create percentage table within each variable
+plot_data <- cat_long %>%
+  group_by(variable, value) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(variable) %>%
+  mutate(
+    percent = count / sum(count),
+    value = fct_reorder(value, percent)
+  )
+
+# Plot
+ggplot(plot_data,
+       aes(x = percent,
+           y = value)) +
+  geom_col(fill = "steelblue") +
+  facet_wrap(~variable,
+             scales = "free_y") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(
+    title = "Distribution of Categorical Variables",
+    x = "Percentage",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    axis.text.y = element_text(size = 9)
+  )
+```
+
+```         
+::: Speaker Notes
+
+:::
+```
+
+## Executive Summary
+
+::: {style="font-size:0.8em; line-height:1.3"}
+**Key Findings:**
+
+**Claims behavior drives volatility.** Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.
+
+**Policy type and bonus score are critical differentiators.** COMP_E policies show the highest loss ratio variance, indicating unstable underwriting results, while COMP_N policies are more predictable. Bonus scores significantly influence profitability outcomes.
+
+**Geography and fuel type play a limited role.** Statistical tests show no significant differences in variance or mean loss ratios across circulation areas or fuel types, suggesting these variables are less impactful in explaining volatility.
+
+**Portfolio risk is dynamic over time.** Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant and requires ongoing monitoring.
+
+**Visual analytics adds measurable value.** Univariate plots highlight skewness and outliers, bivariate analyses reveal correlations between premiums, incurred costs, and claims, while statistical tests validate which categorical differences are meaningful.
+
+**Conclusion:**\
+The investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.
+:::
+
+```         
+::: Speaker Notes
+
+:::
+```

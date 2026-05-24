@@ -137,15 +137,60 @@
 </section>
 <section id="take-home-exercise-1" class="slide level2">
 <h2>Take-home Exercise 1</h2>
-<p>Jiang Yuxi April Term 2026</p>
+<h3 id="exploring-profitability-and-volatility-in-motor-insurance">Exploring Profitability and Volatility in Motor Insurance</h3>
+<p><br><br><br><br><br></p>
+<pre><code>                    Jiang Yuxi April Term 2026 </code></pre>
 </section>
 <section id="contents" class="slide level2">
 <h2>Contents</h2>
-<h3 id="insight-1">Insight 1</h3>
-<h3 id="insight-2">Insight 2</h3>
-<h3 id="insight-3">Insight 3</h3>
-<h3 id="insight-4">Insight 4</h3>
-<h3 id="insight-5">Insight 5</h3>
+<p>Insight 1:</p>
+<p>Insight 2:</p>
+<p>Insight 3:</p>
+<p>Insight 4:</p>
+<p>Insight 5:</p>
+<p>Executive Summary</p>
+</section>
+<section id="insight-1-cost-distribution" class="slide level2">
+<h2>Insight 1: Cost Distribution</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"><div style="font-size:0.9em; margin-top:10px">
+<p><strong>Insight:</strong> Heavier cars tend to have lower fuel efficiency, as shown by the negative correlation between weight and mpg.</p>
+</div>
+</section>
+<section id="insight-2-premium-distribution" class="slide level2">
+<h2>Insight 2: Premium Distribution</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<section id="insight-3-claim-distribution" class="slide level2">
+<h2>Insight 3: Claim Distribution</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
+<section id="insight-4-profitability-metrics" class="slide level2">
+<h2>Insight 4: Profitability Metrics</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="insight-5-categorical-variables-distribution" class="slide level2">
+<h2>Insight 5: Categorical Variables Distribution</h2>
+
+<img data-src="Take-home_Ex01_Executive-Summary_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"><pre><code>::: Speaker Notes
+
+:::</code></pre>
+</section>
+<section id="executive-summary" class="slide level2">
+<h2>Executive Summary</h2>
+<div style="font-size:0.8em; line-height:1.3">
+<p><strong>Key Findings:</strong></p>
+<p><strong>Claims behavior drives volatility.</strong> Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45). Catastrophic claims amplify incurred costs, while frequent smaller claims steadily erode profitability.</p>
+<p><strong>Policy type and bonus score are critical differentiators.</strong> COMP_E policies show the highest loss ratio variance, indicating unstable underwriting results, while COMP_N policies are more predictable. Bonus scores significantly influence profitability outcomes.</p>
+<p><strong>Geography and fuel type play a limited role.</strong> Statistical tests show no significant differences in variance or mean loss ratios across circulation areas or fuel types, suggesting these variables are less impactful in explaining volatility.</p>
+<p><strong>Portfolio risk is dynamic over time.</strong> Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant and requires ongoing monitoring.</p>
+<p><strong>Visual analytics adds measurable value.</strong> Univariate plots highlight skewness and outliers, bivariate analyses reveal correlations between premiums, incurred costs, and claims, while statistical tests validate which categorical differences are meaningful.</p>
+<p><strong>Conclusion:</strong><br>
+The investigation confirms that profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators. Geography and fuel type are less influential, while portfolio risk fluctuates over time. By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights—targeting unstable product types, managing claim drivers, leveraging bonus scores for segmentation, and monitoring volatility trends to anticipate shocks.</p>
+</div>
+<pre><code>::: Speaker Notes
+
+:::</code></pre>
 
 
 </section>
@@ -364,6 +409,44 @@
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")

@@ -37,7 +37,7 @@ website:
         menu: 
           - text: "Take-home Exercise 1 Technical Report"
             href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html"      
-          - text: "Take-home Exercise 1 Presentation"
+          - text: "Take-home Exercise 1 Executive Summary"
             href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html"  
 
     right: 

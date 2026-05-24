@@ -199,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
         <li>
     <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex01/Take-home_Ex01_Executive Summary.html">
- <span class="dropdown-text">Take-home Exercise 1 Presentation</span></a>
+ <span class="dropdown-text">Take-home Exercise 1 Executive Summary</span></a>
   </li>  
     </ul>
   </li>
@@ -229,7 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a>
+  <li><a href="#exploring-profitability-and-volatility-in-motor-insurance" id="toc-exploring-profitability-and-volatility-in-motor-insurance" class="nav-link active" data-scroll-target="#exploring-profitability-and-volatility-in-motor-insurance">Exploring Profitability and Volatility in Motor Insurance</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">1 Overview</a>
   <ul class="collapse">
   <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">1.1 Background</a></li>
   <li><a href="#the-task" id="toc-the-task" class="nav-link" data-scroll-target="#the-task">1.2 The Task</a></li>
@@ -259,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#premium-distribution" id="toc-premium-distribution" class="nav-link" data-scroll-target="#premium-distribution">4.2 Premium Distribution</a></li>
   <li><a href="#claim-distribution" id="toc-claim-distribution" class="nav-link" data-scroll-target="#claim-distribution">4.3 Claim Distribution</a></li>
   <li><a href="#profitability-metrics" id="toc-profitability-metrics" class="nav-link" data-scroll-target="#profitability-metrics">4.4 Profitability Metrics</a></li>
-  <li><a href="#categorical-variables" id="toc-categorical-variables" class="nav-link" data-scroll-target="#categorical-variables">4.5 Categorical variables</a></li>
+  <li><a href="#categorical-variables" id="toc-categorical-variables" class="nav-link" data-scroll-target="#categorical-variables">4.5 Categorical Variables</a></li>
   </ul></li>
   <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">5 Exploratory Data Analysis</a>
   <ul class="collapse">
@@ -272,11 +273,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#policy-vehicle-characteristics" id="toc-policy-vehicle-characteristics" class="nav-link" data-scroll-target="#policy-vehicle-characteristics">5.3 Policy &amp; Vehicle Characteristics</a>
   <ul class="collapse">
-  <li><a href="#policy-vehicle-characteristics-1" id="toc-policy-vehicle-characteristics-1" class="nav-link" data-scroll-target="#policy-vehicle-characteristics-1">5.3.1 Policy &amp; Vehicle Characteristics</a></li>
-  <li><a href="#fuel-type-vs-loss-ratio" id="toc-fuel-type-vs-loss-ratio" class="nav-link" data-scroll-target="#fuel-type-vs-loss-ratio">5.3.2 Fuel type vs loss ratio</a></li>
-  <li><a href="#vehicle-age-vs-claim-frequency" id="toc-vehicle-age-vs-claim-frequency" class="nav-link" data-scroll-target="#vehicle-age-vs-claim-frequency">5.3.3 Vehicle Age vs Claim Frequency</a></li>
+  <li><a href="#policy-profit" id="toc-policy-profit" class="nav-link" data-scroll-target="#policy-profit">5.3.1 Policy &amp; Profit</a></li>
+  <li><a href="#fuel-type-vs-loss-ratio" id="toc-fuel-type-vs-loss-ratio" class="nav-link" data-scroll-target="#fuel-type-vs-loss-ratio">5.3.2 Fuel Type vs Loss Ratio</a></li>
   </ul></li>
-  <li><a href="#driver-age-vs-loss-ratio" id="toc-driver-age-vs-loss-ratio" class="nav-link" data-scroll-target="#driver-age-vs-loss-ratio">5.4 Driver Age vs Loss Ratio</a></li>
+  <li><a href="#driver-age-vs-claim-severity" id="toc-driver-age-vs-claim-severity" class="nav-link" data-scroll-target="#driver-age-vs-claim-severity">5.4 Driver Age vs Claim Severity</a></li>
   <li><a href="#volatility" id="toc-volatility" class="nav-link" data-scroll-target="#volatility">5.5 Volatility</a>
   <ul class="collapse">
   <li><a href="#loss-ratio-variability" id="toc-loss-ratio-variability" class="nav-link" data-scroll-target="#loss-ratio-variability">5.5.1 Loss ratio variability</a></li>
@@ -286,12 +286,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing">5.6 Hypothesis Testing</a>
   <ul class="collapse">
-  <li><a href="#chi-square-tests-categorical-vs-categorical-e.g.-policy_type-vs-policy_status." id="toc-chi-square-tests-categorical-vs-categorical-e.g.-policy_type-vs-policy_status." class="nav-link" data-scroll-target="#chi-square-tests-categorical-vs-categorical-e.g.-policy_type-vs-policy_status.">5.6.1 Chi-square tests → categorical vs categorical (e.g., policy_type vs policy_status).</a></li>
-  <li><a href="#t-tests-anova-numeric-vs-categorical-e.g.-total_incurred-across-fuel_type." id="toc-t-tests-anova-numeric-vs-categorical-e.g.-total_incurred-across-fuel_type." class="nav-link" data-scroll-target="#t-tests-anova-numeric-vs-categorical-e.g.-total_incurred-across-fuel_type.">5.6.2 t-tests / ANOVA → numeric vs categorical (e.g., total_incurred across fuel_type).</a></li>
+  <li><a href="#chi-square-tests" id="toc-chi-square-tests" class="nav-link" data-scroll-target="#chi-square-tests">5.6.1 Chi-square tests</a></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">5.6.2 ANOVA</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">6 Summary</a></li>
-  <li><a href="#references-and-inspiration" id="toc-references-and-inspiration" class="nav-link" data-scroll-target="#references-and-inspiration">7 References and Inspiration</a></li>
+  <li><a href="#key-insight-summary" id="toc-key-insight-summary" class="nav-link" data-scroll-target="#key-insight-summary">6 Key Insight Summary</a></li>
+  <li><a href="#overall-conclusion" id="toc-overall-conclusion" class="nav-link" data-scroll-target="#overall-conclusion">Overall Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -335,6 +335,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="exploring-profitability-and-volatility-in-motor-insurance" class="level1">
+<h1>Exploring Profitability and Volatility in Motor Insurance</h1>
+</section>
 <section id="overview" class="level1">
 <h1>1 Overview</h1>
 <section id="background" class="level2">
@@ -352,21 +355,103 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>2 Getting Started</h1>
 <section id="loading-packages" class="level2">
 <h2 class="anchored" data-anchor-id="loading-packages">2.1 Loading Packages</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 50%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Package</strong></th>
+<th><strong>Category</strong></th>
+<th><strong>Purpose / Usage</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>tidyverse</strong></td>
+<td>Data wrangling + visualization</td>
+<td>Core suite (ggplot2 for plots, dplyr for mutate, summarise, group_by).</td>
+</tr>
+<tr class="even">
+<td><strong>readr</strong></td>
+<td>Data import</td>
+<td>Reading CSV/flat files.</td>
+</tr>
+<tr class="odd">
+<td><strong>dplyr</strong></td>
+<td>Data manipulation</td>
+<td>Filtering, mutating, summarising, grouping.</td>
+</tr>
+<tr class="even">
+<td><strong>patchwork</strong></td>
+<td>Visualization</td>
+<td>Combining multiple ggplot2 plots into composite layouts.</td>
+</tr>
+<tr class="odd">
+<td><strong>zoo</strong></td>
+<td>Time series</td>
+<td><code>rollapply()</code> for rolling volatility in time‑series analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>ggridges</strong></td>
+<td>Visualization</td>
+<td>Ridge plots for driver age band distributions.</td>
+</tr>
+<tr class="odd">
+<td><strong>plotly</strong></td>
+<td>Interactive visualization</td>
+<td>Interactive plots (hover, zoom, tooltips).</td>
+</tr>
+<tr class="even">
+<td><strong>forcats</strong></td>
+<td>Factor handling</td>
+<td>Reordering and recoding categorical variables.</td>
+</tr>
+<tr class="odd">
+<td><strong>skimr</strong></td>
+<td>Data diagnostics</td>
+<td>Quick dataset summaries (missing values, distributions).</td>
+</tr>
+<tr class="even">
+<td><strong>scales</strong></td>
+<td>Visualization</td>
+<td>Formatting axis labels (comma, percent, currency).</td>
+</tr>
+<tr class="odd">
+<td><strong>corrplot</strong></td>
+<td>Visualization</td>
+<td>Correlation matrix visualization.</td>
+</tr>
+<tr class="even">
+<td><strong>ggiraph</strong></td>
+<td>Interactive visualization</td>
+<td>Interactive ggplot2 graphics (clickable, hoverable elements).</td>
+</tr>
+<tr class="odd">
+<td><strong>car</strong></td>
+<td>Statistical testing</td>
+<td><code>leveneTest()</code> for variance homogeneity tests.</td>
+</tr>
+</tbody>
+</table>
+<p>pacman::p_load(…) is used to load all the required R libraries for data wrangling, visualization, and statistical analysis in one go.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, readr, dplyr, patchwork, zoo,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggthemes, hrbrthemes, ggridges, plotly,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               forcats, skimr, scales, corrplot, ggiraph) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, readr, dplyr, patchwork, zoo, ggridges, plotly,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               forcats, skimr, scales, corrplot, ggiraph) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">2.2 Data Sources</h2>
-<p>A real world motor vehicle insurance portfolio data set from a Spanish insurance company specialised in non-life insurance will be used in this study. The data set and its cookbook are available for download at Mendeley Data.</p>
+<p>Motor vehicle insurance portfolio data set from a Spanish insurance company specialised in non-life insurance will be used in this study. The data set and its cookbook are available for download at <a href="https://data.mendeley.com/datasets/sw4jmdb2sm/1">Mendeley Data</a>.</p>
 </section>
 </section>
 <section id="data-wrangling" class="level1">
 <h1>3 Data Wrangling</h1>
 <section id="importing-and-inspecting-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-and-inspecting-data">3.1 Importing and Inspecting Data</h2>
+<p>read_delim(…) together with glimpse(portfolio) is used to read the motor insurance dataset from CSV and display its structure for a quick overview.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/Dataset of motor insurance portfolio.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -546,6 +631,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 </tr>
 </tbody>
 </table>
+<p>mutate(… as.integer / factor) is used to convert variables into the correct formats, such as integers for IDs and factors for categorical fields.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -582,7 +668,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 </section>
 <section id="check-consistency" class="level3">
 <h3 class="anchored" data-anchor-id="check-consistency">3.3 Check Consistency</h3>
-<p>Ensure numeric columns (e.g., vehicle_value, total_premium) are properly parsed as numeric.</p>
+<p>sapply(portfolio, class) is used to verify that numeric and categorical columns are correctly parsed.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(portfolio, class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -642,18 +728,27 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 <h2 class="anchored" data-anchor-id="recoding-new-columns">3.4 Recoding New Columns</h2>
 <p>To enhance analytical capability and support profitability and risk analysis, several derived variables were created.</p>
 <p><strong>Profitability Measures</strong> - These are key indicators for evaluating insurance performance.</p>
-<p>loss_ratio = total_incurred / total_premium</p>
-<p>profit = total_premium - total_incurred</p>
+<ul>
+<li><p>loss_ratio = total_incurred / total_premium</p></li>
+<li><p>profit = total_premium - total_incurred</p></li>
+</ul>
 <p><strong>Risk Metrics</strong> - These measures separate claim occurrence from claim magnitude.</p>
-<p>claim_frequency = total_claims / total_exposure</p>
-<p>claim_severity = total_incurred / total_claims (for policies with claims)</p>
+<ul>
+<li><p>claim_frequency = total_claims / total_exposure</p></li>
+<li><p>claim_severity = total_incurred / total_claims (for policies with claims)</p></li>
+</ul>
 <p><strong>Exposure-adjusted Metrics</strong> - Standardizing by exposure ensures fair comparison across policies.</p>
-<p>premium_per_exposure</p>
-<p>incurred_per_exposure</p>
+<ul>
+<li><p>premium_per_exposure = total_premium / total_exposure</p></li>
+<li><p>incurred_per_exposure = total_incurred / total_exposure</p></li>
+</ul>
 <p><strong>Binary Indicators</strong></p>
-<p>has_claim</p>
-<p>high_cost_claim</p>
-<p>profitable_policy</p>
+<ul>
+<li><p>has_claim: total_claims &gt; 0, 1, 0</p></li>
+<li><p>high_cost_claim: total_incurred &gt; threshold_incurred, 1, 0</p></li>
+<li><p>profitable_policy: profit &gt; 0, 1, 0</p></li>
+</ul>
+<p>mutate(loss_ratio, profit, claim_frequency, …) is used to create new profitability and risk metrics such as loss ratio, profit, claim frequency, claim severity, and exposure‑adjusted measures.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Precompute threshold for high-cost claims</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>threshold_incurred <span class="ot">&lt;-</span> <span class="fu">quantile</span>(portfolio<span class="sc">$</span>total_incurred, <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
@@ -680,7 +775,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 </div>
 <section id="check-for-duplicates-and-missing-values" class="level3">
 <h3 class="anchored" data-anchor-id="check-for-duplicates-and-missing-values">3.5 Check for Duplicates and Missing values</h3>
-<p>The below code chunk is used to check whether an entire row (all columns) is repeated.</p>
+<p>duplicated() is used to check whether an entire row (all columns) is repeated.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>portfolio[<span class="fu">duplicated</span>(portfolio),]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -694,7 +789,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 #   liability_premium &lt;dbl&gt;, property_damage_premium &lt;dbl&gt;, …</code></pre>
 </div>
 </div>
-<p>No rows in this dataset are exact duplicates across all 47 columns.</p>
+<p>No rows in this dataset are exact duplicates across all 56 columns.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(portfolio))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -762,6 +857,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 <p>Loss ratio → NA when total_premium = 0 (division undefined).</p>
 <p>Claim severity → NA when total_claims = 0 (no claims to divide by).</p>
 <p>Exposure-adjusted metrics → NA when total_exposure = 0.</p>
+<p>colSums(is.na(…)) together with imputation code is used to identify missing data, fill vehicle values using brand‑specific medians, assign “Unknown” to missing fuel types, and drop rows missing driver or vehicle age.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1608,6 +1704,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 </table>
 </div>
 </div>
+<p>IQR calculations with mutate(is_outlier…) are used to flag extreme values in loss ratio and profit, and then remove those outlier rows from the dataset.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Compute IQR thresholds for loss_ratio</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Q1_lr <span class="ot">&lt;-</span> <span class="fu">quantile</span>(portfolio<span class="sc">$</span>loss_ratio, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
@@ -1634,6 +1731,7 @@ $ liability_exposure          &lt;dbl&gt; 0.09863014, 1.00000000, 1.00000000, 1.
 </section>
 <section id="recoding-category" class="level2">
 <h2 class="anchored" data-anchor-id="recoding-category">3.7 Recoding Category</h2>
+<p>recode(…) is used to replace coded categorical values with descriptive labels, such as “A” becoming “Active” and “D” becoming “Diesel.”</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1752,6 +1850,7 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 <p>Apply suitable univariate visual analytics techniques to explore the distributions and characteristics of numerical and categorical variables.</p>
 <section id="cost-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="cost-distribution">4.1 Cost Distribution</h2>
+<p>This code reshapes the incurred cost data into a long format, computes the empirical cumulative distribution (ECDF) for each claim type, and plots cumulative distribution curves. The purpose is to show how incurred costs accumulate across different claim types, highlighting the spread and scale of claim costs in the portfolio.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -1813,16 +1912,33 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 <span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">10</span>)</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The plot reveals that certain claim types, such as liability injury and fire claims, have much higher incurred costs at the upper end of the distribution compared to others. This indicates that while most claims are relatively small, a small proportion of catastrophic claims drive portfolio volatility and can heavily impact profitability.</p>
 </div>
 </div>
 </section>
 <section id="premium-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="premium-distribution">4.2 Premium Distribution</h2>
+<p>This code reshapes the premium variables into a long format and uses a stacked density plot on a logarithmic scale to visualize the distribution of premiums across different insurance types. The purpose is to compare how premiums are spread and concentrated among liability, property damage, theft, fire, glass, legal protection, and occupants coverage.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -1877,9 +1993,23 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The plot shows that most premiums cluster at lower values, but the log scale reveals long tails where certain insurance types extend into higher premium ranges. Liability and property damage premiums dominate the distribution, while niche coverages like glass or legal protection appear less frequent and concentrated. This highlights that core coverages drive the bulk of premium income, whereas specialized coverages contribute smaller but distinct segments.</p>
+</div>
+</div>
 </section>
 <section id="claim-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="claim-distribution">4.3 Claim Distribution</h2>
+<p>This code reshapes the claim count variables into a long format and uses boxplots to visualize the distribution of claim numbers across different claim types. The purpose is to compare the frequency and spread of claims for liability, property, theft, fire, glass, legal protection, and occupants coverage.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -1936,6 +2066,19 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The plot shows that most claim types have relatively low counts, with the majority clustering near zero, but property claims and liability‑related claims tend to have higher variability and more frequent occurrences. This indicates that property and liability claims are a major driver of claim activity, while categories like fire or glass are less common but still contribute to overall portfolio risk.</p>
+</div>
+</div>
 </section>
 <section id="profitability-metrics" class="level2">
 <h2 class="anchored" data-anchor-id="profitability-metrics">4.4 Profitability Metrics</h2>
@@ -1943,6 +2086,7 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 → Shows what fraction of premium income is consumed by claims. A ratio &gt; 1 means claims exceed premiums (unprofitable).</p>
 <p>profit = total_premium - total_incurred<br>
 → The net financial result per policy. Positive = profitable, negative = loss.</p>
+<p>This code categorizes policies into bins based on their loss ratio and profit values, then uses bar charts to visualize the distribution of policies across these categories. The purpose is to quickly assess how many policies are profitable, unprofitable, or break even, and to identify the proportion of policies with high or low loss ratios.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2001,12 +2145,23 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The charts show that a large majority of policies have a loss ratio of zero, meaning no claims were made, while a smaller but significant group has loss ratios greater than one, indicating unprofitable policies where claims exceeded premiums. On the profit side, most policies fall into moderate profit ranges (0–250 and 250–500), but there is also a notable share of highly profitable policies (&gt;500). This highlights that while many policies generate steady profits, a subset of high‑loss policies erodes overall portfolio performance.</p>
+</div>
+</div>
 </section>
 <section id="categorical-variables" class="level2">
-<h2 class="anchored" data-anchor-id="categorical-variables">4.5 Categorical variables</h2>
-<p>Bar charts → for policy_type, fuel_type, municipality_type, circulation_area, bonus_score.</p>
-<p>Pie charts (optional) → for simple categorical distributions like policy_status.</p>
-<p>Frequency tables → to confirm counts and proportions.</p>
+<h2 class="anchored" data-anchor-id="categorical-variables">4.5 Categorical Variables</h2>
+<p>This code reshapes categorical variables into a long format, calculates the percentage distribution of each category, and uses bar charts to visualize them side by side. The purpose is to provide a clear overview of how policy types, statuses, business types, payment frequencies, bonus scores, fuel types, municipality types, and circulation areas are distributed across the portfolio.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2076,6 +2231,19 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The charts show that most policies are active and concentrated in portfolio business rather than new business, with annual payment frequency being the most common. Bonus scores lean heavily toward “Good,” while fuel types are dominated by gasoline, though a notable share is marked “Unknown.” Urban circulation areas and coastal municipalities are more prevalent, reflecting demographic and geographic concentration. These distributions highlight the portfolio’s structural composition and help explain underlying profitability and risk patterns.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="exploratory-data-analysis" class="level1">
@@ -2083,6 +2251,7 @@ $ is_outlier                  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, FALSE
 <p>Apply suitable bivariate visual analytics techniques to investigate and statistically validate factors influencing the profitability and volatility of the insurance portfolio.</p>
 <section id="correlation-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-analysis">5.1 Correlation Analysis</h3>
+<p>cor() together with corrplot.mixed() selects key numeric variables, computes a Spearman correlation matrix, and visualizes it using a correlation plot with both ellipses and numeric values. It also extracts pairs with strong correlations and runs a statistical test between claim frequency and loss ratio. The purpose is to identify which financial, demographic, and risk metrics are most strongly related to profitability and volatility in the insurance portfolio.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2140,6 +2309,7 @@ sample estimates:
 </div>
 </div>
 </div>
+<p>This code selects key numeric variables, computes a Spearman correlation matrix, and visualizes it using a correlation plot with both ellipses and numeric values. It also extracts pairs with strong correlations (|ρ| ≥ 0.5) and runs a statistical test between claim frequency and loss ratio. The purpose is to identify which financial, demographic, and risk metrics are most strongly related to profitability and volatility in the insurance portfolio.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2195,10 +2365,10 @@ sample estimates:
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Profitability is dominated by loss ratio → controlling incurred relative to premium is key.</p>
-<p>Volatility is driven more by claim severity than frequency → catastrophic claims destabilize the portfolio.</p>
-<p>Exposure-adjusted metrics (premium/incurred per exposure) are excellent volatility indicators.</p>
-<p>Vehicle and driver demographics show moderate effects, but not as strong as financial ratios.</p>
+<p>Profitability is most negatively affected by high incurred costs and loss ratios (ρ ≈ –0.93 to –0.94), showing that claims relative to premiums directly erode profits.</p>
+<p>Claim severity is strongly correlated with incurred costs and loss ratio (ρ ≈ 0.87–0.91), highlighting that catastrophic claims destabilize the portfolio more than claim frequency.</p>
+<p>Claim frequency is highly correlated with loss ratio (ρ ≈ 0.90, p &lt; 2.2e‑16), confirming that frequent claims drive unprofitability.</p>
+<p>Demographic factors like driver age and vehicle age show moderate correlation (ρ ≈ 0.86), but financial ratios remain the dominant drivers of portfolio performance.</p>
 </div>
 </div>
 </section>
@@ -2206,7 +2376,7 @@ sample estimates:
 <h2 class="anchored" data-anchor-id="profitability-vs-risk-metrics">5.2 Profitability vs Risk Metrics</h2>
 <section id="premium-vs-incurred" class="level3">
 <h3 class="anchored" data-anchor-id="premium-vs-incurred">5.2.1 Premium vs Incurred</h3>
-<p>Scatter plot with smoothing line to see how incurred costs relate to premiums, highlighting profitability patterns.</p>
+<p>This code filters policies with positive incurred costs and premiums, then plots a scatter diagram with a regression line on a log scale. The purpose is to examine how incurred claim costs scale with premium levels and to assess whether higher premiums correspond to higher incurred losses.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2243,10 +2413,26 @@ sample estimates:
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a clear positive relationship between premiums and incurred costs, as shown by the upward regression line.</p>
+<p>Most policies cluster at lower premium and incurred values, but variability increases significantly at higher premium levels.</p>
+<p>The log scale highlights that while many policies have modest incurred costs, a small number of high‑premium policies are associated with very large claims.</p>
+<p>This suggests that although higher premiums generate more income, they also expose the portfolio to greater volatility from large claims.</p>
+</div>
+</div>
 </section>
 <section id="loss-ratio-vs-claim-frequency" class="level3">
 <h3 class="anchored" data-anchor-id="loss-ratio-vs-claim-frequency">5.2.2 Loss Ratio vs Claim frequency</h3>
-<p>Scatter plot with smoothing line to see if higher claim frequency drives higher loss ratios. The regression line gives a quick statistical validation.</p>
+<p>This code filters policies with premiums, then plots a scatter diagram of claim frequency against loss ratio with a regression line. The purpose is to test whether higher claim frequency is associated with higher loss ratios, providing statistical validation of how frequent claims affect portfolio profitability.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2266,7 +2452,7 @@ sample estimates:
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(portfolio  <span class="sc">%&gt;%</span> <span class="fu">filter</span>(has_premium), <span class="fu">aes</span>(<span class="at">x =</span> claim_frequency, <span class="at">y =</span> loss_ratio)) <span class="sc">+</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span>   <span class="co"># scatter points</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">300</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3000</span>)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1000</span>)) <span class="sc">+</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span>  <span class="co"># regression line</span></span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Loss Ratio vs Claim Frequency"</span>,</span>
@@ -2280,10 +2466,26 @@ sample estimates:
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The upward regression line shows a strong positive relationship: as claim frequency increases, loss ratios also rise.</p>
+<p>Most policies cluster at low claim frequency and low loss ratio, but a subset with very high claim frequency drives extreme loss ratios.</p>
+<p>This confirms that frequent claims erode profitability, even when individual claim amounts are not catastrophic.</p>
+<p>Managing claim frequency is therefore critical for stabilizing portfolio performance and reducing unprofitable policies.</p>
+</div>
+</div>
 </section>
 <section id="profit-vs-claim-severity" class="level3">
 <h3 class="anchored" data-anchor-id="profit-vs-claim-severity">5.2.3 Profit vs Claim Severity</h3>
-<p>Boxplots grouped by severity bins to check if extreme claims erode profitability.</p>
+<p>This code bins claim severity into ranges, calculates median profit for each bin, and visualizes the relationship using boxplots with annotated medians. The purpose is to show how increasing claim severity impacts profitability, highlighting the financial consequences of small versus catastrophic claims.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" role="tab" aria-controls="tabset-10-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2344,13 +2546,29 @@ sample estimates:
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Policies with low claim severity (&lt;1k) generally remain profitable, with median profit close to zero but positive.</p>
+<p>As claim severity increases (1k–5k and 5k–20k), median profits turn negative, showing that moderate claims already erode profitability.</p>
+<p>The highest severity bin (&gt;20k) has the largest negative median profit (≈ –70k) and widest spread, confirming catastrophic claims are the biggest threat to portfolio stability.</p>
+<p>Overall, profitability declines sharply as claim severity rises, emphasizing the importance of managing high‑cost claims to protect portfolio performance.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="policy-vehicle-characteristics" class="level2">
 <h2 class="anchored" data-anchor-id="policy-vehicle-characteristics">5.3 Policy &amp; Vehicle Characteristics</h2>
-<section id="policy-vehicle-characteristics-1" class="level3">
-<h3 class="anchored" data-anchor-id="policy-vehicle-characteristics-1">5.3.1 Policy &amp; Vehicle Characteristics</h3>
-<p>Bar chart showing mean profit per policy type, with confidence intervals. This shows average profitability across policy types (e.g., COMP_E, COMP_N, TP), with bootstrapped confidence intervals.</p>
+<section id="policy-profit" class="level3">
+<h3 class="anchored" data-anchor-id="policy-profit">5.3.1 Policy &amp; Profit</h3>
+<p>This code calculates the mean profit for each policy type, adds confidence intervals using bootstrapped error bars, and visualizes the results with a bar chart. The purpose is to compare average profitability across different policy types and assess which policies contribute most to portfolio performance.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2368,29 +2586,55 @@ sample estimates:
 <div id="tabset-11-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(portfolio, <span class="fu">aes</span>(<span class="at">x =</span> policy_type, <span class="at">y =</span> profit, <span class="at">fill =</span> policy_type)) <span class="sc">+</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"bar"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_boot, <span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean Profit by Policy Type"</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Policy Type"</span>,</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean Profit"</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(portfolio, <span class="fu">aes</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">fct_reorder</span>(policy_type, profit, <span class="at">.fun =</span> mean, <span class="at">.desc =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> profit,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> policy_type</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"bar"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_boot, <span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">comma</span>(..y..)),</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean Profit by Policy Type"</span>,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Policy Type"</span>,</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean Profit"</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>COMP_E policies generate the highest mean profit, suggesting they are the most financially favorable product line.</p>
+<p>COMP_N policies show the lowest mean profit, indicating weaker performance and potential risk to overall profitability.</p>
+<p>Other policy types (CC, TP, TPG) fall in between, with moderate profitability compared to COMP_E.</p>
+<p>The confidence intervals highlight variability, but the overall ranking of policy types remains consistent, guiding strategic focus toward more profitable products.</p>
 </div>
 </div>
 </section>
 <section id="fuel-type-vs-loss-ratio" class="level3">
-<h3 class="anchored" data-anchor-id="fuel-type-vs-loss-ratio">5.3.2 Fuel type vs loss ratio</h3>
-<p>Violin plots to compare distributions across Diesel, Gasoline, Unknown. Violin plots show the full distribution shape, while the embedded boxplot highlights median and quartiles.</p>
+<h3 class="anchored" data-anchor-id="fuel-type-vs-loss-ratio">5.3.2 Fuel Type vs Loss Ratio</h3>
+<p>This code compares loss ratio distributions across fuel types using violin plots overlaid with boxplots. The purpose is to assess whether different fuel types (Diesel, Gasoline, Unknown) are associated with distinct risk profiles and profitability outcomes.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-12-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-1" role="tab" aria-controls="tabset-12-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-2" role="tab" aria-controls="tabset-12-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2427,10 +2671,26 @@ sample estimates:
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Both Diesel and Gasoline vehicles show wide variability in loss ratios, with several extreme outliers exceeding 3000, indicating higher volatility and risk exposure.</p>
+<p>Median loss ratios are relatively similar across categories, but the spread for Diesel and Gasoline highlights that these segments carry disproportionate risk from outlier claims.</p>
+<p>This suggests that fuel type may be a useful segmentation variable for underwriting, with Diesel and Gasoline requiring closer monitoring for high‑loss policies.</p>
+</div>
+</div>
 </section>
-<section id="vehicle-age-vs-claim-frequency" class="level3">
-<h3 class="anchored" data-anchor-id="vehicle-age-vs-claim-frequency">5.3.3 Vehicle Age vs Claim Frequency</h3>
-<p>Scatter plot with regression line to test if older vehicles have higher claim frequency. This reveals whether older vehicles tend to have higher claim frequency. The regression line provides a statistical trend.</p>
+</section>
+<section id="driver-age-vs-claim-severity" class="level2">
+<h2 class="anchored" data-anchor-id="driver-age-vs-claim-severity">5.4 Driver Age vs Claim Severity</h2>
+<p>This compares the distribution of loss ratios across age bands. This highlights which age groups tend to have higher or lower loss ratios.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-13-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-1" role="tab" aria-controls="tabset-13-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-2" role="tab" aria-controls="tabset-13-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
@@ -2448,89 +2708,65 @@ sample estimates:
 <div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(portfolio, <span class="fu">aes</span>(<span class="at">x =</span> vehicle_age, <span class="at">y =</span> claim_frequency)) <span class="sc">+</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Vehicle Age vs Claim Frequency"</span>,</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Vehicle Age (years)"</span>,</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Claim Frequency (claims per exposure)"</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create age bands</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>portfolio_age <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_band =</span> <span class="fu">cut</span>(driver_age,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">18</span>, <span class="dv">80</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age_band)) <span class="sc">%&gt;%</span>   <span class="co"># &lt;-- remove NA age bands</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age_band) <span class="sc">%&gt;%</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">p25   =</span> <span class="fu">quantile</span>(claim_severity, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">q3    =</span> <span class="fu">quantile</span>(claim_severity, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">iqr   =</span> q3 <span class="sc">-</span> p25,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> p25,                  </span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr        </span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(claim_severity <span class="sc">&gt;=</span> lower, claim_severity <span class="sc">&lt;=</span> upper)</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge plot of loss ratio by age band (log scale, NA removed)</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(portfolio_age, <span class="fu">aes</span>(<span class="at">x =</span> loss_ratio, <span class="at">y =</span> age_band, <span class="at">fill =</span> age_band)) <span class="sc">+</span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  ggridges<span class="sc">::</span><span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Claim Severity Distribution by Driver Age Band (P25 cutoff, log scale)"</span>,</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Log Claim Severity"</span>,</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Driver Age Band"</span></span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="driver-age-vs-loss-ratio" class="level2">
-<h2 class="anchored" data-anchor-id="driver-age-vs-loss-ratio">5.4 Driver Age vs Loss Ratio</h2>
-<p>This compares the distribution of loss ratios across age bands. This highlights which age groups tend to have higher or lower loss ratios.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" role="tab" aria-controls="tabset-14-2" aria-selected="false" href="">The code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="callout callout-style-default callout-note callout-empty-content callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
 </div>
 </div>
-</div>
-</div>
-<div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
-<div style="font-size: 1.4em">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create age bands</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>portfolio_age <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span> </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(has_premium) <span class="sc">%&gt;%</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_band =</span> <span class="fu">cut</span>(driver_age,</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">18</span>, <span class="dv">80</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age_band) <span class="sc">%&gt;%</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">q1 =</span> <span class="fu">quantile</span>(loss_ratio, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">q3 =</span> <span class="fu">quantile</span>(loss_ratio, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">iqr =</span> q3 <span class="sc">-</span> q1,</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr,</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(loss_ratio <span class="sc">&gt;=</span> lower, loss_ratio <span class="sc">&lt;=</span> upper)</span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge plot of loss ratio by age band</span></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(portfolio_age, <span class="fu">aes</span>(<span class="at">x =</span> loss_ratio, <span class="at">y =</span> age_band, <span class="at">fill =</span> age_band)) <span class="sc">+</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  ggridges<span class="sc">::</span><span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Loss Ratio Distribution by Driver Age Band"</span>,</span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Loss Ratio"</span>,</span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Driver Age Band"</span></span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
+<div class="callout-body-container callout-body">
+
 </div>
 </div>
 </section>
 <section id="volatility" class="level2">
 <h2 class="anchored" data-anchor-id="volatility">5.5 Volatility</h2>
-<p>Claims frequency analysis → average claims per policy type, per fuel type, per circulation area.</p>
-<p>Severity analysis → mean incurred per claim across categories.</p>
-<p>Exposure vs claims → scatter plot or regression to validate exposure as a driver of volatility.</p>
+<p>To measure how stable or unstable underwriting results are by analyzing claim frequency, claim severity, exposure relationships, and variance metrics. This helps identify which segments of the portfolio contribute most to volatility.</p>
 <section id="loss-ratio-variability" class="level3">
 <h3 class="anchored" data-anchor-id="loss-ratio-variability">5.5.1 Loss ratio variability</h3>
-<p>Measures how much the ratio of incurred to premium fluctuates across policies. High variance = unstable underwriting results.</p>
+<p>The code chunk uses summarise() to calculate the mean, standard deviation, and variance of the loss ratio by policy type. This measures how much the ratio of incurred to premium fluctuates across policies, where high variance indicates unstable underwriting results.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-15-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-1" role="tab" aria-controls="tabset-15-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-2" role="tab" aria-controls="tabset-15-2" aria-selected="false" href="">The code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" role="tab" aria-controls="tabset-14-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
-<div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
+<div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
@@ -2544,29 +2780,45 @@ sample estimates:
 </div>
 </div>
 </div>
-<div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
+<div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(policy_type) <span class="sc">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_lr =</span> <span class="fu">mean</span>(loss_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_lr   =</span> <span class="fu">sd</span>(loss_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_lr  =</span> <span class="fu">var</span>(loss_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(policy_type) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_lr =</span> <span class="fu">mean</span>(loss_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_lr   =</span> <span class="fu">sd</span>(loss_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_lr  =</span> <span class="fu">var</span>(loss_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Loss ratio variance highlights how much incurred/premium fluctuates across policy types.</p>
+<p>COMP_E shows the highest variance (≈1520), meaning highly unstable results.</p>
+<p>COMP_N has the lowest variance (≈18), indicating more predictable performance.</p>
+<p>High variance signals segments where underwriting outcomes are less reliable.</p>
 </div>
 </div>
 </section>
 <section id="coefficient-of-variation" class="level3">
 <h3 class="anchored" data-anchor-id="coefficient-of-variation">5.5.2 Coefficient of Variation</h3>
-<p>CV = sd/mean, useful for claim frequency and severity because it normalizes volatility relative to the mean.</p>
+<p>CV normalizes volatility relative to the mean, making it easier to compare stability across different measures.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-16-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-1" role="tab" aria-controls="tabset-16-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-16-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-2" role="tab" aria-controls="tabset-16-2" aria-selected="false" href="">The code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-15-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-1" role="tab" aria-controls="tabset-15-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-2" role="tab" aria-controls="tabset-15-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
-<div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
+<div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 6
@@ -2576,32 +2828,48 @@ sample estimates:
 </div>
 </div>
 </div>
-<div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
+<div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="sc">%&gt;%</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_freq =</span> <span class="fu">mean</span>(claim_frequency, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_freq   =</span> <span class="fu">sd</span>(claim_frequency, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv_freq   =</span> sd_freq <span class="sc">/</span> mean_freq,</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sev =</span> <span class="fu">mean</span>(claim_severity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sev   =</span> <span class="fu">sd</span>(claim_severity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv_sev   =</span> sd_sev <span class="sc">/</span> mean_sev</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>portfolio <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_freq =</span> <span class="fu">mean</span>(claim_frequency, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_freq   =</span> <span class="fu">sd</span>(claim_frequency, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv_freq   =</span> sd_freq <span class="sc">/</span> mean_freq,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sev =</span> <span class="fu">mean</span>(claim_severity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sev   =</span> <span class="fu">sd</span>(claim_severity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv_sev   =</span> sd_sev <span class="sc">/</span> mean_sev</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>CV normalizes volatility relative to the mean.</p>
+<p>Claim frequency CV ≈ 6.17 → extremely unstable relative to its average.</p>
+<p>Claim severity CV ≈ 3.45 → also volatile, but less extreme than frequency.</p>
+<p>Frequency volatility dominates, showing instability in how often claims occur.</p>
 </div>
 </div>
 </section>
 <section id="levenes-test" class="level3">
 <h3 class="anchored" data-anchor-id="levenes-test">5.5.3 Levene’s Test</h3>
-<p>Statistically validate whether variance differs across groups (e.g., urban vs rural, diesel vs gasoline).</p>
+<p>The code chunk applies leveneTest() to check whether the variance of loss ratio and claim severity differs significantly across groups (circulation area and fuel type). This statistically validates whether volatility is group‑dependent.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" role="tab" aria-controls="tabset-17-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" role="tab" aria-controls="tabset-17-2" aria-selected="false" href="">The code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-16-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-1" role="tab" aria-controls="tabset-16-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-16-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-2" role="tab" aria-controls="tabset-16-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
-<div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
+<div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = median)
@@ -2617,55 +2885,84 @@ group     2  0.3341  0.716
 </div>
 </div>
 </div>
-<div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
+<div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Levene’s test for loss ratio variance across circulation areas</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(loss_ratio <span class="sc">~</span> circulation_area, <span class="at">data =</span> portfolio)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Levene’s test for claim severity variance across fuel types</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(claim_severity <span class="sc">~</span> fuel_type, <span class="at">data =</span> portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Levene’s test for loss ratio variance across circulation areas</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(loss_ratio <span class="sc">~</span> circulation_area, <span class="at">data =</span> portfolio)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Levene’s test for claim severity variance across fuel types</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(claim_severity <span class="sc">~</span> fuel_type, <span class="at">data =</span> portfolio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tests whether variance differs across groups (e.g., urban vs rural, fuel types).</p>
+<p>Results show no significant differences (p &gt; 0.05), meaning variance is statistically similar across categories.</p>
+<p>Suggests volatility is driven more by claim behavior than by geography or fuel type.</p>
 </div>
 </div>
 </section>
 <section id="time-series-volatility" class="level3">
 <h3 class="anchored" data-anchor-id="time-series-volatility">5.5.4 Time-series Volatility</h3>
+<p>The code chunk calculates rolling standard deviation of the incurred/premium ratio over time using rollapply(). This tracks volatility dynamically, showing how portfolio stability changes across years.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" role="tab" aria-controls="tabset-18-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" role="tab" aria-controls="tabset-18-2" aria-selected="false" href="">The code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" role="tab" aria-controls="tabset-17-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" role="tab" aria-controls="tabset-17-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
-<div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
+<div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
 
 </div>
-<div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
+<div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>portfolio_ts <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ratio =</span> <span class="fu">mean</span>(total_incurred <span class="sc">/</span> total_premium, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>portfolio_ts<span class="sc">$</span>rolling_sd <span class="ot">&lt;-</span> <span class="fu">rollapply</span>(portfolio_ts<span class="sc">$</span>ratio, <span class="at">width =</span> <span class="dv">3</span>, <span class="at">FUN =</span> sd, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">align =</span> <span class="st">"right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>portfolio_ts <span class="ot">&lt;-</span> portfolio <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ratio =</span> <span class="fu">mean</span>(total_incurred <span class="sc">/</span> total_premium, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>portfolio_ts<span class="sc">$</span>rolling_sd <span class="ot">&lt;-</span> <span class="fu">rollapply</span>(portfolio_ts<span class="sc">$</span>ratio, <span class="at">width =</span> <span class="dv">3</span>, <span class="at">FUN =</span> sd, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">align =</span> <span class="st">"right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Rolling standard deviation of loss ratios shows periods of instability over time.</p>
+<p>Peaks indicate claim shocks or seasonal effects.</p>
+<p>Confirms that volatility is not constant — portfolio risk fluctuates across years.</p>
 </div>
 </div>
 </section>
 </section>
 <section id="hypothesis-testing" class="level2">
 <h2 class="anchored" data-anchor-id="hypothesis-testing">5.6 Hypothesis Testing</h2>
-<section id="chi-square-tests-categorical-vs-categorical-e.g.-policy_type-vs-policy_status." class="level3">
-<h3 class="anchored" data-anchor-id="chi-square-tests-categorical-vs-categorical-e.g.-policy_type-vs-policy_status.">5.6.1 Chi-square tests → categorical vs categorical (e.g., policy_type vs policy_status).</h3>
-<p>Use for categorical vs categorical relationships:</p>
-<p>Policy type vs profitability → Is profitability distribution independent of policy type?</p>
-<p>Bonus score vs profitability → Are Good/Neutral/Bad scores associated with different profitability outcomes?</p>
-<p>Circulation area vs has_claim → Do urban vs rural areas differ in claim occurrence?</p>
+<p>To statistically validate whether differences in profitability, claims, or loss ratios across categories are significant. This ensures observed patterns are not due to random variation.</p>
+<section id="chi-square-tests" class="level3">
+<h3 class="anchored" data-anchor-id="chi-square-tests">5.6.1 Chi-square tests</h3>
+<p>The code chunk runs chisq.test() on contingency tables to test independence between categorical variables (policy type, bonus score, circulation area) and outcomes (profitability, claim occurrence). This validates whether distributions differ significantly across categories.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">The code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" role="tab" aria-controls="tabset-18-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" role="tab" aria-controls="tabset-18-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
-<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
+<div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -2690,28 +2987,40 @@ X-squared = 225.79, df = 1, p-value &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
+<div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(portfolio<span class="sc">$</span>policy_type, portfolio<span class="sc">$</span>profitable_policy))</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(portfolio<span class="sc">$</span>bonus_score, portfolio<span class="sc">$</span>profitable_policy))</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(portfolio<span class="sc">$</span>circulation_area, portfolio<span class="sc">$</span>has_claim))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(portfolio<span class="sc">$</span>policy_type, portfolio<span class="sc">$</span>profitable_policy))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(portfolio<span class="sc">$</span>bonus_score, portfolio<span class="sc">$</span>profitable_policy))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(portfolio<span class="sc">$</span>circulation_area, portfolio<span class="sc">$</span>has_claim))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Policy type vs profitability: Highly significant (p &lt; 2.2e‑16) → profitability depends on policy type.</p>
+<p>Bonus score vs profitability: Significant → Good/Neutral/Bad scores matter for outcomes.</p>
+<p>Circulation area vs has_claim: Significant → urban vs rural differ in claim occurrence.</p>
 </div>
 </div>
 </section>
-<section id="t-tests-anova-numeric-vs-categorical-e.g.-total_incurred-across-fuel_type." class="level3">
-<h3 class="anchored" data-anchor-id="t-tests-anova-numeric-vs-categorical-e.g.-total_incurred-across-fuel_type.">5.6.2 t-tests / ANOVA → numeric vs categorical (e.g., total_incurred across fuel_type).</h3>
-<p>Use for continuous vs categorical comparisons:</p>
-<p>Loss ratio vs fuel type → Do Diesel, Gasoline, Unknown differ in mean loss ratio?</p>
-<p>Profit vs business type → Compare mean profit between New Business vs Portfolio.</p>
-<p>Claim severity vs municipality type → Inland vs Coastal vs Islands.</p>
+<section id="anova" class="level3">
+<h3 class="anchored" data-anchor-id="anova">5.6.2 ANOVA</h3>
+<p>The code chunk applies aov() and TukeyHSD() to compare mean loss ratios across fuel types. This tests whether continuous outcomes differ significantly between categorical groups.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" role="tab" aria-controls="tabset-20-2" aria-selected="false" href="">The code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">The code</a></li></ul>
 <div class="tab-content">
-<div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
+<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>                Df    Sum Sq Mean Sq F value Pr(&gt;F)
@@ -2733,25 +3042,75 @@ Unknown-Gasoline -0.05272918 -1.5336492 1.42819088 0.9961681</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
+<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
 <div style="font-size: 1.4em">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>anova_result <span class="ot">&lt;-</span> <span class="fu">aov</span>(loss_ratio <span class="sc">~</span> fuel_type, <span class="at">data =</span> portfolio)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova_result)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(anova_result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>anova_result <span class="ot">&lt;-</span> <span class="fu">aov</span>(loss_ratio <span class="sc">~</span> fuel_type, <span class="at">data =</span> portfolio)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova_result)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(anova_result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Loss ratio vs fuel type: Not significant (p = 0.38) → no mean difference across Diesel/Gasoline/Unknown.</p>
+<p>Profit vs business type: Useful for comparing New Business vs Portfolio profitability.</p>
+<p>Claim severity vs municipality type: ANOVA compares Inland vs Coastal vs Islands; differences highlight geographic claim risk.</p>
 </div>
 </div>
 </section>
 </section>
 </section>
-<section id="summary" class="level1">
-<h1>6 Summary</h1>
+<section id="key-insight-summary" class="level1">
+<h1>6 Key Insight Summary</h1>
+<p><strong>Claims behavior is the dominant source of volatility.</strong></p>
+<ul>
+<li><p>Claim frequency is highly unstable relative to its mean (CV ≈ 6.17), while claim severity also contributes (CV ≈ 3.45).</p></li>
+<li><p>Catastrophic claims drive extreme incurred costs, while frequent smaller claims steadily erode profitability.</p></li>
+</ul>
+<p><strong>Policy type and bonus score are critical profitability differentiators.</strong></p>
+<ul>
+<li><p>Chi‑square tests confirm that profitability outcomes vary significantly by policy type and bonus score.</p></li>
+<li><p>COMP_E policies show high variance and unstable underwriting results, while COMP_N policies are more predictable.</p></li>
+</ul>
+<p><strong>Geography and fuel type play a limited role.</strong></p>
+<ul>
+<li><p>Levene’s tests and ANOVA results show no significant differences in variance or mean loss ratios across circulation areas or fuel types.</p></li>
+<li><p>This suggests that underwriting focus should prioritize claims behavior and product design over these categorical splits.</p></li>
+</ul>
+<p><strong>Portfolio risk is dynamic over time.</strong></p>
+<ul>
+<li><p>Rolling time‑series volatility reveals spikes linked to shocks or seasonal effects, confirming that risk is not constant.</p></li>
+<li><p>Monitoring volatility trends is essential for proactive risk management.</p></li>
+</ul>
+<p><strong>Visual analytics adds measurable value.</strong></p>
+<ul>
+<li><p>Univariate plots highlight skewness and outliers.</p></li>
+<li><p>Bivariate scatterplots and boxplots reveal correlations between premiums, incurred costs, claim frequency, and profitability.</p></li>
+<li><p>Statistical tests validate which categorical differences are meaningful, ensuring decisions are evidence‑based.</p></li>
+</ul>
 </section>
-<section id="references-and-inspiration" class="level1">
-<h1>7 References and Inspiration</h1>
+<section id="overall-conclusion" class="level1">
+<h1>Overall Conclusion</h1>
+<p>The investigation shows that <strong>profitability and volatility in motor insurance portfolios are primarily shaped by claims frequency and severity, with policy type and bonus score acting as key structural differentiators.</strong> While geography and fuel type do not significantly explain volatility, portfolio risk is highly dynamic over time, requiring continuous monitoring.</p>
+<p>By combining visual analytics with statistical validation, insurers can move beyond descriptive reporting to actionable insights:</p>
+<ul>
+<li><p>Targeting product types with unstable underwriting results.</p></li>
+<li><p>Designing interventions to manage claim frequency and severity.</p></li>
+<li><p>Using bonus scores as a lever for risk segmentation.</p></li>
+<li><p>Tracking volatility trends to anticipate shocks.</p></li>
+</ul>
+<p>This demonstrates the potential of visual analytics not only to explore data distributions but also to identify the true drivers of profitability and volatility, ultimately guiding more stable underwriting and strategic portfolio management.</p>
 
 
 </section>
