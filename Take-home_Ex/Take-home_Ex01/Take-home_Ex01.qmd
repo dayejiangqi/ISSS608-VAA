@@ -31,7 +31,7 @@ Apply suitable bivariate visual analytics techniques to investigate and statisti
 ## 2.1 Loading Packages
 
 | **Package** | **Category** | **Purpose / Usage** |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | **tidyverse** | Data wrangling + visualization | Core suite (ggplot2 for plots, dplyr for mutate, summarise, group_by). |
 | **readr** | Data import | Reading CSV/flat files. |
 | **dplyr** | Data manipulation | Filtering, mutating, summarising, grouping. |
@@ -73,7 +73,7 @@ glimpse(portfolio)
 Convert categorical variables (policy_type, fuel_type, etc.) into factors.
 
 | Variable | Data Type | Reason |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | insured_id | integer | Unique identifier, sequential ID. |
 | year | integer | Calendar year, discrete not continuous. |
 | policy_type | factor | Categorical (COMP_E, COMP_N, TP, etc.). |
