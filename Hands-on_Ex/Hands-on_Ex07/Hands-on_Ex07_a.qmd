@@ -113,6 +113,12 @@ GAStech_edges <- GAStech_edges %>%
 
 Table below shows the data structure of the reformatted *GAStech_edges* data frame
 
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+glimpse(GAStech_edges)
+```
+
 ## 3.7 Wrangling attributes
 
 A close examination of *GAStech_edges* data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.
@@ -144,6 +150,12 @@ GAStech_edges_aggregated <- GAStech_edges %>%
 ## 3.8 Reviewing the revised edges file
 
 Table below shows the data structure of the reformatted *GAStech_edges* data frame
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+glimpse(GAStech_edges_aggregated)
+```
 
 # 4 Creating network objects using tidygraph
 
@@ -697,3 +709,7 @@ visNetwork(GAStech_nodes,
 Visit [Option](http://datastorm-open.github.io/visNetwork/options.html) to find out more about visOption’s argument.
 
 # 9 Reference
+
+[26 R for Data Science: Tidyverse principles and methods](https://r4va.netlify.app/chap26)
+
+[28 R for Data Science: Tidyverse principles and methods](https://r4va.netlify.app/chap28)

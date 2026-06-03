@@ -114,8 +114,6 @@ write_rds(raw_text, "data/news20.rds")
 
 Figure below shows the frequency of messages by newsgroup.
 
-![](https://r4va.netlify.app/chap29_files/figure-html/unnamed-chunk-6-1.png)
-
 The code chunk:
 
 ```{r}
@@ -229,6 +227,18 @@ wordcloud(words_by_newsgroup$word,
           max.words = 300)
 ```
 
+A DT table can be used to complement the visual discovery.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+DT::datatable(words_by_newsgroup,
+              options = list(pageLength = 10,
+                             scrollX = TRUE),
+              class = "compact",
+              caption = "Word frequencies by newsgroup")
+```
+
 ## 6.5 Visualising Words in newsgroups
 
 The wordcloud below is plotted by using ggwordcloud package.
@@ -242,11 +252,11 @@ set.seed(1234)
 
 words_by_newsgroup %>%
   filter(n > 0) %>%
-ggplot(aes(label = word,
+  ggplot(aes(label = word,
            size = n)) +
   geom_text_wordcloud() +
   theme_minimal() +
-  facet_wrap(~newsgroup)
+  facet_wrap(~newsgroup) 
 ```
 
 # 7 Basic Concept of TF-IDF
@@ -285,7 +295,9 @@ datatable(
 )
 ```
 
-7.3 Visualising tf-idf as interactive table The code chunk below uses datatable() of DT package to create a html table that allows pagination of rows and columns.
+## 7.3 Visualising tf-idf as interactive table
+
+The code chunk below uses datatable() of DT package to create a html table that allows pagination of rows and columns.
 
 ```{r}
 #| code-fold: true
@@ -338,11 +350,13 @@ tf_idf %>%
 
 ## 7.5 Counting and correlating pairs of words with the widyr package
 
-To count the number of times that two words appear within the same document, or to see how correlated they are.
+-   To count the number of times that two words appear within the same document, or to see how correlated they are.
 
-Most operations for finding pairwise counts or correlations need to turn the data into a wide matrix first.
+-   Most operations for finding pairwise counts or correlations need to turn the data into a wide matrix first.
 
-widyr package first ‘casts’ a tidy dataset into a wide matrix, performs an operation such as a correlation on it, then re-tidies the result.
+-   widyr package first ‘casts’ a tidy dataset into a wide matrix, performs an operation such as a correlation on it, then re-tidies the result.
+
+![](images/clipboard-1831394702.png)
 
 In this code chunk below, pairwise_cor() of widyr package is used to compute the correlation between newsgroup based on the common words found.
 
@@ -510,3 +524,13 @@ ggraph(bigram_graph,
 ```
 
 # 8 References
+
+-   Reference guide
+
+    -   [widyr: Widen, process, and re-tidy a dataset](https://cran.r-project.org/web/packages/widyr/vignettes/intro.html)
+
+    -   [United Nations Voting Correlations](https://cran.r-project.org/web/packages/widyr/vignettes/united_nations.html)
+
+[28 R for Data Science: Tidyverse principles and methods](https://r4va.netlify.app/chap28)
+
+[30 R for Data Science: Tidyverse principles and methods](https://r4va.netlify.app/chap30)
