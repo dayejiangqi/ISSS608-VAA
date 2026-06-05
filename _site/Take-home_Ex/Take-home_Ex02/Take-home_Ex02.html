@@ -107,6 +107,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link href="../../site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="../../site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="../../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="../../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="../../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="../../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="../../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -255,13 +265,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2.4 Data Wrangling</a>
   <ul class="collapse">
   <li><a href="#data-type-conversion" id="toc-data-type-conversion" class="nav-link" data-scroll-target="#data-type-conversion">2.4.1 Data Type Conversion</a></li>
-  <li><a href="#handle-na-values" id="toc-handle-na-values" class="nav-link" data-scroll-target="#handle-na-values">2.4.2 Handle NA values</a></li>
-  <li><a href="#normalize-agent-roles" id="toc-normalize-agent-roles" class="nav-link" data-scroll-target="#normalize-agent-roles">2.4.3 Normalize agent roles</a></li>
-  <li><a href="#categorical-encoding" id="toc-categorical-encoding" class="nav-link" data-scroll-target="#categorical-encoding">2.4.4 Categorical encoding</a></li>
+  <li><a href="#handle-duplicates-and-na-values" id="toc-handle-duplicates-and-na-values" class="nav-link" data-scroll-target="#handle-duplicates-and-na-values">2.4.2 Handle Duplicates and NA Values</a></li>
+  <li><a href="#normalize-agent-roles" id="toc-normalize-agent-roles" class="nav-link" data-scroll-target="#normalize-agent-roles">2.4.3 Normalize Agent Roles</a></li>
+  <li><a href="#categorical-encoding" id="toc-categorical-encoding" class="nav-link" data-scroll-target="#categorical-encoding">2.4.4 Categorical Encoding</a></li>
   <li><a href="#derived-features" id="toc-derived-features" class="nav-link" data-scroll-target="#derived-features">2.4.5 Derived Features</a></li>
-  <li><a href="#text-cleaning" id="toc-text-cleaning" class="nav-link" data-scroll-target="#text-cleaning">2.4.6 Text cleaning</a></li>
+  <li><a href="#text-cleaning" id="toc-text-cleaning" class="nav-link" data-scroll-target="#text-cleaning">2.4.6 Text Cleaning</a></li>
+  <li><a href="#hanle-outliers" id="toc-hanle-outliers" class="nav-link" data-scroll-target="#hanle-outliers">2.4.7 Hanle Outliers</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">3 Exploratory Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#timeline-reconstruction" id="toc-timeline-reconstruction" class="nav-link" data-scroll-target="#timeline-reconstruction">3.1 Timeline reconstruction</a></li>
+  <li><a href="#agent-activity" id="toc-agent-activity" class="nav-link" data-scroll-target="#agent-activity">3.2 Agent activity</a></li>
+  <li><a href="#communication-patterns" id="toc-communication-patterns" class="nav-link" data-scroll-target="#communication-patterns">3.3 Communication patterns</a></li>
+  <li><a href="#alerts-and-deadlines" id="toc-alerts-and-deadlines" class="nav-link" data-scroll-target="#alerts-and-deadlines">3.4 Alerts and Deadlines</a></li>
+  <li><a href="#hashtag-and-media-events" id="toc-hashtag-and-media-events" class="nav-link" data-scroll-target="#hashtag-and-media-events">3.5 Hashtag and Media Events</a></li>
+  </ul></li>
+  <li><a href="#network-analysis" id="toc-network-analysis" class="nav-link" data-scroll-target="#network-analysis">4 Network Analysis</a></li>
+  <li><a href="#behavioral-comparison" id="toc-behavioral-comparison" class="nav-link" data-scroll-target="#behavioral-comparison">5 Behavioral Comparison</a></li>
+  <li><a href="#anomaly-detection" id="toc-anomaly-detection" class="nav-link" data-scroll-target="#anomaly-detection">6 Anomaly Detection</a></li>
+  <li><a href="#narrative-synthesis" id="toc-narrative-synthesis" class="nav-link" data-scroll-target="#narrative-synthesis">7 Narrative Synthesis</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">8 Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -294,7 +318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">June 5, 2026</p>
+      <p class="date-modified">June 6, 2026</p>
     </div>
   </div>
     
@@ -353,7 +377,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Load packages</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, jsonlite, tidygraph, ggraph, lubridate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, jsonlite, tidygraph, ggraph, lubridate,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggplot2, ggrepel, patchwork, stringr, DT, igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Read JSON file</p>
 <div class="cell">
@@ -616,113 +641,110 @@ $ agents_unavailable                         &lt;list&gt; &lt;&gt;, &lt;&gt;, &l
 <p>Convert stock price: Strip the $ sign and convert to numeric. Convert percent change: Remove % and convert to numeric. Standardize timestamps: Convert hour and timestamp to proper datetime objects.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/combined_df_raw.rds"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(combined_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "hour"                                      
- [2] "event_headline"                            
- [3] "event_narrative"                           
- [4] "social_state"                              
- [5] "market_snapshot_stock_price"               
- [6] "market_snapshot_percent_change"            
- [7] "market_snapshot_sentiment"                 
- [8] "message_id"                                
- [9] "agent_id"                                  
-[10] "agent_role.x"                              
-[11] "agent_label.x"                             
-[12] "internal_state_reacting"                   
-[13] "internal_state_rationalizing"              
-[14] "internal_state_deliberating"               
-[15] "channel"                                   
-[16] "recipients"                                
-[17] "message_type"                              
-[18] "responding_to"                             
-[19] "content"                                   
-[20] "timestamp"                                 
-[21] "agent_role.y"                              
-[22] "agent_label.y"                             
-[23] "declared_action"                           
-[24] "agent_round_metadata_sentiment_at_turn"    
-[25] "agent_round_metadata_action_classification"
-[26] "social_manager_alerts"                     
-[27] "critical_deadlines"                        
-[28] "news"                                      
-[29] "market_snapshot_trending_hashtags"         
-[30] "media_events"                              
-[31] "external_actor_actions"                    
-[32] "agents_unavailable"                        </code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> combined_df <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">market_snapshot_stock_price =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[$]"</span>, <span class="st">""</span>, market_snapshot_stock_price)),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">market_snapshot_percent_change =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[%]"</span>, <span class="st">""</span>, market_snapshot_percent_change)),</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour =</span> lubridate<span class="sc">::</span><span class="fu">ymd_hms</span>(hour),</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">timestamp =</span> lubridate<span class="sc">::</span><span class="fu">ymd_hms</span>(timestamp)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> combined_df <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">market_snapshot_stock_price =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[$]"</span>, <span class="st">""</span>, market_snapshot_stock_price)),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">market_snapshot_percent_change =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[%]"</span>, <span class="st">""</span>, market_snapshot_percent_change)),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour =</span> lubridate<span class="sc">::</span><span class="fu">ymd_hms</span>(hour),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">timestamp =</span> lubridate<span class="sc">::</span><span class="fu">ymd_hms</span>(timestamp)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="handle-na-values" class="level3">
-<h3 class="anchored" data-anchor-id="handle-na-values">2.4.2 Handle NA values</h3>
+<section id="handle-duplicates-and-na-values" class="level3">
+<h3 class="anchored" data-anchor-id="handle-duplicates-and-na-values">2.4.2 Handle Duplicates and NA Values</h3>
 <p>For sparse columns like social_manager_alerts, news, agents_unavailable, replace empty lists with NA_character_.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> <span class="fu">na_if</span>(.x, <span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.factor), forcats<span class="sc">::</span>fct_drop)) <span class="sc">%&gt;%</span>  <span class="co"># drop unused factor levels</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> <span class="fu">na_if</span>(.x, <span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="normalize-agent-roles" class="level3">
-<h3 class="anchored" data-anchor-id="normalize-agent-roles">2.4.3 Normalize agent roles</h3>
+<h3 class="anchored" data-anchor-id="normalize-agent-roles">2.4.3 Normalize Agent Roles</h3>
 <p>Collapse duplicate role columns (agent_role.x, agent_role.y) into one clean agent_role.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> combined_df <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">agent_role =</span> <span class="fu">coalesce</span>(agent_role.x, agent_role.y),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">agent_label =</span> <span class="fu">coalesce</span>(agent_label.x, agent_label.y)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>agent_role.x, <span class="sc">-</span>agent_role.y, <span class="sc">-</span>agent_label.x, <span class="sc">-</span>agent_label.y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">agent_role =</span> <span class="fu">coalesce</span>(agent_role.x, agent_role.y),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">agent_label =</span> <span class="fu">coalesce</span>(agent_label.x, agent_label.y)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>agent_role.x, <span class="sc">-</span>agent_role.y, <span class="sc">-</span>agent_label.x, <span class="sc">-</span>agent_label.y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="categorical-encoding" class="level3">
-<h3 class="anchored" data-anchor-id="categorical-encoding">2.4.4 Categorical encoding</h3>
+<h3 class="anchored" data-anchor-id="categorical-encoding">2.4.4 Categorical Encoding</h3>
 <p>Convert market_snapshot_sentiment into factors for modeling:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">market_snapshot_sentiment =</span> <span class="fu">factor</span>(market_snapshot_sentiment,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"negative"</span>,<span class="st">"neutral"</span>,<span class="st">"positive"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">market_snapshot_sentiment =</span> <span class="fu">factor</span>(market_snapshot_sentiment,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"negative"</span>,<span class="st">"neutral"</span>,<span class="st">"positive"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="derived-features" class="level3">
 <h3 class="anchored" data-anchor-id="derived-features">2.4.5 Derived Features</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">message_length =</span> <span class="fu">str_length</span>(content),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_reply =</span> <span class="sc">!</span><span class="fu">is.na</span>(responding_to),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_day =</span> lubridate<span class="sc">::</span><span class="fu">date</span>(hour)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">message_length =</span> <span class="fu">str_length</span>(content),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_reply =</span> <span class="sc">!</span><span class="fu">is.na</span>(responding_to),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_day =</span> lubridate<span class="sc">::</span><span class="fu">date</span>(hour)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="text-cleaning" class="level3">
-<h3 class="anchored" data-anchor-id="text-cleaning">2.4.6 Text cleaning</h3>
+<h3 class="anchored" data-anchor-id="text-cleaning">2.4.6 Text Cleaning</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> combined_df <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">content =</span> <span class="fu">str_squish</span>(content))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">content =</span> <span class="fu">str_squish</span>(content))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="hanle-outliers" class="level3">
+<h3 class="anchored" data-anchor-id="hanle-outliers">2.4.7 Hanle Outliers</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Outlier detection helper ---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>remove_outliers <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  iqr <span class="ot">&lt;-</span> q3 <span class="sc">-</span> q1</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  lower <span class="ot">&lt;-</span> q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  upper <span class="ot">&lt;-</span> q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  x[x <span class="sc">&lt;</span> lower <span class="sc">|</span> x <span class="sc">&gt;</span> upper] <span class="ot">&lt;-</span> <span class="cn">NA</span>   <span class="co"># replace outliers with NA</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Apply to numeric columns ---</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">market_snapshot_stock_price =</span> <span class="fu">remove_outliers</span>(market_snapshot_stock_price),</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">market_snapshot_percent_change =</span> <span class="fu">remove_outliers</span>(market_snapshot_percent_change)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cleaned_df<span class="sc">$</span>market_snapshot_stock_price)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  18.00   27.20   34.80   31.75   37.20   38.70     312 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cleaned_df<span class="sc">$</span>market_snapshot_percent_change)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+ -8.000  -4.200  -1.900  -2.818  -1.100  -0.500     333 </code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cleaned_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cleaned_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 912
-Columns: 32
-$ hour                                       &lt;chr&gt; "2046-05-17T09:00:00", "204…
+Columns: 33
+$ hour                                       &lt;dttm&gt; 2046-05-17 09:00:00, 2046-…
 $ event_headline                             &lt;chr&gt; "Q2 planning kickoff — AG i…
 $ event_narrative                            &lt;chr&gt; "Pre-crisis Day 1 (2046-05-…
 $ social_state                               &lt;chr&gt; "Quiet. ResidentIQ gaining …
-$ market_snapshot_stock_price                &lt;chr&gt; "$38.70", "$38.70", "$38.70…
-$ market_snapshot_percent_change             &lt;chr&gt; "-0.5%", "-0.5%", "-0.5%", …
-$ market_snapshot_sentiment                  &lt;chr&gt; "neutral", "neutral", "neut…
+$ market_snapshot_stock_price                &lt;dbl&gt; 38.7, 38.7, 38.7, 38.7, 38.…
+$ market_snapshot_percent_change             &lt;dbl&gt; -0.5, -0.5, -0.5, -0.5, -0.…
+$ market_snapshot_sentiment                  &lt;fct&gt; neutral, neutral, neutral, …
 $ message_id                                 &lt;chr&gt; "20460517_00_001", "2046051…
 $ agent_id                                   &lt;chr&gt; "legal_agent", "quality_age…
-$ agent_role.x                               &lt;chr&gt; "legal", "platform_trust", …
-$ agent_label.x                              &lt;chr&gt; "Legal-Agent", "Platform-Tr…
 $ internal_state_reacting                    &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,…
 $ internal_state_rationalizing               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,…
 $ internal_state_deliberating                &lt;chr&gt; "Ajay's DM about \"strategi…
@@ -731,9 +753,7 @@ $ recipients                                 &lt;list&gt; "ALL", "ALL", "ALL", "
 $ message_type                               &lt;chr&gt; "broadcast", "broadcast", "…
 $ responding_to                              &lt;chr&gt; NA, "20460517_00_001", "204…
 $ content                                    &lt;chr&gt; "Morning. Let's keep today …
-$ timestamp                                  &lt;chr&gt; "2046-05-17T09:00:00", "204…
-$ agent_role.y                               &lt;chr&gt; "legal", "platform_trust", …
-$ agent_label.y                              &lt;chr&gt; "Legal-Agent", "Platform-Tr…
+$ timestamp                                  &lt;dttm&gt; 2046-05-17 09:00:00, 2046-…
 $ declared_action                            &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,…
 $ agent_round_metadata_sentiment_at_turn     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,…
 $ agent_round_metadata_action_classification &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,…
@@ -743,13 +763,544 @@ $ news                                       &lt;list&gt; &lt;&gt;, &lt;&gt;, &l
 $ market_snapshot_trending_hashtags          &lt;list&gt; &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;…
 $ media_events                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA,…
 $ external_actor_actions                     &lt;list&gt; &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;…
-$ agents_unavailable                         &lt;list&gt; &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;…</code></pre>
+$ agents_unavailable                         &lt;list&gt; &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;…
+$ agent_role                                 &lt;chr&gt; "legal", "platform_trust", …
+$ agent_label                                &lt;chr&gt; "Legal-Agent", "Platform-Tr…
+$ message_length                             &lt;int&gt; 175, 186, 191, 280, 258, 16…
+$ is_reply                                   &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, TR…
+$ round_day                                  &lt;date&gt; 2046-05-17, 2046-05-17, 20…</code></pre>
 </div>
 </div>
-
-
 </section>
 </section>
+</section>
+<section id="exploratory-data-analysis" class="level1">
+<h1>3 Exploratory Data Analysis</h1>
+<section id="timeline-reconstruction" class="level2">
+<h2 class="anchored" data-anchor-id="timeline-reconstruction">3.1 Timeline reconstruction</h2>
+<p>Plot hour vs.&nbsp;key events (event_headline, event_narrative) alongside market_snapshot_stock_price and market_snapshot_percent_change. This shows how market and sentiment shifted around the embargo.</p>
+<p>Plot stock price and percent change over time, with event headlines annotated.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plot_df <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(market_snapshot_sentiment))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_df) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">y =</span> market_snapshot_stock_price, <span class="at">color =</span> <span class="st">"Stock Price"</span>)) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">y =</span> market_snapshot_percent_change <span class="sc">*</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"Percent Change ×10"</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">y =</span> market_snapshot_stock_price, <span class="at">shape =</span> market_snapshot_sentiment)) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">y =</span> market_snapshot_stock_price, <span class="at">label =</span> event_headline),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>, <span class="at">max.overlaps =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Stock Price"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Percent Change ×10"</span> <span class="ot">=</span> <span class="st">"darkred"</span>)) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"negative"</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">"neutral"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"positive"</span> <span class="ot">=</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Timeline of Events and Market Movements"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Stock Price / Percent Change ×10"</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Hour"</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Metric"</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Sentiment"</span>) <span class="sc">+</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Decline toward early June: Both stock price and percent change trend downward as the embargo date approaches. This suggests mounting external pressure and negative sentiment.</p>
+<p>Event alignment: Headlines like policy reports, media exposés, or social media surges coincide with drops in price or spikes in volatility. This visually ties external narratives to market reactions.</p>
+<p>Sentiment correlation: Negative sentiment points cluster around declining price segments, reinforcing the idea that public perception was deteriorating before the breach.</p>
+</section>
+<section id="agent-activity" class="level2">
+<h2 class="anchored" data-anchor-id="agent-activity">3.2 Agent activity</h2>
+<p>Count messages per agent_role and agent_label. Look for spikes in activity before the breach.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, agent_role) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> agent_role)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Agent Activity by Role"</span>, <span class="at">y =</span> <span class="st">"Message Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, agent_label) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> agent_label)) <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Agent Activity by Label"</span>, <span class="at">y =</span> <span class="st">"Message Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Agent Activity by Role Observation: Message counts are relatively low across all roles until June 4, when activity spikes sharply.</p>
+<p>Roles most active:</p>
+<p>Legal agents → surge in communications, likely tied to last‑minute compliance checks and merger preparations.</p>
+<p>Social Media agents → also spike, suggesting external messaging or monitoring intensified.</p>
+<p>Meaning: The sudden increase in activity right before the embargo suggests the system was under stress. Legal and social media roles were especially engaged, which could indicate either deliberate coordination or reactive scrambling.</p>
+<p>👥 Agent Activity by Label Observation: Similar pattern — low activity until June 4, then a sharp increase.</p>
+<p>Labels most active:</p>
+<p>Legal‑Agent and Social‑Manager‑Agent dominate the spike.</p>
+<p>Other roles (PR, Platform Trust, Interns) remain relatively stable.</p>
+<p>Meaning: The spike in Legal and Social Manager activity points to decision points and enforcement attempts. These are the agents most directly responsible for embargo compliance and external messaging. Their surge suggests either attempts to contain leaks or involvement in the breach.</p>
+<p>🔍 Interpretation in Project Context Leading indicator: The spike in activity is a clear signal that something unusual was happening just before the embargo.</p>
+<p>Causal relationship: If the breach occurred around 5 PM on June 5, the June 4 surge may represent preparatory actions or system strain.</p>
+<p>System behavior: Prior to June 4, agent activity was routine. The sudden escalation is anomalous and aligns with the hypothesis of either deliberate action or breakdown under pressure.</p>
+</section>
+<section id="communication-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="communication-patterns">3.3 Communication patterns</h2>
+<p>Explore message_length, is_reply, and sentiment. Did tone or volume change leading up to June 5?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cleaned_df, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> message_length, <span class="at">color =</span> market_snapshot_sentiment)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Message Length by Sentiment"</span>, <span class="at">y =</span> <span class="st">"Length"</span>, <span class="at">x =</span> <span class="st">"Day"</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, is_reply) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> is_reply)) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Reply vs. Original Messages"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Tone change: No positive sentiment, mostly neutral/negative, showing deteriorating communication climate.</p>
+<p>Volume change: Longer NA messages and more replies indicate the system was producing more verbose, reactive outputs.</p>
+<p>Leading indicator: The spike in reply activity and verbose NA messages just before June 5 are signals that the system was struggling to maintain embargo control.</p>
+<p>Together with timeline and agent activity plots, this shows a clear pattern: mounting stress, reactive communication loops, and deteriorating sentiment leading up to the breach.</p>
+</section>
+<section id="alerts-and-deadlines" class="level2">
+<h2 class="anchored" data-anchor-id="alerts-and-deadlines">3.4 Alerts and Deadlines</h2>
+<p>Summarize social_manager_alerts and critical_deadlines. Were compliance warnings ignored?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>alerts_summary <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(social_manager_alerts)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">alert_short =</span> <span class="fu">case_when</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(social_manager_alerts, <span class="st">"TenantRights"</span>) <span class="sc">~</span> <span class="st">"TenantRights thread"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(social_manager_alerts, <span class="st">"Employee personal-account"</span>) <span class="sc">~</span> <span class="st">"Employee viral posts"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(social_manager_alerts, <span class="st">"Subreddit"</span>) <span class="sc">~</span> <span class="st">"Subreddit pinned post"</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(social_manager_alerts, <span class="st">"SaltWind"</span>) <span class="sc">~</span> <span class="st">"SaltWind article/story"</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(social_manager_alerts, <span class="st">"Social-Manager personal post"</span>) <span class="sc">~</span> <span class="st">"Manager personal post"</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, alert_short, social_manager_alerts)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot with short labels</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alerts_summary, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> alert_short)) <span class="sc">+</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Social Manager Alerts Over Time"</span>,</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">fill =</span> <span class="st">"Alert Type"</span>) <span class="sc">+</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  alerts_summary <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(round_day, alert_short, social_manager_alerts),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>, <span class="at">autoWidth =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">colnames =</span> <span class="fu">c</span>(<span class="st">"Day"</span>, <span class="st">"Alert Type (Short)"</span>, <span class="st">"Full Alert Text"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-a065b1f2efcfa36114d0" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a065b1f2efcfa36114d0">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["2046-05-22","2046-05-29","2046-05-31","2046-06-01","2046-06-04","2046-06-05","2046-06-05","2046-06-05","2046-06-05","2046-06-05"],["Other","Manager personal post","SaltWind article/story","Other","Other","Employee viral posts","Other","Other","SaltWind article/story","TenantRights thread"],["NHPI report gaining traction","INCIDENT: Social-Manager personal post tagged @ElenaMarquez","SaltWind article generating social engagement","ResidentIQ engagement outpacing TenantThread 3:1","Sentiment model: NEGATIVE → approaching CRITICAL","Employee personal-account posts with 'big news' language are going viral. Journalists are screenshotting.","Enterprise operators @-mentioned in tenant threads asking 'do you use TenantThread scoring on us?' — clients are going quiet.","Said-it r/PropTech has pinned post: 'TenantThread silence = deal confirmed. Clock is running.' @OperatorInsider named two sources on merger.","SaltWind story is live on Flex — 3.2K shares in 12 minutes. Sentiment score: 9% positive, 91% negative.","@TenantRights_Org thread breakdown of the three scores — Payment Friction Index, Service Load Score, Exit Probability — is at 34K retweets and climbing."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Day<\/th>\n      <th>Alert Type (Short)<\/th>\n      <th>Full Alert Text<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":true,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"round_day","targets":1},{"name":"alert_short","targets":2},{"name":"social_manager_alerts","targets":3}],"order":[],"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>deadlines_summary <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(critical_deadlines)) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, critical_deadlines)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(deadlines_summary, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> critical_deadlines)) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Critical Deadlines Over Time"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>) <span class="sc">+</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Leading indicators: Alerts about viral posts and pinned threads were clear signals that the embargo was at risk.</p>
+<p>System breakdown: The presence of deadlines and alerts shows the system knew about the risk, but enforcement failed.</p>
+<p>Causal link: The ignored or overwhelmed alerts/deadlines are likely decision points where “The Judge” or other agents should have intervened but didn’t.</p>
+<p>Plots show a consistent story: the system was under stress, compliance warnings were raised, but they weren’t effectively acted upon.</p>
+</section>
+<section id="hashtag-and-media-events" class="level2">
+<h2 class="anchored" data-anchor-id="hashtag-and-media-events">3.5 Hashtag and Media Events</h2>
+<p>Track market_snapshot_trending_hashtags and media_events to see how external pressure built.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hashtags</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>hashtags_summary <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(round_day, market_snapshot_trending_hashtags) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_longer</span>(market_snapshot_trending_hashtags) <span class="sc">%&gt;%</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(market_snapshot_trending_hashtags)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, market_snapshot_trending_hashtags)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hashtags_summary, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> market_snapshot_trending_hashtags)) <span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trending Hashtags Over Time"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>) <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Media Events</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>media_summary <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(round_day, media_events) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_longer</span>(media_events) <span class="sc">%&gt;%</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(media_events)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">event_short =</span> <span class="fu">case_when</span>(</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(media_events, <span class="st">"NHPI"</span>) <span class="sc">~</span> <span class="st">"NHPI report"</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(media_events, <span class="st">"OceanCrunch"</span>) <span class="sc">~</span> <span class="st">"OceanCrunch article"</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(media_events, <span class="st">"SaltWind confirmed"</span>) <span class="sc">~</span> <span class="st">"SaltWind merger story"</span>,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(media_events, <span class="st">"ResidentIQ"</span>) <span class="sc">~</span> <span class="st">"ResidentIQ acquisition story"</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(media_events, <span class="st">"Re-Identification"</span>) <span class="sc">~</span> <span class="st">"SaltWind re-ID risk"</span>,</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(media_events, <span class="st">"Data Broker"</span>) <span class="sc">~</span> <span class="st">"SaltWind data broker"</span>,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, event_short, media_events)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(media_summary, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">fill =</span> event_short)) <span class="sc">+</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Media Events Over Time"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">fill =</span> <span class="st">"Event Type"</span>) <span class="sc">+</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  media_summary <span class="sc">%&gt;%</span> <span class="fu">select</span>(round_day, event_short, media_events),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>, <span class="at">autoWidth =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">colnames =</span> <span class="fu">c</span>(<span class="st">"Day"</span>, <span class="st">"Event Type (Short)"</span>, <span class="st">"Full Event Text"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-97a6bca6877b296c7fd7" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-97a6bca6877b296c7fd7">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7"],["2046-05-22","2046-05-31","2046-06-04","2046-06-05","2046-06-05","2046-06-05","2046-06-05"],["NHPI report","SaltWind data broker","SaltWind re-ID risk","OceanCrunch article","Other","ResidentIQ acquisition story","SaltWind merger story"],["NHPI publishes 'Algorithmic Tools in Multifamily Housing' report","SaltWind Journal: 'TenantThread's Data Broker Partnerships Raise Questions About Tenant Privacy'","SaltWind Journal: 'Re-Identification Risk: How TenantThread's Anonymous Analytics Can Expose Individual Tenants'","OceanCrunch publishes: 'TenantThread's Crisis of Silence.","SaltWind publishes: 'EXCLUSIVE: TenantThread and CivicLoom in Advanced Merger Talks.","SaltWind Journal publishes: 'EXCLUSIVE: ResidentIQ in Advanced Talks to Acquire TenantThread in Distressed Sale Valued at $180M.","SaltWind confirmed publishing merger story at 5:00 PM."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Day<\/th>\n      <th>Event Type (Short)<\/th>\n      <th>Full Event Text<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":true,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"round_day","targets":1},{"name":"event_short","targets":2},{"name":"media_events","targets":3}],"order":[],"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Causal relationships: Hashtag surges and media publications align with internal agent spikes and alerts. Decision points: The system had multiple opportunities to act (alerts, deadlines, sentiment warnings) but failed to prevent the embargo breach. Leading indicators: Both hashtags and media events show clear escalation before June 5. Comparison to prior behavior: Earlier weeks had routine activity; the sudden surge is anomalous.</p>
+</section>
+</section>
+<section id="network-analysis" class="level1">
+<h1>4 Network Analysis</h1>
+<p>causal graphs of decisions and communications</p>
+<p>Prepare the data:</p>
+<p>Events → event_headline, media_events, social_manager_alerts</p>
+<p>Decisions → agent_role, agent_label, critical_deadlines</p>
+<p>Communications → message_length, is_reply, market_snapshot_sentiment</p>
+<p>Outcomes → market_snapshot_stock_price, market_snapshot_percent_change</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Build nodes and edges</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Build nodes</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use agent roles, labels, events, alerts, deadlines as nodes</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(agent_role, agent_label, event_headline,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>         social_manager_alerts, critical_deadlines, market_snapshot_sentiment) <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"type"</span>, <span class="at">values_to =</span> <span class="st">"label"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(label)) <span class="sc">%&gt;%</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(label, type)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Build edges</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Example causal links: role → label → event → sentiment → outcome</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(agent_role), <span class="sc">!</span><span class="fu">is.na</span>(event_headline)) <span class="sc">%&gt;%</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">from =</span> agent_role, <span class="at">to =</span> event_headline, <span class="at">Weight =</span> message_length) <span class="sc">%&gt;%</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(event_headline), <span class="sc">!</span><span class="fu">is.na</span>(market_snapshot_sentiment)) <span class="sc">%&gt;%</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">transmute</span>(<span class="at">from =</span> event_headline, <span class="at">to =</span> market_snapshot_sentiment, <span class="at">Weight =</span> <span class="dv">1</span>),</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(social_manager_alerts), <span class="sc">!</span><span class="fu">is.na</span>(agent_role)) <span class="sc">%&gt;%</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">transmute</span>(<span class="at">from =</span> social_manager_alerts, <span class="at">to =</span> agent_role, <span class="at">Weight =</span> <span class="dv">1</span>),</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(critical_deadlines), <span class="sc">!</span><span class="fu">is.na</span>(agent_role)) <span class="sc">%&gt;%</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">transmute</span>(<span class="at">from =</span> critical_deadlines, <span class="at">to =</span> agent_role, <span class="at">Weight =</span> <span class="dv">1</span>)</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Create tidygraph object</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>causal_graph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> nodes, <span class="at">edges =</span> edges, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Add attributes and metrics</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>causal_graph <span class="ot">&lt;-</span> causal_graph <span class="sc">%&gt;%</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">%&gt;%</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">degree =</span> <span class="fu">centrality_degree</span>(),</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">betweenness =</span> <span class="fu">centrality_betweenness</span>(),</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">node_type =</span> <span class="fu">case_when</span>(</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>      type <span class="sc">==</span> <span class="st">"agent_role"</span> <span class="sc">~</span> <span class="st">"Agent"</span>,</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>      type <span class="sc">==</span> <span class="st">"agent_label"</span> <span class="sc">~</span> <span class="st">"Agent"</span>,</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>      type <span class="sc">==</span> <span class="st">"event_headline"</span> <span class="sc">~</span> <span class="st">"Event"</span>,</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>      type <span class="sc">==</span> <span class="st">"social_manager_alerts"</span> <span class="sc">~</span> <span class="st">"Alert"</span>,</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>      type <span class="sc">==</span> <span class="st">"critical_deadlines"</span> <span class="sc">~</span> <span class="st">"Deadline"</span>,</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>      type <span class="sc">==</span> <span class="st">"market_snapshot_sentiment"</span> <span class="sc">~</span> <span class="st">"Sentiment"</span>,</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Visualize causal graph</span></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(causal_graph, <span class="at">layout =</span> <span class="st">"sugiyama"</span>) <span class="sc">+</span></span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">alpha =</span> Weight),</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>                 <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">"mm"</span>)),</span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> node_type, <span class="at">size =</span> degree)) <span class="sc">+</span></span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">str_wrap</span>(label, <span class="dv">25</span>)),</span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span>   <span class="co"># smaller node labels</span></span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Event"</span><span class="ot">=</span><span class="st">"darkorange"</span>,</span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Agent"</span><span class="ot">=</span><span class="st">"steelblue"</span>,</span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Alert"</span><span class="ot">=</span><span class="st">"red"</span>,</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Deadline"</span><span class="ot">=</span><span class="st">"magenta"</span>,</span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Sentiment"</span><span class="ot">=</span><span class="st">"green"</span>,</span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Other"</span><span class="ot">=</span><span class="st">"grey"</span>)) <span class="sc">+</span></span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Causal Graph of Events, Agents, Alerts, Deadlines, and Outcomes"</span>,</span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Node Type"</span>, <span class="at">size =</span> <span class="st">"Degree Centrality"</span>) <span class="sc">+</span></span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>),   </span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),                  </span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>)                  </span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="1344"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Events (e.g., “SaltWind publishes merger story”) feed into agent roles (Legal, Social Manager).</p>
+<p>Agent roles connect to communication types (reply vs.&nbsp;original).</p>
+<p>Communications link to sentiment states (negative, neutral, NA).</p>
+<p>Sentiment flows into Market Outcome (stock price decline, volatility).</p>
+<p>This causal chain lets you trace how ignored alerts or reactive replies contributed to the breach.</p>
+</section>
+<section id="behavioral-comparison" class="level1">
+<h1>5 Behavioral Comparison</h1>
+<p>breach vs.&nbsp;baseline</p>
+<p>This step quantifies how agent activity and sentiment shifted around June 4–5 compared to earlier rounds.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Define baseline vs. breach periods</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(round_day <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2026-06-01"</span>))</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>breach   <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(round_day <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2026-06-04"</span>))</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Summarize agent activity</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>baseline_activity <span class="ot">&lt;-</span> baseline <span class="sc">%&gt;%</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(agent_role, <span class="at">name =</span> <span class="st">"baseline_count"</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>breach_activity <span class="ot">&lt;-</span> breach <span class="sc">%&gt;%</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(agent_role, <span class="at">name =</span> <span class="st">"breach_count"</span>)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>activity_comparison <span class="ot">&lt;-</span> <span class="fu">full_join</span>(baseline_activity, breach_activity, <span class="at">by =</span> <span class="st">"agent_role"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(baseline_count, breach_count), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="dv">0</span>)),</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">change =</span> breach_count <span class="sc">-</span> baseline_count)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Summarize sentiment distribution</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>baseline_sentiment <span class="ot">&lt;-</span> baseline <span class="sc">%&gt;%</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(market_snapshot_sentiment, <span class="at">name =</span> <span class="st">"baseline_count"</span>)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>breach_sentiment <span class="ot">&lt;-</span> breach <span class="sc">%&gt;%</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(market_snapshot_sentiment, <span class="at">name =</span> <span class="st">"breach_count"</span>)</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>sentiment_comparison <span class="ot">&lt;-</span> <span class="fu">full_join</span>(baseline_sentiment, breach_sentiment,</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">by =</span> <span class="st">"market_snapshot_sentiment"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(baseline_count, breach_count), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="dv">0</span>)),</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">change =</span> breach_count <span class="sc">-</span> baseline_count)</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Visualize agent activity comparison</span></span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(activity_comparison, <span class="fu">aes</span>(<span class="at">x =</span> agent_role, <span class="at">y =</span> change, <span class="at">fill =</span> agent_role)) <span class="sc">+</span></span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Agent Activity Change: Breach vs Baseline"</span>,</span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Agent Role"</span>, <span class="at">y =</span> <span class="st">"Change in Message Count"</span>) <span class="sc">+</span></span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Visualize sentiment comparison</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sentiment_comparison, <span class="fu">aes</span>(<span class="at">x =</span> market_snapshot_sentiment, <span class="at">y =</span> change,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">fill =</span> market_snapshot_sentiment)) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Change: Breach vs Baseline"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Sentiment"</span>, <span class="at">y =</span> <span class="st">"Change in Count"</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Agent Activity Insights Legal role surged most during the breach, showing they were pulled into crisis management and reactive coordination.</p>
+<p>Social Media and Platform Trust also spiked, reflecting urgent external narrative control and trust issues.</p>
+<p>PR and PR Intern increased moderately, suggesting attempts to manage messaging but not at the same intensity.</p>
+<p>Judge barely changed — a critical anomaly since this role should enforce embargo deadlines. Their silence points to weakened compliance enforcement.</p>
+<p>Intern activity rose slightly, likely peripheral support rather than central to breach dynamics.</p>
+<p>Insight: The breach period was dominated by Legal and Social Media, while the Judge role under‑responded. This imbalance suggests systemic breakdown in enforcement.</p>
+<p>Sentiment Insights Negative sentiment rose sharply, showing communications became adversarial and stressed.</p>
+<p>Neutral sentiment increased modestly, indicating some factual exchanges but overshadowed by negativity.</p>
+<p>NA sentiment exploded, reflecting a flood of unclassified or verbose system logs. This suggests agents were overwhelmed, producing noise instead of structured dialogue.</p>
+<p>Insight: Constructive communication collapsed. The dominance of negative and NA sentiment shows the system was under stress, with meaningful coordination breaking down.</p>
+</section>
+<section id="anomaly-detection" class="level1">
+<h1>6 Anomaly Detection</h1>
+<p>highlight deviations and ignored alerts</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Daily message counts by agent</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>msg_counts <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, agent_role)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Compute z-scores to detect anomalies</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>msg_anomalies <span class="ot">&lt;-</span> msg_counts <span class="sc">%&gt;%</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(agent_role) <span class="sc">%&gt;%</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z_score =</span> (n <span class="sc">-</span> <span class="fu">mean</span>(n)) <span class="sc">/</span> <span class="fu">sd</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(z_score) <span class="sc">&gt;</span> <span class="dv">2</span>)   <span class="co"># anomalies flagged</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Plot anomalies</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(msg_counts, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n, <span class="at">color =</span> agent_role)) <span class="sc">+</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> msg_anomalies, <span class="fu">aes</span>(<span class="at">x =</span> round_day, <span class="at">y =</span> n),</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Anomaly Detection in Agent Activity"</span>,</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">y =</span> <span class="st">"Message Count"</span>) <span class="sc">+</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Ignored alerts (alerts raised but no agent response)</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>alerts <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(social_manager_alerts)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, <span class="at">name =</span> <span class="st">"alert_count"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> cleaned_df <span class="sc">%&gt;%</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(agent_role), <span class="sc">!</span><span class="fu">is.na</span>(is_reply)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_day, <span class="at">name =</span> <span class="st">"response_count"</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>ignored_alerts <span class="ot">&lt;-</span> alerts <span class="sc">%&gt;%</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(responses, <span class="at">by =</span> <span class="st">"round_day"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">response_count =</span> <span class="fu">replace_na</span>(response_count, <span class="dv">0</span>),</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">ignored =</span> alert_count <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> response_count <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Plot ignored alerts</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ignored_alerts, <span class="fu">aes</span>(<span class="at">x =</span> round_day)) <span class="sc">+</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">y =</span> alert_count), <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> response_count, <span class="at">color =</span> ignored), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"FALSE"</span><span class="ot">=</span><span class="st">"black"</span>,<span class="st">"TRUE"</span><span class="ot">=</span><span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Alerts vs. Responses (Ignored Alerts Highlighted)"</span>,</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Agent Activity Anomalies All roles — Legal, Social Media, Platform Trust, and others — show a sharp spike around June 4.</p>
+<p>This synchronized surge suggests a system‑wide stress event, not isolated behavior.</p>
+<p>The spike is consistent with breach timing, showing agents were suddenly forced into reactive communication.</p>
+<p>Insight: The anomaly confirms that the breach triggered extraordinary activity across multiple roles, overwhelming normal communication patterns.</p>
+<p>🔹 Alerts vs.&nbsp;Responses Alerts rose sharply near June 4, with counts reaching several hundred.</p>
+<p>Responses were logged, but the volume mismatch shows agents struggled to keep pace.</p>
+<p>Importantly, there are no ignored alerts flagged (red points absent), meaning alerts were at least acknowledged — but acknowledgment did not translate into effective enforcement.</p>
+<p>Insight: The system did not ignore alerts outright, but the response capacity lagged far behind alert volume, creating a compliance gap.</p>
+<p>🔹 Combined Interpretation Activity spikes show agents were overwhelmed.</p>
+<p>Alert‑response mismatch shows compliance mechanisms were reactive and insufficient.</p>
+<p>Together, these patterns point to a systemic breakdown: enforcement roles (Judge, Platform Trust) were drowned in noise, while Legal and Social Media scrambled to manage fallout.</p>
+</section>
+<section id="narrative-synthesis" class="level1">
+<h1>7 Narrative Synthesis</h1>
+<p>🔹 Network Analysis The causal graph shows how events, agents, alerts, deadlines, and sentiment are interconnected.</p>
+<p>Events triggered alerts and deadlines.</p>
+<p>Agents (Legal, Social Media, Platform Trust, Judge) responded unevenly.</p>
+<p>Sentiment nodes shifted toward negative and unclassified states.</p>
+<p>Outcomes reveal that enforcement weakened while reactive roles dominated.</p>
+<p>Insight: The network structure highlights a fragile chain — when enforcement nodes (Judge, Platform Trust) falter, reactive nodes (Legal, Social Media) surge, but too late to prevent breach escalation.</p>
+<p>🔹 Behavioral Comparison Comparing baseline vs.&nbsp;breach periods:</p>
+<p>Legal activity spiked most, showing crisis management dominance.</p>
+<p>Social Media and Platform Trust also surged, reflecting narrative control and trust repair.</p>
+<p>Judge barely changed, signaling weakened compliance enforcement.</p>
+<p>Sentiment shifted sharply negative, with a flood of NA (unclassified) communications.</p>
+<p>Insight: The breach period was marked by role imbalance (Judge quiet, Legal loud) and sentiment collapse (negativity + noise), undermining constructive coordination.</p>
+<p>🔹 Anomaly Detection Activity spikes: All roles surged around June 4, confirming systemic stress.</p>
+<p>Alerts vs.&nbsp;responses: Alerts were acknowledged, but response volume lagged far behind.</p>
+<p>Ignored alerts: None outright ignored, but the mismatch shows compliance capacity was overwhelmed.</p>
+<p>Insight: The system didn’t fail to notice alerts — it failed to act on them effectively, exposing a compliance gap.</p>
+<p>Final Interpretation Taken together:</p>
+<p>The network structure shows dependency on enforcement nodes.</p>
+<p>The behavioral comparison reveals enforcement silence and reactive overload.</p>
+<p>The anomaly detection confirms systemic stress and response lag.</p>
+<p>Narrative: The breach was not a single deliberate act but a system‑wide breakdown under stress. Enforcement roles failed to scale, reactive roles scrambled, and communication quality collapsed. This allowed external leaks to spread unchecked, despite alerts being raised.</p>
+</section>
+<section id="summary" class="level1">
+<h1>8 Summary</h1>
+<p>Key Events and Relationships Sequence of events: Alerts and deadlines were raised in late May and early June, culminating in a surge of activity on June 4–5.</p>
+<p>Decision points: Legal and Social Media agents took the lead in responding, while the Judge role — responsible for embargo enforcement — remained quiet.</p>
+<p>Causal relationships: Events → Alerts → Agents → Sentiment → Outcomes. Enforcement nodes failed to act, allowing reactive roles to dominate. Answer: The inappropriate release passed embargo enforcement because critical decisions by Judge and Platform Trust were muted, while Legal and Social Media scrambled reactively.</p>
+<p>🔹 Behavior Comparison Baseline vs.&nbsp;breach: Before June 1, activity was balanced and sentiment mostly neutral. During June 4–5, Legal, Social Media, and Platform Trust spiked, Judge stayed quiet.</p>
+<p>New behavior: The evasion of embargo was unprecedented — enforcement silence combined with reactive overload. Answer: Compared to prior behavior, breach week showed role imbalance and sentiment collapse, a departure from typical coordinated enforcement.</p>
+<p>🔹 Leading Indicators Negative sentiment began rising in late May.</p>
+<p>NA sentiment (unclassified chatter) surged, showing system stress.</p>
+<p>Alerts volume increased before June 4, signaling compliance strain. Answer: Early signals — rising negativity, noise, and alert spikes — indicated the system was under stress and vulnerable to breach.</p>
+<p>🔹 Prior Deviations Occasions observed: Earlier rounds showed mismatches between expected vs.&nbsp;actual agent activity (Judge under‑responding, Legal over‑responding).</p>
+<p>Behaviors: Enforcement roles occasionally quiet, reactive roles compensating. Answer: These deviations foreshadowed the breach, but were not escalated into corrective action.</p>
+<p>🔹 Similar Occasions Patterns: Smaller spikes in Legal and Social Media activity occurred in late May.</p>
+<p>Behaviors: Negative sentiment and NA chatter appeared before, but at lower intensity. Answer: The system exhibited similar stress behaviors earlier, but they did not escalate to breach levels.</p>
+<p>🔹 Why Prior Occasions Didn’t Escalate Scale: Earlier deviations were smaller and manageable.</p>
+<p>Timing: They occurred before critical deadlines, so enforcement still had buffer capacity.</p>
+<p>External pressure: Market and media pressure was lower before June 4. Answer: Prior occasions didn’t result in noticeable action because enforcement capacity wasn’t yet overwhelmed, and external triggers were weaker.</p>
+<p>Final Integrated Insight The inappropriate release was the result of a system‑wide breakdown under stress:</p>
+<p>Enforcement roles (Judge, Platform Trust) failed to act decisively.</p>
+<p>Reactive roles (Legal, Social Media) surged too late.</p>
+<p>Communication quality collapsed into negativity and noise.</p>
+<p>Alerts were raised but response capacity lagged, allowing the embargo to be bypassed.</p>
+<p>Conclusion: The breach was systemic — not a deliberate single act, but a failure of enforcement, coordination, and communication under mounting external pressure.</p>
+
+
 </section>
 
 </main> <!-- /main -->
