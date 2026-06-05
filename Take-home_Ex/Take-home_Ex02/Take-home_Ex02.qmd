@@ -1,0 +1,284 @@
+---
+title: "Take-home Ex02"
+author: "Jiang Yuxi"
+format: html
+editor: visual
+date: "May 22, 2026"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# Exploring Vast Challenge 2024 - Mini-challenge 1
+
+# 1. Overview
+
+## 1.1 Setting the scene
+
+## 1.2 Key Objectives of this assignment
+
+# 2. Data Import & Processing
+
+## 2.1 Loading Relevant Packages and Data
+
+| Packages Used | Purpose |
+|----------------------------------|--------------------------------------|
+| jsonlite, sf | Importing JSON file and geojson for geographical data |
+| tidyverse, lubridate, dplyr, readr, reshape2, data.table | Data wrangling and reshaping in preparation for visualisation and wrap text function |
+| ggplot2, tidygraph, patchwork, sf, ggrepel | Statistical graph and geographical plots with points and polygons and tidying of graphs for clarity and aesthetics |
+| DT, igraph, ggraph, plotly, visNetwork, ggiraph | For interactive graph and data table for user to drill down on area of interest |
+
+Load packages
+
+```{r}
+pacman::p_load(tidyverse, jsonlite, tidygraph, ggraph, lubridate)
+```
+
+Read JSON file
+
+```{r}
+mc1_data <- fromJSON ("VAST_Challenge_2026_MC1/MC1_final_00.json")
+```
+
+Save parsed object for quick reloads
+
+```{r}
+write_rds(mc1_data, "data/mc1_data.rds")
+```
+
+## 2.2 Inspect Data Structure
+
+to see which fields are nested and which are flat
+
+```{r}
+glimpse(mc1_data)
+```
+
+## 2.3 Flat Nested Columns
+
+separated the dataset into simple columns (flat, easy to analyze) and nested list columns (require flattening).
+
+mutate() converts strings like "2046-05-17T09:00:00" into proper timestamps.
+
+parse_number() strips \$ and % so you can plot stock price and percent change.
+
+This table is perfect for time-series plots, sentiment trends, and event timelines.
+
+```{r}
+# Convert rounds into tibble
+df_flat <- as_tibble(mc1_data$rounds)
+glimpse(df_flat)
+```
+
+```{r}
+# --- Step 1: Flatten environment_context ---
+df_flat <- df_flat %>%
+  unnest_wider(environment_context) %>%                 # expand 10 subfields
+  unnest_wider(market_snapshot, names_sep = "_")        # expand nested market_snapshot
+
+# --- Step 2: Round-level context (macro trends) ---
+context_df <- df_flat %>%
+  select(hour, event_headline, event_narrative,
+         social_state, market_snapshot_stock_price,
+         market_snapshot_percent_change, market_snapshot_sentiment)
+
+# --- Step 3: Communications (micro actions) ---
+comm_df <- df_flat %>%
+  select(hour, communications) %>%
+  unnest(communications)   # each message becomes a row
+
+# --- Step 4: Participants ---
+participants_df <- df_flat %>%
+  select(hour, participants) %>%
+  unnest(participants)     # each participant becomes a row
+
+# --- Step 5: Alerts ---
+alerts_df <- df_flat %>%
+  select(hour, social_manager_alerts) %>%
+  unnest_longer(social_manager_alerts)
+
+# --- Step 6: Deadlines ---
+deadlines_df <- df_flat %>%
+  select(hour, critical_deadlines) %>%
+  unnest_longer(critical_deadlines)
+
+# --- Step 7: News ---
+news_df <- df_flat %>%
+  select(hour, news) %>%
+  unnest_longer(news)
+
+# --- Step 8: Hashtags ---
+hashtags_df <- df_flat %>%
+  select(hour, market_snapshot_trending_hashtags) %>%
+  unnest_longer(market_snapshot_trending_hashtags)
+
+# --- Step 9: Media Events ---
+media_df <- df_flat %>%
+  select(hour, media_events) %>%
+  unnest_longer(media_events)
+
+# --- Step 10: External Actor Actions ---
+actors_df <- df_flat %>%
+  select(hour, external_actor_actions) %>%
+  unnest_longer(external_actor_actions)
+
+# --- Step 11: Agents Unavailable ---
+agents_df <- df_flat %>%
+  select(hour, agents_unavailable) %>%
+  unnest_longer(agents_unavailable)
+
+# --- Step 12: Join everything back on hour ---
+combined_df <- context_df %>%
+  left_join(comm_df, by = "hour") %>%
+  left_join(participants_df, by = c("hour", "agent_id")) %>%
+  left_join(alerts_df, by = "hour") %>%
+  left_join(deadlines_df, by = "hour") %>%
+  left_join(news_df, by = "hour") %>%
+  left_join(hashtags_df, by = "hour") %>%
+  left_join(media_df, by = "hour") %>%
+  left_join(actors_df, by = "hour") %>%
+  left_join(agents_df, by = "hour")
+
+ # --- Step 13: unnest nested columns---
+combined_df <- combined_df %>%
+  unnest_wider(internal_state, names_sep = "_") %>%
+  unnest_wider(agent_round_metadata, names_sep = "_")
+
+# Inspect the combined dataset
+glimpse(combined_df)
+```
+
+**Structure of the Data Round context (macro level)**
+
+-   hour: timestamp of the round (e.g., "2046-05-17T09:00:00")
+
+-   event_headline: short summary of the round’s main event
+
+-   event_narrative: longer description of what happened
+
+-   social_state: public sentiment or chatter at that time
+
+-   market_snapshot_stock_price, market_snapshot_percent_change, market_snapshot_sentiment: financial indicators
+
+**Message details (micro level)**
+
+-   message_id: unique ID for each communication
+
+-   channel: communication channel (e.g., comms_huddle)
+
+-   recipients: who received the message (often "ALL")
+
+-   message_type: type of communication (broadcast, direct, etc.)
+
+-   responding_to: links replies to earlier messages
+
+-   content: the actual text of the message
+
+-   timestamp: precise time within the round
+
+**Agent information**
+
+-   agent_id: unique identifier (e.g., legal_agent, quality_agent)
+
+-   agent_role.x / agent_role.y: role categories (legal, platform_trust, PR, social_media)
+
+-   agent_label.x / agent_label.y: human‑readable labels (Legal‑Agent, PR‑Agent, etc.)
+
+-   declared_action: explicit actions taken (often NA if none declared)
+
+**Internal state (flattened)**
+
+-   internal_state_reacting, internal_state_rationalizing, internal_state_deliberating: cognitive/emotional notes about the agent’s reasoning during that message.
+
+**Agent round metadata**
+
+-   agent_round_metadata_sentiment_at_turn: sentiment snapshot for that agent at that turn
+
+-   agent_round_metadata_action_classification: classification of the agent’s action
+
+**Additional context signals**
+
+-   social_manager_alerts, critical_deadlines, news, market_snapshot_trending_hashtags, media_events, external_actor_actions, agents_unavailable: contextual signals, often sparse (many NA or empty lists).
+
+```{r}
+saveRDS(combined_df, "data/combined_df_raw.rds")
+```
+
+## 2.4 Data Wrangling
+
+### 2.4.1 Data Type Conversion
+
+Convert stock price: Strip the \$ sign and convert to numeric. 
+Convert percent change: Remove % and convert to numeric. 
+Standardize timestamps: Convert hour and timestamp to proper datetime objects.
+
+```{r}
+combined_df <- readRDS("data/combined_df_raw.rds")
+names(combined_df)
+```
+
+```{r}
+cleaned_df <- combined_df %>%
+  mutate(
+    market_snapshot_stock_price = as.numeric(gsub("[$]", "", market_snapshot_stock_price)),
+    market_snapshot_percent_change = as.numeric(gsub("[%]", "", market_snapshot_percent_change)),
+    hour = lubridate::ymd_hms(hour),
+    timestamp = lubridate::ymd_hms(timestamp)
+  )
+```
+
+### 2.4.2 Handle NA values
+
+For sparse columns like social_manager_alerts, news, agents_unavailable, replace empty lists with NA_character\_.
+
+```{r}
+cleaned_df <- cleaned_df %>%
+  mutate(across(where(is.character), ~ na_if(.x, ""))) %>%
+  select(where(~ !all(is.na(.))))
+
+```
+
+### 2.4.3 Normalize agent roles
+
+Collapse duplicate role columns (agent_role.x, agent_role.y) into one clean agent_role.
+
+```{r}
+cleaned_df <- combined_df %>%
+  mutate(agent_role = coalesce(agent_role.x, agent_role.y),
+         agent_label = coalesce(agent_label.x, agent_label.y)) %>%
+  select(-agent_role.x, -agent_role.y, -agent_label.x, -agent_label.y)
+```
+
+### 2.4.4 Categorical encoding 
+
+Convert market_snapshot_sentiment into factors for modeling:
+```{r}
+cleaned_df <- cleaned_df %>%
+  mutate(market_snapshot_sentiment = factor(market_snapshot_sentiment,
+                                            levels = c("negative","neutral","positive")))
+```
+### 2.4.5 Derived Features
+
+```{r}
+cleaned_df <- cleaned_df %>%
+  mutate(
+    message_length = str_length(content),
+    is_reply = !is.na(responding_to),
+    round_day = lubridate::date(hour)
+  )
+```
+
+### 2.4.6 Text cleaning
+
+```{r}
+cleaned_df <- combined_df %>%
+  mutate(content = str_squish(content))
+```
+
+```{r}
+glimpse(cleaned_df)
+```
+
