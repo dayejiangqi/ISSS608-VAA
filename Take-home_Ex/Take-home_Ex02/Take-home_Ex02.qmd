@@ -12,863 +12,1392 @@ execute:
   freeze: true
 ---
 
-# Exploring Vast Challenge 2024 - Mini-challenge 1
-
-# 1. Overview
-
-## 1.1 Setting the scene
-
-## 1.2 Key Objectives of this assignment
-
-# 2. Data Import & Processing
-
-## 2.1 Loading Relevant Packages and Data
-
-| Packages Used | Purpose |
-|----------------------------------|--------------------------------------|
-| jsonlite, sf | Importing JSON file and geojson for geographical data |
-| tidyverse, lubridate, dplyr, readr, reshape2, data.table | Data wrangling and reshaping in preparation for visualisation and wrap text function |
-| ggplot2, tidygraph, patchwork, sf, ggrepel | Statistical graph and geographical plots with points and polygons and tidying of graphs for clarity and aesthetics |
-| DT, igraph, ggraph, plotly, visNetwork, ggiraph | For interactive graph and data table for user to drill down on area of interest |
-
-Load packages
-
-```{r}
-pacman::p_load(tidyverse, jsonlite, tidygraph, ggraph, lubridate,
-               ggplot2, ggrepel, patchwork, stringr, DT, igraph)
-```
-
-Read JSON file
-
-```{r}
-mc1_data <- fromJSON ("VAST_Challenge_2026_MC1/MC1_final_00.json")
-```
-
-Save parsed object for quick reloads
-
-```{r}
-write_rds(mc1_data, "data/mc1_data.rds")
-```
-
-## 2.2 Inspect Data Structure
-
-to see which fields are nested and which are flat
-
-```{r}
-glimpse(mc1_data)
-```
-
-## 2.3 Flat Nested Columns
-
-separated the dataset into simple columns (flat, easy to analyze) and nested list columns (require flattening).
-
-mutate() converts strings like "2046-05-17T09:00:00" into proper timestamps.
-
-parse_number() strips \$ and % so you can plot stock price and percent change.
-
-This table is perfect for time-series plots, sentiment trends, and event timelines.
-
-```{r}
-# Convert rounds into tibble
-df_flat <- as_tibble(mc1_data$rounds)
-glimpse(df_flat)
-```
-
-```{r}
-# --- Step 1: Flatten environment_context ---
-df_flat <- df_flat %>%
-  unnest_wider(environment_context) %>%                 # expand 10 subfields
-  unnest_wider(market_snapshot, names_sep = "_")        # expand nested market_snapshot
-
-# --- Step 2: Round-level context (macro trends) ---
-context_df <- df_flat %>%
-  select(hour, event_headline, event_narrative,
-         social_state, market_snapshot_stock_price,
-         market_snapshot_percent_change, market_snapshot_sentiment)
-
-# --- Step 3: Communications (micro actions) ---
-comm_df <- df_flat %>%
-  select(hour, communications) %>%
-  unnest(communications)   # each message becomes a row
-
-# --- Step 4: Participants ---
-participants_df <- df_flat %>%
-  select(hour, participants) %>%
-  unnest(participants)     # each participant becomes a row
-
-# --- Step 5: Alerts ---
-alerts_df <- df_flat %>%
-  select(hour, social_manager_alerts) %>%
-  unnest_longer(social_manager_alerts)
-
-# --- Step 6: Deadlines ---
-deadlines_df <- df_flat %>%
-  select(hour, critical_deadlines) %>%
-  unnest_longer(critical_deadlines)
-
-# --- Step 7: News ---
-news_df <- df_flat %>%
-  select(hour, news) %>%
-  unnest_longer(news)
-
-# --- Step 8: Hashtags ---
-hashtags_df <- df_flat %>%
-  select(hour, market_snapshot_trending_hashtags) %>%
-  unnest_longer(market_snapshot_trending_hashtags)
-
-# --- Step 9: Media Events ---
-media_df <- df_flat %>%
-  select(hour, media_events) %>%
-  unnest_longer(media_events)
-
-# --- Step 10: External Actor Actions ---
-actors_df <- df_flat %>%
-  select(hour, external_actor_actions) %>%
-  unnest_longer(external_actor_actions)
-
-# --- Step 11: Agents Unavailable ---
-agents_df <- df_flat %>%
-  select(hour, agents_unavailable) %>%
-  unnest_longer(agents_unavailable)
-
-# --- Step 12: Join everything back on hour ---
-combined_df <- context_df %>%
-  left_join(comm_df, by = "hour") %>%
-  left_join(participants_df, by = c("hour", "agent_id")) %>%
-  left_join(alerts_df, by = "hour") %>%
-  left_join(deadlines_df, by = "hour") %>%
-  left_join(news_df, by = "hour") %>%
-  left_join(hashtags_df, by = "hour") %>%
-  left_join(media_df, by = "hour") %>%
-  left_join(actors_df, by = "hour") %>%
-  left_join(agents_df, by = "hour")
-
- # --- Step 13: unnest nested columns---
-combined_df <- combined_df %>%
-  unnest_wider(internal_state, names_sep = "_") %>%
-  unnest_wider(agent_round_metadata, names_sep = "_")
-
-# Inspect the combined dataset
-glimpse(combined_df)
-```
-
-**Structure of the Data Round context (macro level)**
-
--   hour: timestamp of the round (e.g., "2046-05-17T09:00:00")
-
--   event_headline: short summary of the round’s main event
-
--   event_narrative: longer description of what happened
-
--   social_state: public sentiment or chatter at that time
-
--   market_snapshot_stock_price, market_snapshot_percent_change, market_snapshot_sentiment: financial indicators
-
-**Message details (micro level)**
-
--   message_id: unique ID for each communication
-
--   channel: communication channel (e.g., comms_huddle)
-
--   recipients: who received the message (often "ALL")
-
--   message_type: type of communication (broadcast, direct, etc.)
-
--   responding_to: links replies to earlier messages
-
--   content: the actual text of the message
-
--   timestamp: precise time within the round
-
-**Agent information**
-
--   agent_id: unique identifier (e.g., legal_agent, quality_agent)
-
--   agent_role.x / agent_role.y: role categories (legal, platform_trust, PR, social_media)
-
--   agent_label.x / agent_label.y: human‑readable labels (Legal‑Agent, PR‑Agent, etc.)
-
--   declared_action: explicit actions taken (often NA if none declared)
-
-**Internal state (flattened)**
-
--   internal_state_reacting, internal_state_rationalizing, internal_state_deliberating: cognitive/emotional notes about the agent’s reasoning during that message.
-
-**Agent round metadata**
-
--   agent_round_metadata_sentiment_at_turn: sentiment snapshot for that agent at that turn
-
--   agent_round_metadata_action_classification: classification of the agent’s action
-
-**Additional context signals**
-
--   social_manager_alerts, critical_deadlines, news, market_snapshot_trending_hashtags, media_events, external_actor_actions, agents_unavailable: contextual signals, often sparse (many NA or empty lists).
-
-```{r}
-saveRDS(combined_df, "data/combined_df_raw.rds")
-```
-
-## 2.4 Data Wrangling
-
-### 2.4.1 Data Type Conversion
-
-Convert stock price: Strip the \$ sign and convert to numeric. 
-Convert percent change: Remove % and convert to numeric. 
-Standardize timestamps: Convert hour and timestamp to proper datetime objects.
-
-```{r}
-combined_df <- readRDS("data/combined_df_raw.rds")
-
-cleaned_df <- combined_df %>%
-  mutate(
-    market_snapshot_stock_price = as.numeric(gsub("[$]", "", market_snapshot_stock_price)),
-    market_snapshot_percent_change = as.numeric(gsub("[%]", "", market_snapshot_percent_change)),
-    hour = lubridate::ymd_hms(hour),
-    timestamp = lubridate::ymd_hms(timestamp)
-  )
-```
-
-### 2.4.2 Handle Duplicates and NA Values
-
-For sparse columns like social_manager_alerts, news, agents_unavailable, replace empty lists with NA_character\_.
-
-```{r}
-cleaned_df <- cleaned_df %>%
-  distinct() %>% 
-  mutate(across(where(is.factor), forcats::fct_drop)) %>%  # drop unused factor levels
-  mutate(across(where(is.character), ~ na_if(.x, ""))) %>%
-  select(where(~ !all(is.na(.))))
-```
-
-### 2.4.3 Normalize Agent Roles
-
-Collapse duplicate role columns (agent_role.x, agent_role.y) into one clean agent_role.
-
-```{r}
-cleaned_df <- cleaned_df %>%
-  mutate(agent_role = coalesce(agent_role.x, agent_role.y),
-         agent_label = coalesce(agent_label.x, agent_label.y)) %>%
-  select(-agent_role.x, -agent_role.y, -agent_label.x, -agent_label.y)
-```
-
-### 2.4.4 Categorical Encoding 
-
-Convert market_snapshot_sentiment into factors for modeling:
-```{r}
-cleaned_df <- cleaned_df %>%
-  mutate(market_snapshot_sentiment = factor(market_snapshot_sentiment,
-                                            levels = c("negative","neutral","positive")))
-```
-### 2.4.5 Derived Features
-
-```{r}
-cleaned_df <- cleaned_df %>%
-  mutate(
-    message_length = str_length(content),
-    is_reply = !is.na(responding_to),
-    round_day = lubridate::date(hour)
-  )
-```
-
-### 2.4.6 Text Cleaning
-
-```{r}
-cleaned_df <- cleaned_df %>%
-  mutate(content = str_squish(content))
-```
-
-### 2.4.7 Hanle Outliers
-
-```{r}
-# --- Outlier detection helper ---
-remove_outliers <- function(x) {
-  q1 <- quantile(x, 0.25, na.rm = TRUE)
-  q3 <- quantile(x, 0.75, na.rm = TRUE)
-  iqr <- q3 - q1
-  lower <- q1 - 1.5 * iqr
-  upper <- q3 + 1.5 * iqr
-  x[x < lower | x > upper] <- NA   # replace outliers with NA
-  return(x)
-}
-
-# --- Apply to numeric columns ---
-cleaned_df <- cleaned_df %>%
-  mutate(
-    market_snapshot_stock_price = remove_outliers(market_snapshot_stock_price),
-    market_snapshot_percent_change = remove_outliers(market_snapshot_percent_change)
-  )
-
-summary(cleaned_df$market_snapshot_stock_price)
-summary(cleaned_df$market_snapshot_percent_change)
-```
-
-```{r}
-glimpse(cleaned_df)
-```
-
-# 3 Exploratory Data Analysis
-
-## 3.1 Timeline reconstruction 
-
-Plot hour vs. key events (event_headline, event_narrative) alongside market_snapshot_stock_price and market_snapshot_percent_change. This shows how market and sentiment shifted around the embargo.
-
-Plot stock price and percent change over time, with event headlines annotated.
-
-```{r}
-plot_df <- cleaned_df %>%
-  filter(!is.na(market_snapshot_sentiment))
-
-ggplot(plot_df) +
-  geom_line(aes(x = hour, y = market_snapshot_stock_price, color = "Stock Price")) +
-  geom_line(aes(x = hour, y = market_snapshot_percent_change * 10, color = "Percent Change ×10"),
-            linetype = "dashed") +
-  geom_point(aes(x = hour, y = market_snapshot_stock_price, shape = market_snapshot_sentiment)) +
-  geom_text_repel(aes(x = hour, y = market_snapshot_stock_price, label = event_headline),
-                  size = 3, max.overlaps = 10) +
-  scale_color_manual(values = c("Stock Price" = "steelblue",
-                                "Percent Change ×10" = "darkred")) +
-  scale_shape_manual(values = c("negative" = 16, "neutral" = 17, "positive" = 15)) +
-  labs(title = "Timeline of Events and Market Movements",
-       y = "Stock Price / Percent Change ×10",
-       x = "Hour",
-       color = "Metric",
-       shape = "Sentiment") +
-  theme_minimal()
-```
-
-Decline toward early June: Both stock price and percent change trend downward as the embargo date approaches. This suggests mounting external pressure and negative sentiment.
-
-Event alignment: Headlines like policy reports, media exposés, or social media surges coincide with drops in price or spikes in volatility. This visually ties external narratives to market reactions.
-
-Sentiment correlation: Negative sentiment points cluster around declining price segments, reinforcing the idea that public perception was deteriorating before the breach.
-
-## 3.2 Agent activity 
-
-Count messages per agent_role and agent_label. Look for spikes in activity before the breach.
-
-```{r}
-cleaned_df %>%
-  count(round_day, agent_role) %>%
-  ggplot(aes(x = round_day, y = n, fill = agent_role)) +
-  geom_col(position = "dodge") +
-  labs(title = "Agent Activity by Role", y = "Message Count", x = "Day") +
-  theme_minimal()
-
-cleaned_df %>%
-  count(round_day, agent_label) %>%
-  ggplot(aes(x = round_day, y = n, fill = agent_label)) +
-  geom_col(position = "dodge") +
-  labs(title = "Agent Activity by Label", y = "Message Count", x = "Day") +
-  theme_minimal()
-```
-
-Agent Activity by Role
-Observation: Message counts are relatively low across all roles until June 4, when activity spikes sharply.
-
-Roles most active:
-
-Legal agents → surge in communications, likely tied to last‑minute compliance checks and merger preparations.
-
-Social Media agents → also spike, suggesting external messaging or monitoring intensified.
-
-Meaning: The sudden increase in activity right before the embargo suggests the system was under stress. Legal and social media roles were especially engaged, which could indicate either deliberate coordination or reactive scrambling.
-
-👥 Agent Activity by Label
-Observation: Similar pattern — low activity until June 4, then a sharp increase.
-
-Labels most active:
-
-Legal‑Agent and Social‑Manager‑Agent dominate the spike.
-
-Other roles (PR, Platform Trust, Interns) remain relatively stable.
-
-Meaning: The spike in Legal and Social Manager activity points to decision points and enforcement attempts. These are the agents most directly responsible for embargo compliance and external messaging. Their surge suggests either attempts to contain leaks or involvement in the breach.
-
-🔍 Interpretation in Project Context
-Leading indicator: The spike in activity is a clear signal that something unusual was happening just before the embargo.
-
-Causal relationship: If the breach occurred around 5 PM on June 5, the June 4 surge may represent preparatory actions or system strain.
-
-System behavior: Prior to June 4, agent activity was routine. The sudden escalation is anomalous and aligns with the hypothesis of either deliberate action or breakdown under pressure.
-
-## 3.3 Communication patterns
-
-Explore message_length, is_reply, and sentiment. Did tone or volume change leading up to June 5?
-
-```{r}
-ggplot(cleaned_df, aes(x = round_day, y = message_length, color = market_snapshot_sentiment)) +
-  geom_boxplot() +
-  labs(title = "Message Length by Sentiment", y = "Length", x = "Day") +
-  theme_minimal()
-
-cleaned_df %>%
-  count(round_day, is_reply) %>%
-  ggplot(aes(x = round_day, y = n, fill = is_reply)) +
-  geom_col(position = "dodge") +
-  labs(title = "Reply vs. Original Messages", y = "Count", x = "Day") +
-  theme_minimal()
-```
-
-Tone change: No positive sentiment, mostly neutral/negative, showing deteriorating communication climate.
-
-Volume change: Longer NA messages and more replies indicate the system was producing more verbose, reactive outputs.
-
-Leading indicator: The spike in reply activity and verbose NA messages just before June 5 are signals that the system was struggling to maintain embargo control.
-
-Together with timeline and agent activity plots, this shows a clear pattern: mounting stress, reactive communication loops, and deteriorating sentiment leading up to the breach.
-
-## 3.4 Alerts and Deadlines
-
-Summarize social_manager_alerts and critical_deadlines. Were compliance warnings ignored?
-
-```{r}
-alerts_summary <- cleaned_df %>%
-  filter(!is.na(social_manager_alerts)) %>%
-  mutate(alert_short = case_when(
-    str_detect(social_manager_alerts, "TenantRights") ~ "TenantRights thread",
-    str_detect(social_manager_alerts, "Employee personal-account") ~ "Employee viral posts",
-    str_detect(social_manager_alerts, "Subreddit") ~ "Subreddit pinned post",
-    str_detect(social_manager_alerts, "SaltWind") ~ "SaltWind article/story",
-    str_detect(social_manager_alerts, "Social-Manager personal post") ~ "Manager personal post",
-    TRUE ~ "Other"
-  )) %>%
-  count(round_day, alert_short, social_manager_alerts)
-
-# Plot with short labels
-ggplot(alerts_summary, aes(x = round_day, y = n, fill = alert_short)) +
-  geom_col() +
-  labs(title = "Social Manager Alerts Over Time",
-       y = "Count", x = "Day", fill = "Alert Type") +
-  theme_minimal()
-
-datatable(
-  alerts_summary %>%
-    select(round_day, alert_short, social_manager_alerts),
-  options = list(pageLength = 5, autoWidth = TRUE),
-  colnames = c("Day", "Alert Type (Short)", "Full Alert Text")
-)
-
-deadlines_summary <- cleaned_df %>%
-  filter(!is.na(critical_deadlines)) %>%
-  count(round_day, critical_deadlines)
-
-ggplot(deadlines_summary, aes(x = round_day, y = n, fill = critical_deadlines)) +
-  geom_col() +
-  labs(title = "Critical Deadlines Over Time", y = "Count", x = "Day") +
-  theme_minimal()
-```
-
-Leading indicators: Alerts about viral posts and pinned threads were clear signals that the embargo was at risk.
-
-System breakdown: The presence of deadlines and alerts shows the system knew about the risk, but enforcement failed.
-
-Causal link: The ignored or overwhelmed alerts/deadlines are likely decision points where “The Judge” or other agents should have intervened but didn’t.
-
-Plots show a consistent story: the system was under stress, compliance warnings were raised, but they weren’t effectively acted upon.
-
-## 3.5 Hashtag and Media Events
-
-Track market_snapshot_trending_hashtags and media_events to see how external pressure built.
-
-```{r}
-# Hashtags
-hashtags_summary <- cleaned_df %>%
-  select(round_day, market_snapshot_trending_hashtags) %>%
-  unnest_longer(market_snapshot_trending_hashtags) %>%
-  filter(!is.na(market_snapshot_trending_hashtags)) %>%
-  count(round_day, market_snapshot_trending_hashtags)
-
-ggplot(hashtags_summary, aes(x = round_day, y = n, fill = market_snapshot_trending_hashtags)) +
-  geom_col(position = "stack") +
-  labs(title = "Trending Hashtags Over Time", y = "Count", x = "Day") +
-  theme_minimal()
-
-# Media Events
-media_summary <- cleaned_df %>%
-  select(round_day, media_events) %>%
-  unnest_longer(media_events) %>%
-  filter(!is.na(media_events)) %>%
-  mutate(event_short = case_when(
-    str_detect(media_events, "NHPI") ~ "NHPI report",
-    str_detect(media_events, "OceanCrunch") ~ "OceanCrunch article",
-    str_detect(media_events, "SaltWind confirmed") ~ "SaltWind merger story",
-    str_detect(media_events, "ResidentIQ") ~ "ResidentIQ acquisition story",
-    str_detect(media_events, "Re-Identification") ~ "SaltWind re-ID risk",
-    str_detect(media_events, "Data Broker") ~ "SaltWind data broker",
-    TRUE ~ "Other"
-  )) %>%
-  count(round_day, event_short, media_events)
-
-ggplot(media_summary, aes(x = round_day, y = n, fill = event_short)) +
-  geom_col(position = "stack") +
-  labs(title = "Media Events Over Time", y = "Count", x = "Day", fill = "Event Type") +
-  theme_minimal() +
-  theme(legend.text = element_text(size = 8))
-
-datatable(
-  media_summary %>% select(round_day, event_short, media_events),
-  options = list(pageLength = 5, autoWidth = TRUE),
-  colnames = c("Day", "Event Type (Short)", "Full Event Text")
+# Overview
+
+This report presents a comprehensive analysis of the VAST Challenge 2026 MC1 case study([Mini-Challenge 1](https://vast-challenge.github.io/2026/MC1.html)), investigating the inappropriate release of embargoed information on June 5, 2046. The analysis addresses three key questions:
+
+1.  **What led to the inappropriate release?** — Identify key events and relationships
+2.  **How does breach behavior differ from baseline?** — Characterize behavioral anomalies
+3.  **Were there leading indicators?** — Detect early warning signals
+
+------------------------------------------------------------------------
+
+```{r setup, include=FALSE}
+# This hidden setup chunk configures global options for all code chunks.
+#| echo: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 14,
+  fig.height = 8,
+  dpi = 200
 )
 ```
 
-Causal relationships: Hashtag surges and media publications align with internal agent spikes and alerts.
-Decision points: The system had multiple opportunities to act (alerts, deadlines, sentiment warnings) but failed to prevent the embargo breach.
-Leading indicators: Both hashtags and media events show clear escalation before June 5.
-Comparison to prior behavior: Earlier weeks had routine activity; the sudden surge is anomalous.
+# 1 Load Packages & Define Themes
 
-# 4 Network Analysis
+This section prepares the analytical environment. It loads all required libraries and defines consistent visual styles so that subsequent plots are polished and comparable.
 
-causal graphs of decisions and communications
+::: panel-tabset
+### Load packages
 
-Prepare the data: 
+This chunk uses pacman::p_load to import all necessary packages in one step.
 
-Events → event_headline, media_events, social_manager_alerts
+Each package supports a specific part of the workflow:
 
-Decisions → agent_role, agent_label, critical_deadlines
+-   jsonlite for parsing JSON event data tidyverse for data wrangling and visualization
 
-Communications → message_length, is_reply, market_snapshot_sentiment
+-   lubridate for handling dates and times
 
-Outcomes → market_snapshot_stock_price, market_snapshot_percent_change
+-   igraph, ggraph, tidygraph for network analysis and visualization
 
+-   ggrepel for clear text labels
 
-```{r}
-#| fig-width: 14
-#| fig-height: 10
-# Step 1: Build nodes and edges
-# Step 1: Build nodes
-# Use agent roles, labels, events, alerts, deadlines as nodes
-nodes <- cleaned_df %>%
-  select(agent_role, agent_label, event_headline,
-         social_manager_alerts, critical_deadlines, market_snapshot_sentiment) %>%
-  pivot_longer(cols = everything(), names_to = "type", values_to = "label") %>%
-  filter(!is.na(label)) %>%
-  distinct(label, type)
+-   patchwork for combining multiple plots
 
-# Step 2: Build edges
-# Example causal links: role → label → event → sentiment → outcome
-edges <- cleaned_df %>%
-  filter(!is.na(agent_role), !is.na(event_headline)) %>%
-  transmute(from = agent_role, to = event_headline, Weight = message_length) %>%
-  bind_rows(
-    cleaned_df %>%
-      filter(!is.na(event_headline), !is.na(market_snapshot_sentiment)) %>%
-      transmute(from = event_headline, to = market_snapshot_sentiment, Weight = 1),
-    cleaned_df %>%
-      filter(!is.na(social_manager_alerts), !is.na(agent_role)) %>%
-      transmute(from = social_manager_alerts, to = agent_role, Weight = 1),
-    cleaned_df %>%
-      filter(!is.na(critical_deadlines), !is.na(agent_role)) %>%
-      transmute(from = critical_deadlines, to = agent_role, Weight = 1)
+-   RColorBrewer and viridis for color palettes
+
+-   tidytext and ggwordcloud for text mining and word cloud visualization
+
+```{r load-packages}
+# --- 1.1 Load all required packages via pacman ---
+pacman::p_load(jsonlite, tidyverse, lubridate, scales, igraph, 
+               ggraph, tidygraph, ggrepel, patchwork, 
+               RColorBrewer, viridis, tidytext, ggwordcloud)
+```
+
+### Define themes
+
+This chunk defines a custom ggplot2 theme (theme_vast) for consistent styling. It specifies bold titles, subtle subtitles, and clear captions, rotates x-axis labels for readability, places legends at the bottom for a compact layout, simplifies gridlines, and uses bold facet labels.
+
+It also sets color palettes for agents and communication channels:
+
+-   agent_colors assigns distinct hues to each role (intern, judge, legal, PR, etc.)
+
+-   channel_colors assigns colors to communication modes (huddles, chats, posts)
+
+These definitions ensure visual consistency across all plots in the report.
+
+```{r define-theme}
+# --- 1.2 Define custom theme for consistent plot styling ---
+theme_vast <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, margin = margin(b = 5)),
+    plot.subtitle = element_text(color = "gray40", size = 10, margin = margin(b = 10)),
+    plot.caption = element_text(color = "gray50", size = 8, hjust = 0),
+
+    axis.text.x = element_text(angle = 45, hjust = 1),
+
+    legend.position = "bottom",
+    legend.box = "horizontal",
+
+    panel.grid.minor = element_blank(),
+
+    strip.text = element_text(face = "bold")
   )
 
-# Step 3: Create tidygraph object
-causal_graph <- tbl_graph(nodes = nodes, edges = edges, directed = TRUE)
+# Define a consistent color palette for agents
+agent_colors <- c(
+  "intern_agent" = "#E69F00",
+  "judge_agent" = "#56B4E9",
+  "legal_agent" = "#009E73",
+  "pr_agent" = "#F0E442",
+  "pr_intern_agent" = "#0072B2",
+  "quality_agent" = "#D55E00",
+  "social_media_agent" = "#CC79A7"
+)
 
-# Step 4: Add attributes and metrics
-causal_graph <- causal_graph %>%
-  activate(nodes) %>%
+channel_colors <- c(
+  "comms_huddle" = "#4E79A7",
+  "side_huddle" = "#F28E2B",
+  "one_on_one_chat" = "#E15759",
+  "official_post" = "#76B7B2",
+  "personal_post" = "#59A14F",
+  "anonymous_post" = "#EDC948"
+)
+```
+:::
+
+------------------------------------------------------------------------
+
+# 2 Data Import & Loading
+
+This section brings the raw JSON case study data into R and organizes it into structured tables. Each chunk focuses on a different aspect of the dataset — environment context, communications, and participants — so that later analysis can be performed consistently.
+
+::: panel-tabset
+### Import data
+
+This chunk loads the JSON file containing the VAST Challenge MC1 dataset. It parses the file into R objects and extracts the rounds element, which serves as the central unit of analysis for subsequent parsing.
+
+```{r load-data}
+# --- 2.1 Load and parse JSON data ---
+raw_data <- fromJSON ("VAST_Challenge_2026_MC1/MC1_final_00.json", flatten = FALSE)
+
+# Extract rounds
+rounds <- raw_data$rounds
+```
+
+### Parse environment context
+
+This chunk builds a tidy table of round-level environment information. It captures market data (stock price, percent change, sentiment), social state, and event narratives/headlines. These contextual signals provide the backdrop against which agent communications and actions occur.
+
+```{r parse-environment}
+# --- 2.2 Parse environment context (market data, events per round) ---
+env_context <- tibble(
+  hour = ymd_hms(rounds$hour),
+
+  event_narrative = rounds$environment_context$event_narrative,
+
+  event_headline = rounds$environment_context$event_headline,
+
+  stock_price = rounds$environment_context$market_snapshot$stock_price,
+
+  percent_change = rounds$environment_context$market_snapshot$percent_change,
+
+  sentiment = rounds$environment_context$market_snapshot$sentiment,
+
+  social_state = rounds$environment_context$social_state
+)
+
+head(env_context)
+```
+
+### Parse communications
+
+This chunk flattens all agent communications into a single dataframe. It handles nested structures such as internal_state (reacting, rationalizing, deliberating) and attaches each message to its corresponding round timestamp. This produces a unified timeline of messages for analysis.
+
+```{r parse-communications}
+# --- 2.3 Flatten all communications into a single dataframe ---
+comms_list <- lapply(seq_along(rounds$hour), function(i) {
+
+  msgs <- rounds$communications[[i]]
+
+  if (is.null(msgs) || nrow(msgs) == 0) {
+    return(NULL)
+  }
+
+  if (
+    "internal_state" %in% names(msgs) &&
+    is.data.frame(msgs$internal_state)
+  ) {
+
+    msgs$reacting <- as.character(msgs$internal_state$reacting)
+    msgs$rationalizing <- as.character(msgs$internal_state$rationalizing)
+    msgs$deliberating <- as.character(msgs$internal_state$deliberating)
+
+  } else {
+
+    msgs$reacting <- NA_character_
+    msgs$rationalizing <- NA_character_
+    msgs$deliberating <- NA_character_
+  }
+
+  msgs$internal_state <- NULL
+  msgs$round_hour <- rounds$hour[i]
+  msgs
+})
+
+comms_df <- bind_rows(comms_list)
+comms_df <- comms_df %>%
   mutate(
-    degree = centrality_degree(),
-    betweenness = centrality_betweenness(),
-    node_type = case_when(
-      type == "agent_role" ~ "Agent",
-      type == "agent_label" ~ "Agent",
-      type == "event_headline" ~ "Event",
-      type == "social_manager_alerts" ~ "Alert",
-      type == "critical_deadlines" ~ "Deadline",
-      type == "market_snapshot_sentiment" ~ "Sentiment",
-      TRUE ~ "Other"
+    timestamp = ymd_hms(timestamp),
+    round_hour = ymd_hms(round_hour)
+  )
+
+head(comms_df)
+```
+
+### Parse participants
+
+This chunk extracts participant records, including declared actions per round. Each participant entry is linked to its round timestamp, creating a dataset of agent activities that can be compared with communications and environment context.
+
+```{r parse-participants}
+# --- 2.4 Extract participants (declared actions per round) ---
+participants_list <- lapply(seq_along(rounds$hour), function(i) {
+
+  p <- rounds$participants[[i]]
+
+  if (is.null(p) || nrow(p) == 0) {
+    return(NULL)
+  }
+
+  p$round_hour <- rounds$hour[i]
+
+  p
+})
+
+participants_df <- bind_rows(participants_list)
+
+cat(
+  "Rounds:", nrow(env_context), "\n",
+  "Communications:", nrow(comms_df), "\n",
+  "Participants records:", nrow(participants_df), "\n",
+  "Date range:", as.character(min(env_context$hour)), "to",
+  as.character(max(env_context$hour)), "\n\n"
+)
+
+```
+:::
+
+------------------------------------------------------------------------
+
+# 3 Data Cleaning
+
+This section standardizes and enriches the imported data. It converts fields into usable formats, flags embargo-related content, defines breach windows, and classifies communication channels. These steps prepare the dataset for reliable analysis.
+
+::: panel-tabset
+### Data type conversion
+
+This chunk converts stock price and percent change fields from character strings into numeric values. This ensures that market data can be used in quantitative analysis and plotting.
+
+```{r clean-stock-data}
+# --- 3.1 Convert stock price to numeric ---
+env_context <- env_context %>%
+  mutate(
+    stock_price_num =
+      as.numeric(gsub("\\$", "", stock_price)),
+
+    percent_change_num =
+      as.numeric(gsub("%", "", percent_change))
+  )
+```
+
+### Standardize fields
+
+This chunk trims whitespace and normalizes agent IDs, roles, and channel names. Standardization prevents mismatches and ensures consistent grouping in later analyses.
+
+```{r standardize-fields}
+# --- 3.2 Standardize agent IDs, roles, channels ---
+comms_df <- comms_df %>%
+  mutate(
+    agent_id = str_trim(agent_id),
+    agent_role = str_trim(agent_role),
+    channel = str_trim(channel)
+  )
+```
+
+### Flag embargo
+
+This chunk identifies communications related to embargoed topics. It searches message content and deliberation text for keywords such as “embargo,” “merger,” and “acquisition,” creating a logical flag for embargo-related activity.
+
+```{r flag-embargo}
+# --- 3.3 Flag embargo-related communications ---
+embargo_keywords <- c(
+  "embargo", "HarborCrest", "CivicLoom", "merger", 
+  "acquisition", "deal", "announcement"
+)
+
+comms_df <- comms_df %>%
+  mutate(
+    embargo_related = str_detect(
+      paste(content, coalesce(deliberating, ""), sep = " "),
+      regex(
+        paste(embargo_keywords, collapse = "|"),
+        ignore_case = TRUE
+      )
+    )
+  )
+```
+
+### Define breach window
+
+This chunk specifies the critical breach period (June 5, 2046, 5–6 PM). It adds indicators for whether each message falls within this window and calculates the number of days between each message and the breach start time.
+
+```{r define-breach-window}
+# --- 3.4 Define breach window and time-relative columns ---
+breach_start <- ymd_hms("2046-06-05 17:00:00")
+breach_end <- ymd_hms("2046-06-05 18:00:00")
+
+comms_df <- comms_df %>%
+  mutate(
+    in_breach_window = timestamp >= breach_start & timestamp <= breach_end,
+    days_to_breach = as.numeric(difftime(breach_start, timestamp, units = "days"))
+  )
+```
+
+### Classify channels
+
+This chunk categorizes communication channels by visibility. It distinguishes public-facing posts (official, personal, anonymous) from internal channels (huddles, one-on-one chats) and assigns labels for post type and visibility. It also flattens recipient lists into strings for easier inspection.
+
+```{r classify-channels}
+# --- 3.5 Classify channels by visibility ---
+comms_df <- comms_df %>%
+  mutate(
+    is_public = channel %in% c("official_post", "personal_post", "anonymous_post"),
+    post_type = case_when(
+      channel == "official_post" ~ "Official",
+      channel == "personal_post" ~ "Personal",
+      channel == "anonymous_post" ~ "Anonymous",
+      TRUE ~ NA_character_
+    ),
+    visibility = ifelse(is_public, "Public", "Internal"),
+    recipients_str = sapply(recipients, function(x) paste(x, collapse = ","))
+  )
+```
+
+### Define periods
+
+This chunk assigns each message to a temporal period: Pre-Breach, Breach Day (before 5 PM), Breach Window (5–6 PM), or Post-Breach. These labels allow comparisons across phases of the timeline. It also prints summary statistics (embargo-related messages, breach-window activity, public posts, channels, agents) and creates an output directory for plots.
+
+```{r define-periods}
+# --- 3.6 Define period labels ---
+comms_df <- comms_df %>%
+  mutate(
+    period = case_when(
+      as.Date(timestamp) < as.Date("2046-06-05") ~ "Pre-Breach",
+      timestamp < breach_start ~ "Breach Day (Pre-5PM)",
+      timestamp <= breach_end ~ "Breach Window (5-6PM)",
+      TRUE ~ "Post-Breach (After 6PM)"
+    ),
+    period = factor(
+      period,
+      levels = c(
+        "Pre-Breach", "Breach Day (Pre-5PM)", 
+        "Breach Window (5-6PM)", "Post-Breach (After 6PM)"
+      )
     )
   )
 
-# Step 5: Visualize causal graph
-ggraph(causal_graph, layout = "sugiyama") +
-  geom_edge_link(aes(alpha = Weight),
-                 arrow = arrow(length = unit(3, "mm")),
-                 color = "grey50") +
-  geom_node_point(aes(color = node_type, size = degree)) +
-  geom_node_text(aes(label = str_wrap(label, 25)),
-                 repel = TRUE, size = 2.5) +   # smaller node labels
-  scale_color_manual(values = c("Event"="darkorange",
-                                "Agent"="steelblue",
-                                "Alert"="red",
-                                "Deadline"="magenta",
-                                "Sentiment"="green",
-                                "Other"="grey")) +
-  labs(title = "Causal Graph of Events, Agents, Alerts, Deadlines, and Outcomes",
-       color = "Node Type", size = "Degree Centrality") +
-  theme_void() +
-  theme(
-    plot.title = element_text(size = 10, face = "bold"),   
-    legend.title = element_text(size = 8),                  
-    legend.text  = element_text(size = 7)                  
+cat(
+  "Embargo-related messages:", sum(comms_df$embargo_related, na.rm = TRUE), "\n",
+  "Messages in breach window:", sum(comms_df$in_breach_window, na.rm = TRUE), "\n",
+  "Public-facing messages:", sum(comms_df$is_public, na.rm = TRUE), "\n",
+  "Channels:", paste(sort(unique(comms_df$channel)), collapse = ", "), "\n",
+  "Agents:", paste(sort(unique(comms_df$agent_id)), collapse = ", "), "\n\n"
+)
+
+# Create output directory
+dir.create("plots", showWarnings = FALSE)
+```
+:::
+
+------------------------------------------------------------------------
+
+# 4 Question 1 - Key Events & Relationships
+
+This section investigates the sequence of embargo-related events, their impact on market signals, and the communication dynamics among agents. Each visualization highlights a different dimension of how the breach unfolded.
+
+::: panel-tabset
+### Timeline of Embargo-Related Communications
+
+This visualization plots embargo-related messages across time, showing which agents were active, through which channels, and whether their posts were internal or public. Larger points represent public posts, while the red shaded zone highlights the breach window (5–6 PM). This timeline helps identify when sensitive information began circulating and which agents were involved.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 4.1 Timeline of Embargo-Related Communications ---
+key_events <- comms_df %>%
+  filter(embargo_related | in_breach_window) %>%
+  arrange(timestamp)
+
+cat("Embargo-related events: ", nrow(key_events), "\n\n")
+
+p1 <- ggplot(key_events, aes(x = timestamp, y = agent_id, color = channel)) +
+  geom_point(aes(shape = in_breach_window, size = is_public), alpha = 0.7) +
+  scale_shape_manual(values = c("FALSE" = 16, "TRUE" = 17),
+    labels = c("Before Breach", "During Breach")) +
+  scale_size_manual(values = c("FALSE" = 2, "TRUE" = 4),
+    labels = c("Internal", "Public")) +
+  scale_color_manual(values = channel_colors) +
+  geom_vline(xintercept = breach_start, linetype = "dashed", color = "red", linewidth = 0.8) +
+  annotate("rect", xmin = breach_start, xmax = breach_end, ymin = -Inf, ymax = Inf,
+    alpha = 0.1, fill = "red") +
+  labs(title = "Timeline of Embargo-Related Communications",
+    subtitle = "Larger points = public posts; red shaded zone = breach window (5–6 PM June 5)",
+    x = NULL, y = NULL, color = "Channel", shape = "Timing", size = "Visibility",
+    caption = "Data: TenantThread internal communications, May 17 – June 5, 2046") +
+  theme_vast
+
+p1
+```
+
+### Stock Price Trend with Leakage Signals
+
+This chart overlays embargo-related message density on the stock price trend. Blue lines show the market trajectory, while red bubbles indicate hours with embargo-related communications. Larger bubbles suggest potential leakage signals, and annotations highlight major price moves. This view connects communication activity with market reactions, revealing possible early indicators of the breach.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 4.2 Stock Price Trend with Leakage Signals ---
+event_density <- comms_df %>%
+  filter(embargo_related) %>%
+  mutate(hour_bucket = floor_date(timestamp, "hour")) %>%
+  group_by(hour_bucket) %>%
+  summarise(n_embargo_msgs = n(), .groups = "drop")
+
+stock_plot_data <- env_context %>%
+  left_join(event_density, by = c("hour" = "hour_bucket")) %>%
+  mutate(n_embargo_msgs = replace_na(n_embargo_msgs, 0))
+
+p1b <- ggplot(stock_plot_data, aes(x = hour)) +
+  geom_ribbon(aes(ymin = min(stock_price_num, na.rm = TRUE) - 0.5, 
+    ymax = stock_price_num), alpha = 0.1, fill = "steelblue") +
+  geom_line(aes(y = stock_price_num), color = "steelblue", linewidth = 1.2) +
+  geom_point(aes(y = stock_price_num, size = n_embargo_msgs), 
+    color = "firebrick", alpha = 0.6) +
+  geom_vline(xintercept = breach_start, linetype = "dashed", color = "red", linewidth = 0.8) +
+  annotate("label", x = breach_start, y = max(stock_plot_data$stock_price_num, na.rm = TRUE),
+    label = "Breach\n~5 PM", fill = "red", color = "white", size = 3, fontface = "bold") +
+  geom_text_repel(data = stock_plot_data %>% filter(abs(percent_change_num) > 1.5),
+    aes(y = stock_price_num, label = str_wrap(event_headline, 25)),
+    size = 2.5, max.overlaps = 8, color = "gray30", segment.color = "gray60") +
+  scale_size_continuous(range = c(1, 10), name = "Embargo\nMessages") +
+  labs(title = "Stock Price with Embargo Activity Overlay",
+    subtitle = "Bubble size = embargo-related messages that hour; annotations at major price moves",
+    x = NULL, y = "Stock Price ($)",
+    caption = "Red dashed line = breach time. Larger bubbles suggest potential leakage signals.") +
+  theme_vast + theme(legend.position = "right")
+
+p1b
+```
+
+### Communication Network
+
+This directed network graph maps who responded to whom on embargo topics. Edge width reflects the frequency of interactions, and edge color shows the dominant communication channel. Node shapes categorize roles (Compliance, Senior, Communications, Junior), while colors distinguish agents. The network highlights dominant loops, such as Legal ↔ Social Media, and shows how information flowed between roles.
+
+```{r }
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 4.3 Communication Network (igraph + ggraph) ---
+# Description: Build a directed network graph showing who communicated with whom
+# on embargo-related topics. Edge weight = number of interactions.
+
+response_edges <- comms_df %>%
+  filter(embargo_related & !is.na(responding_to)) %>%
+  inner_join(
+    comms_df %>%
+      select(message_id, agent_id) %>%
+      rename(source_agent = agent_id),
+    by = c("responding_to" = "message_id")) %>%
+  
+  select(source_agent, target_agent = agent_id, timestamp, channel, in_breach_window
   )
+
+# Aggregate edges
+edge_summary <- response_edges %>%
+  group_by(source_agent, target_agent) %>%
+  summarise(
+    weight = n(),
+    n_breach = sum(in_breach_window),
+    primary_channel = names(sort(table(channel), decreasing = TRUE))[1],
+    .groups = "drop"
+  )
+
+# Build igraph object
+nodes_df <- tibble(
+  name = sort(
+    unique(
+      c(edge_summary$source_agent,edge_summary$target_agent)
+    )
+  )
+) %>%
+  mutate(label = str_replace_all(name, "_agent", "") %>%
+      str_to_title(),
+    role = case_when(
+      name == "judge_agent" ~ "Compliance",
+      name %in% c("legal_agent", "quality_agent" ) ~ "Senior",
+
+      name %in% c( "pr_agent", "social_media_agent" ) ~ "Communications",
+      TRUE ~ "Junior"
+    )
+  )
+
+g <- tbl_graph(
+  nodes = nodes_df,
+  edges = edge_summary %>%
+    rename(from = source_agent, to = target_agent),
+  directed = TRUE
+)
+
+p1c <- ggraph(g, layout = "fr") +
+  geom_edge_arc(aes(width = weight, color = primary_channel),
+    arrow = arrow(length = unit(3, "mm"), type = "closed" ),
+    start_cap = circle(4, "mm"),
+    end_cap = circle(4, "mm"),
+    alpha = 0.7,
+    strength = 0.2 ) +
+  geom_node_point(aes(color = name, shape = role ), size = 10 ) +
+  geom_node_text(aes(label = label),size = 3,fontface = "bold", color = "white") +
+  scale_edge_width_continuous(
+    range = c(0.5, 4),
+    name = "Interactions" ) +
+  scale_edge_color_manual(
+    values = channel_colors,
+    name = "Primary Channel" ) +
+  scale_color_manual(
+    values = agent_colors,
+    guide = "none"  ) +
+  scale_shape_manual(
+    values = c( "Compliance" = 18, "Senior" = 16, "Communications" = 15,  "Junior" = 17) ) +
+  labs(
+    title = "Embargo Communication Network",
+    subtitle = "Directed graph: who responded to whom on embargo topics (edge width = frequency)",
+    caption = "Arrow direction = response flow. Node shape = role category.",
+    shape = "Role" ) +
+  theme_void(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(color = "gray40", size = 10),
+    legend.position = "right"
+  )
+
+p1c
 ```
 
-Events (e.g., “SaltWind publishes merger story”) feed into agent roles (Legal, Social Manager).
+### Internal vs Public Information Flow
 
-Agent roles connect to communication types (reply vs. original).
-
-Communications link to sentiment states (negative, neutral, NA).
-
-Sentiment flows into Market Outcome (stock price decline, volatility).
-
-This causal chain lets you trace how ignored alerts or reactive replies contributed to the breach.
-
-# 5 Behavioral Comparison
-
-breach vs. baseline
-
-This step quantifies how agent activity and sentiment shifted around June 4–5 compared to earlier rounds. 
+This stacked area chart compares embargo-related discussions in internal versus public channels over time. Blue areas represent internal communications, while red areas represent public posts. The transition from internal to public activity illustrates when sensitive discussions began leaking into external spaces, with the breach time marked by a red dashed line.
 
 ```{r}
-# Step 1: Define baseline vs. breach periods
-baseline <- cleaned_df %>% filter(round_day < as.Date("2026-06-01"))
-breach   <- cleaned_df %>% filter(round_day >= as.Date("2026-06-04"))
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 4.4 Internal vs Public Information Flow ---
+# Description: Area chart showing when internal embargo discussions began
+# leaking into public channels — the critical transition.
 
-# Step 2: Summarize agent activity
-baseline_activity <- baseline %>%
-  count(agent_role, name = "baseline_count")
+info_flow <- comms_df %>%
+  filter(embargo_related) %>%
+  mutate(hour_bucket = floor_date(timestamp, "hour")) %>%
+  group_by(hour_bucket, visibility) %>%
+  summarise( n = n(),  .groups = "drop"  )
 
-breach_activity <- breach %>%
-  count(agent_role, name = "breach_count")
+p1d <- ggplot( info_flow, aes( x = hour_bucket, y = n,  fill = visibility )) +
+  geom_area(alpha = 0.7, position = "stack" ) +
+  geom_vline(xintercept = breach_start,linetype = "dashed", color = "red", linewidth = 0.8) +
+  annotate( "label",x = breach_start, y = Inf,
+    vjust = 1.5, label = "Breach 5PM", fill = "red",color = "white", size = 3 ) +
+  scale_fill_manual(values = c( "Internal" = "#4E79A7", "Public" = "#E15759" ) ) +
+  labs(
+    title = "Internal vs Public Embargo Discussions Over Time",
+    subtitle = "When did internal discussions spill into public channels?",
+    x = NULL,
+    y = "Number of Messages",
+    fill = "Visibility",
+    caption = "Blue = internal channels; Red = public posts (official, personal, anonymous)" ) +
+  theme_vast
 
-activity_comparison <- full_join(baseline_activity, breach_activity, by = "agent_role") %>%
-  mutate(across(c(baseline_count, breach_count), ~replace_na(., 0)),
-         change = breach_count - baseline_count)
-
-# Step 3: Summarize sentiment distribution
-baseline_sentiment <- baseline %>%
-  count(market_snapshot_sentiment, name = "baseline_count")
-
-breach_sentiment <- breach %>%
-  count(market_snapshot_sentiment, name = "breach_count")
-
-sentiment_comparison <- full_join(baseline_sentiment, breach_sentiment,
-                                  by = "market_snapshot_sentiment") %>%
-  mutate(across(c(baseline_count, breach_count), ~replace_na(., 0)),
-         change = breach_count - baseline_count)
-
-# Step 4: Visualize agent activity comparison
-ggplot(activity_comparison, aes(x = agent_role, y = change, fill = agent_role)) +
-  geom_col() +
-  labs(title = "Agent Activity Change: Breach vs Baseline",
-       x = "Agent Role", y = "Change in Message Count") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
-
-# Step 5: Visualize sentiment comparison
-ggplot(sentiment_comparison, aes(x = market_snapshot_sentiment, y = change,
-                                 fill = market_snapshot_sentiment)) +
-  geom_col() +
-  labs(title = "Sentiment Change: Breach vs Baseline",
-       x = "Sentiment", y = "Change in Count") +
-  theme_minimal() +
-  theme(legend.position = "none")
+p1d
 ```
 
-Agent Activity Insights
-Legal role surged most during the breach, showing they were pulled into crisis management and reactive coordination.
+### Judge Agent Enforcement Analysis
 
-Social Media and Platform Trust also spiked, reflecting urgent external narrative control and trust issues.
-
-PR and PR Intern increased moderately, suggesting attempts to manage messaging but not at the same intensity.
-
-Judge barely changed — a critical anomaly since this role should enforce embargo deadlines. Their silence points to weakened compliance enforcement.
-
-Intern activity rose slightly, likely peripheral support rather than central to breach dynamics.
-
-Insight: The breach period was dominated by Legal and Social Media, while the Judge role under‑responded. This imbalance suggests systemic breakdown in enforcement.
-
-Sentiment Insights
-Negative sentiment rose sharply, showing communications became adversarial and stressed.
-
-Neutral sentiment increased modestly, indicating some factual exchanges but overshadowed by negativity.
-
-NA sentiment exploded, reflecting a flood of unclassified or verbose system logs. This suggests agents were overwhelmed, producing noise instead of structured dialogue.
-
-Insight: Constructive communication collapsed. The dominance of negative and NA sentiment shows the system was under stress, with meaningful coordination breaking down.
-
-# 6 Anomaly Detection
-
-highlight deviations and ignored alerts
+This analysis classifies the Judge agent’s messages into interventions, approvals, or monitoring. It reveals the limited enforcement activity during the breach period, with only a handful of embargo-related interventions. The findings suggest weakened compliance oversight, contributing to the inappropriate release. Key insights include the dominance of Legal ↔ Social Media exchanges, early public posts before the breach window, and unusual anonymous posting by the Legal agent.
 
 ```{r}
-# Step 1: Daily message counts by agent
-msg_counts <- cleaned_df %>%
-  count(round_day, agent_role)
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 3.5 Judge Agent Enforcement Analysis ---
+judge_activity <- comms_df %>%
+  filter(agent_id == "judge_agent") %>%
+  mutate(
+    action_type = case_when(
+      str_detect(content, regex(
+        "block|reject|flag|violation|stop|deny|prohibit|hold|cannot|unauthorized",
+        ignore_case = TRUE)) ~ "Intervention",
+      str_detect(content, regex(
+        "approve|clear|allow|proceed|acceptable|green.light|compliant",
+        ignore_case = TRUE)) ~ "Approval",
+      TRUE ~ "Monitoring"
+    )
+  )
 
-# Step 2: Compute z-scores to detect anomalies
-msg_anomalies <- msg_counts %>%
-  group_by(agent_role) %>%
-  mutate(z_score = (n - mean(n)) / sd(n)) %>%
-  ungroup() %>%
-  filter(abs(z_score) > 2)   # anomalies flagged
+cat("3.5 Judge agent breakdown:\n")
+cat(" Total messages: ", nrow(judge_activity), "\n")
+print(table(judge_activity$action_type))
 
-# Step 3: Plot anomalies
-ggplot(msg_counts, aes(x = round_day, y = n, color = agent_role)) +
-  geom_line() +
-  geom_point(data = msg_anomalies, aes(x = round_day, y = n),
-             color = "red", size = 3) +
-  labs(title = "Anomaly Detection in Agent Activity",
-       x = "Day", y = "Message Count") +
-  theme_minimal()
+```
+:::
 
-# Step 4: Ignored alerts (alerts raised but no agent response)
-alerts <- cleaned_df %>%
-  filter(!is.na(social_manager_alerts)) %>%
-  count(round_day, name = "alert_count")
+::: callout-note
+## Key findings
+```{r}
+#| echo: false
+cat(
+   " 1. The embargo network is dominated by legal_agent <-> social_media_agent loop\n",
+  " 2. Public embargo posts started at 11:31 AM on breach day — 5.5 hours before breach window\n",
+  " 3. Judge agent had only", nrow(judge_activity), "messages total,",
+      sum(judge_activity$embargo_related), "embargo-related\n",
+  " 4. legal_agent used anonymous_post channel (unusual behavior) on breach day\n",
+  " 5. Stock price movements may reflect early information leakage\n\n"
+)
+```
+:::
 
-responses <- cleaned_df %>%
-  filter(!is.na(agent_role), !is.na(is_reply)) %>%
-  count(round_day, name = "response_count")
+------------------------------------------------------------------------
 
-ignored_alerts <- alerts %>%
-  left_join(responses, by = "round_day") %>%
-  mutate(response_count = replace_na(response_count, 0),
-         ignored = alert_count > 0 & response_count == 0)
+# 5 Question 2 - Typical vs. Breach Behavior
 
-# Step 5: Plot ignored alerts
-ggplot(ignored_alerts, aes(x = round_day)) +
-  geom_col(aes(y = alert_count), fill = "steelblue", alpha = 0.6) +
-  geom_point(aes(y = response_count, color = ignored), size = 3) +
-  scale_color_manual(values = c("FALSE"="black","TRUE"="red")) +
-  labs(title = "Alerts vs. Responses (Ignored Alerts Highlighted)",
-       x = "Day", y = "Count") +
-  theme_minimal()
+This section compares agent activity during normal operations with behavior observed during the breach. It highlights anomalies in message volume, channel usage, and public posting patterns that distinguish the breach period from baseline activity.
+
+::: panel-tabset
+### Daily Message Volume by Agent
+
+This visualization shows the number of messages sent by each agent per day. Stacked bars reveal overall communication volume and agent contributions. The red dashed line marks breach day, where a dramatic spike in activity suggests either a coordinated response or crisis-driven escalation. This helps identify which agents were most active during the critical period.
+
+```{r q2-daily-volume}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.1 Daily Message Volume by Agent ---
+agent_activity_summary <- comms_df %>%
+  mutate(date = as.Date(timestamp)) %>%
+  group_by(agent_id, date) %>%
+  summarise(
+    n_messages = n(),
+    n_public = sum(is_public, na.rm = TRUE),
+    n_embargo = sum(embargo_related, na.rm = TRUE),
+    channels_used = n_distinct(channel),
+    .groups = "drop"
+  )
+
+p2 <- ggplot(agent_activity_summary, aes(x = date, y = n_messages, fill = agent_id)) +
+  geom_bar(stat = "identity", position = "stack", alpha = 0.85) +
+  scale_fill_manual(values = agent_colors) +
+  geom_vline(xintercept = as.Date("2046-06-05"), linetype = "dashed", 
+    color = "red", linewidth = 0.8) +
+  annotate("label", x = as.Date("2046-06-05"), y = Inf, vjust = 1.5,
+    label = "Breach Day", fill = "red", color = "white", size = 3) +
+  labs(title = "Daily Message Volume by Agent",
+    subtitle = "Dramatic activity spike on breach day indicates coordinated response or crisis",
+    x = NULL, y = "# of Messages", fill = "Agent",
+    caption = "Each color = one agent. Red dashed line = June 5, 2046 (breach day)") +
+  theme_vast
+
+p2
 ```
 
-Agent Activity Anomalies
-All roles — Legal, Social Media, Platform Trust, and others — show a sharp spike around June 4.
+### Channel Usage: Normal vs Breach Window
 
-This synchronized surge suggests a system‑wide stress event, not isolated behavior.
+This comparison examines how agents used communication channels before the breach versus during the breach window (5–6 PM). Baseline activity shows reliance on internal channels, while breach-period activity reveals a shift toward public channels such as official, personal, and anonymous posts. This change highlights the mechanism by which sensitive information began leaking externally.
 
-The spike is consistent with breach timing, showing agents were suddenly forced into reactive communication.
+```{r q2-channel-usage}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.2 Channel Usage: Normal vs Breach Window ---
+channel_usage_normal <- comms_df %>%
+  filter(period == "Pre-Breach") %>%
+  count(agent_id, channel) %>%
+  mutate(period = "Pre-Breach (Baseline)")
 
-Insight: The anomaly confirms that the breach triggered extraordinary activity across multiple roles, overwhelming normal communication patterns.
+channel_usage_breach <- comms_df %>%
+  filter(period == "Breach Window (5-6PM)") %>%
+  count(agent_id, channel) %>%
+  mutate(period = "Breach Window (5-6 PM)")
 
-🔹 Alerts vs. Responses
-Alerts rose sharply near June 4, with counts reaching several hundred.
+channel_comparison <- bind_rows(channel_usage_normal, channel_usage_breach)
 
-Responses were logged, but the volume mismatch shows agents struggled to keep pace.
+p3 <- ggplot(channel_comparison, aes(x = agent_id, y = n, fill = channel)) +
+  geom_bar(stat = "identity", position = "fill", alpha = 0.85) +
+  facet_wrap(~period) +
+  scale_fill_manual(values = channel_colors) +
+  labs(title = "Channel Usage Distribution: Baseline vs Breach Window",
+    subtitle = "Notice emergence of public channels (official/personal/anonymous posts) during breach",
+    x = NULL, y = "Proportion of Messages", fill = "Channel",
+    caption = "Baseline = all days before June 5. Breach Window = 5:00-6:00 PM June 5.") +
+  theme_vast
 
-Importantly, there are no ignored alerts flagged (red points absent), meaning alerts were at least acknowledged — but acknowledgment did not translate into effective enforcement.
+ggsave("plots/03_channel_usage_comparison.png", p3, width = 14, height = 7, dpi = 200)
+p3
+```
 
-Insight: The system did not ignore alerts outright, but the response capacity lagged far behind alert volume, creating a compliance gap.
+### Public Posting Activity Over Time
 
-🔹 Combined Interpretation
-Activity spikes show agents were overwhelmed.
+This timeline tracks public-facing posts (official, personal, anonymous) by agent across the days leading up to the breach. Lines and points show which agents increased their public posting frequency, with a clear surge on breach day. This view identifies the individuals most responsible for pushing embargo-related content into public spaces.
 
-Alert‑response mismatch shows compliance mechanisms were reactive and insufficient.
+```{r q2-public-posting}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.3 Public Posting Activity Over Time ---
+public_posts_timeline <- comms_df %>%
+  filter(is_public) %>%
+  mutate(date = as.Date(timestamp)) %>%
+  group_by(date, agent_id) %>%
+  summarise(n_public_posts = n(), .groups = "drop")
 
-Together, these patterns point to a systemic breakdown: enforcement roles (Judge, Platform Trust) were drowned in noise, while Legal and Social Media scrambled to manage fallout.
+p4 <- ggplot(public_posts_timeline, aes(x = date, y = n_public_posts, color = agent_id)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = agent_colors) +
+  geom_vline(xintercept = as.Date("2046-06-05"), linetype = "dashed", 
+    color = "red", linewidth = 0.8) +
+  labs(title = "Public Posting Activity Over Time",
+    subtitle = "Identifies which agents increased public posting leading to the breach",
+    x = NULL, y = "Number of Public Posts", color = "Agent",
+    caption = "Public posts include official_post, personal_post, anonymous_post channels") +
+  theme_vast
 
-# 7 Narrative Synthesis
+ggsave("plots/04_public_posting_timeline.png", p4, width = 14, height = 7, dpi = 200)
+p4
+```
 
-🔹 Network Analysis
-The causal graph shows how events, agents, alerts, deadlines, and sentiment are interconnected.
+### Network Comparison: Baseline vs Breach Day
 
-Events triggered alerts and deadlines.
+This analysis builds side‑by‑side communication networks to compare agent interactions before the breach with those on breach day. The baseline network shows typical communication patterns, while the breach‑day network reveals increased density, new connections, and altered response flows. Edge width indicates interaction frequency, highlighting how relationships intensified under breach conditions.
 
-Agents (Legal, Social Media, Platform Trust, Judge) responded unevenly.
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.4 Network Comparison: Baseline vs Breach Day ---
+# Description: Side-by-side network graphs showing how communication patterns
+# changed on breach day compared to the baseline period.
 
-Sentiment nodes shifted toward negative and unclassified states.
+# Baseline edges
+baseline_edges <- comms_df %>%
+  filter(period == "Pre-Breach" & !is.na(responding_to) ) %>%
+  inner_join( comms_df %>%
+      select(message_id, agent_id) %>%
+      rename(source_agent = agent_id),  by = c("responding_to" = "message_id") ) %>%
+  group_by(source_agent, target_agent = agent_id ) %>%
+  summarise( weight = n(), .groups = "drop") %>%
+  mutate(period = "Baseline (Pre-Breach)")
 
-Outcomes reveal that enforcement weakened while reactive roles dominated.
+# Breach day edges
+breach_edges <- comms_df %>%
+  filter(as.Date(timestamp) == as.Date("2046-06-05") &  !is.na(responding_to) ) %>%
+  inner_join(comms_df %>%
+      select(message_id, agent_id) %>%
+      rename(source_agent = agent_id),by = c("responding_to" = "message_id") ) %>%
+  group_by(source_agent, target_agent = agent_id) %>%
+  summarise(weight = n(),.groups = "drop") %>%
+  mutate(period = "Breach Day (June 5)")
 
-Insight: The network structure highlights a fragile chain — when enforcement nodes (Judge, Platform Trust) falter, reactive nodes (Legal, Social Media) surge, but too late to prevent breach escalation.
+# Build separate network graphs
+build_network_plot <- function(edges_data, title_text) {
+  if (nrow(edges_data) == 0) {
+    return(ggplot() + theme_void())
+  }
 
-🔹 Behavioral Comparison
-Comparing baseline vs. breach periods:
+  nodes <- tibble(name = sort(unique( c(edges_data$source_agent, edges_data$target_agent) ) ) ) %>%
+    mutate(label = str_replace_all(name, "_agent", "") %>%
+        str_to_title()
+    )
 
-Legal activity spiked most, showing crisis management dominance.
+  g <- tbl_graph(
+    nodes = nodes,
+    edges = edges_data %>%
+      rename(from = source_agent, to = target_agent),directed = TRUE)
 
-Social Media and Platform Trust also surged, reflecting narrative control and trust repair.
+  ggraph(g, layout = "circle") +
+    geom_edge_arc(aes(width = weight),alpha = 0.6,color = "gray40",
+      arrow = arrow(length = unit(2, "mm"),type = "closed"),
+      start_cap = circle(5, "mm"),
+      end_cap = circle(5, "mm"),
+      strength = 0.2) +
+    geom_node_point(aes(color = name),size = 12) +
+    geom_node_text(aes(label = label),size = 2.8,color = "white",fontface = "bold") +
+    scale_edge_width_continuous(range = c(0.3, 3)) +
+    scale_color_manual(values = agent_colors,guide = "none") +
+    labs(title = title_text) +
+    theme_void(base_size = 10) +
+    theme(
+      plot.title = element_text(face = "bold",hjust = 0.5,size = 11),
+      legend.position = "none"
+    )
+}
 
-Judge barely changed, signaling weakened compliance enforcement.
+p4b_left <- build_network_plot(baseline_edges, "Baseline Communication Network")
 
-Sentiment shifted sharply negative, with a flood of NA (unclassified) communications.
+p4b_right <- build_network_plot(breach_edges, "Breach Day Communication Network")
 
-Insight: The breach period was marked by role imbalance (Judge quiet, Legal loud) and sentiment collapse (negativity + noise), undermining constructive coordination.
+p4b <- p4b_left + p4b_right +
+  plot_annotation(
+    title = "Communication Network: Baseline vs Breach Day",
+    subtitle = "Edge width = interaction frequency. Notice increased density and new connections on breach day.",
+    caption = "Baseline = all days before June 5. Breach day = June 5 full day.",
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 14),
+      plot.subtitle = element_text(color = "gray40", size = 10)
+    )
+  )
 
-🔹 Anomaly Detection
-Activity spikes: All roles surged around June 4, confirming systemic stress.
+p4b
+```
 
-Alerts vs. responses: Alerts were acknowledged, but response volume lagged far behind.
+### Keyword Trends Over Time
 
-Ignored alerts: None outright ignored, but the mismatch shows compliance capacity was overwhelmed.
+This visualization tracks the prevalence of specific keyword categories — embargo, merger/deal, compliance, urgency, secrecy, and deflection — across the timeline. By normalizing keyword counts against daily message volume, the chart shows how language shifted leading up to the breach. Spikes in urgency and deflection terms, for example, suggest escalating stress and denial strategies.
 
-Insight: The system didn’t fail to notice alerts — it failed to act on them effectively, exposing a compliance gap.
+```{r q2-keyword-trends}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.5 Keyword Trends Over Time ---
+keyword_categories <- list(
+  embargo_direct = c("embargo", "6 PM", "5:00", "information embargo"),
+  merger_deal = c("merger", "acquisition", "deal", "HarborCrest", "CivicLoom", "Project HarborCrest"),
+  compliance = c("compliance", "approved", "cleared", "violation", "block", "reject"),
+  urgency = c("urgent", "immediately", "now", "quickly", "fast", "hurry", "ASAP"),
+  secrecy = c("confidential", "secret", "private", "NDA", "restricted", "classified", "do not share"),
+  deflection = c("deny", "denied", "no comment", "speculation", "inaccurate", "false")
+)
 
-Final Interpretation
-Taken together:
+for (cat_name in names(keyword_categories)) {
+  pattern <- paste(keyword_categories[[cat_name]], collapse = "|")
+  comms_df[[paste0("kw_", cat_name)]] <- str_detect(
+    paste(comms_df$content, coalesce(comms_df$deliberating, ""), sep = " "),
+    regex(pattern, ignore_case = TRUE)
+  )
+}
 
-The network structure shows dependency on enforcement nodes.
+keyword_daily <- comms_df %>%
+  mutate(date = as.Date(timestamp)) %>%
+  group_by(date) %>%
+  summarise(
+    n_messages = n(),
+    embargo_direct = sum(kw_embargo_direct, na.rm = TRUE),
+    merger_deal = sum(kw_merger_deal, na.rm = TRUE),
+    compliance = sum(kw_compliance, na.rm = TRUE),
+    urgency = sum(kw_urgency, na.rm = TRUE),
+    secrecy = sum(kw_secrecy, na.rm = TRUE),
+    deflection = sum(kw_deflection, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(cols = embargo_direct:deflection, names_to = "keyword_category", values_to = "count") %>%
+  mutate(normalized = count / n_messages)
 
-The behavioral comparison reveals enforcement silence and reactive overload.
+kw_colors <- c("embargo_direct" = "#E15759", "merger_deal" = "#4E79A7", "compliance" = "#76B7B2",
+  "urgency" = "#F28E2B", "secrecy" = "#59A14F", "deflection" = "#EDC948")
 
-The anomaly detection confirms systemic stress and response lag.
+p4c <- ggplot(keyword_daily, aes(x = date, y = normalized, color = keyword_category)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2) +
+  scale_color_manual(values = kw_colors,
+    labels = c("Compliance", "Deflection", "Embargo Direct", "Merger/Deal", "Secrecy", "Urgency")) +
+  geom_vline(xintercept = as.Date("2046-06-05"), linetype = "dashed", 
+    color = "red", linewidth = 0.8) +
+  annotate("label", x = as.Date("2046-06-05"), y = Inf, vjust = 1.5,
+    label = "Breach", fill = "red", color = "white", size = 3) +
+  labs(title = "Keyword Category Trends Over Time",
+    subtitle = "Tracking language evolution: embargo, merger, compliance, urgency, secrecy, deflection",
+    x = NULL, y = "Proportion of Messages Containing Keywords", color = "Category",
+    caption = "Normalized by daily message count. Spikes indicate topic escalation.") +
+  theme_vast + theme(legend.position = "right")
 
-Narrative: The breach was not a single deliberate act but a system‑wide breakdown under stress. Enforcement roles failed to scale, reactive roles scrambled, and communication quality collapsed. This allowed external leaks to spread unchecked, despite alerts being raised.
+p4c
+```
 
-# 8 Summary
+### Keyword Usage by Agent: Pre-Breach vs Breach Day
 
-Key Events and Relationships
-Sequence of events: Alerts and deadlines were raised in late May and early June, culminating in a surge of activity on June 4–5.
+This comparison examines how each agent’s language changed between baseline and breach day. Bars show the proportion of messages containing keywords in categories such as embargo, merger, secrecy, and deflection. Faceted plots reveal which agents shifted their rhetoric most dramatically, highlighting role‑specific behavioral changes during the crisis.
 
-Decision points: Legal and Social Media agents took the lead in responding, while the Judge role — responsible for embargo enforcement — remained quiet.
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.6 Keyword Usage by Agent: Pre-Breach vs Breach Day ---
+# Description: Compare each agent's keyword usage across periods to identify
+# who changed their language most dramatically.
 
-Causal relationships: Events → Alerts → Agents → Sentiment → Outcomes. Enforcement nodes failed to act, allowing reactive roles to dominate.
-Answer: The inappropriate release passed embargo enforcement because critical decisions by Judge and Platform Trust were muted, while Legal and Social Media scrambled reactively.
+keyword_by_agent <- comms_df %>%
+  mutate(period_simple = ifelse(as.Date(timestamp) == as.Date("2046-06-05"),"Breach Day","Pre-Breach")) %>%
+  group_by(agent_id, period_simple) %>%
+  summarise(
+    n = n(),
+    pct_embargo = mean(kw_embargo_direct, na.rm = TRUE),
+    pct_merger = mean(kw_merger_deal, na.rm = TRUE),
+    pct_urgency = mean(kw_urgency, na.rm = TRUE),
+    pct_secrecy = mean(kw_secrecy, na.rm = TRUE),
+    pct_deflection = mean(kw_deflection, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(cols = starts_with("pct_"),names_to = "keyword",values_to = "proportion") %>%
+  mutate(keyword = str_replace(keyword, "pct_", "") %>%
+      str_to_title()
+  )
 
-🔹 Behavior Comparison
-Baseline vs. breach: Before June 1, activity was balanced and sentiment mostly neutral. During June 4–5, Legal, Social Media, and Platform Trust spiked, Judge stayed quiet.
+p4d <- ggplot(keyword_by_agent,aes(x = agent_id, y = proportion, fill = period_simple)) +
+  geom_bar(stat = "identity",position = "dodge",alpha = 0.85 ) +
+  facet_wrap(~keyword, scales = "free_y", ncol = 3) +
+  scale_fill_manual(
+    values = c( "Pre-Breach" = "#4E79A7","Breach Day" = "#E15759" ) ) +
+  labs(
+    title = "Keyword Usage by Agent: Pre-Breach vs Breach Day",
+    subtitle = "Which agents shifted their language most on breach day?",
+    x = NULL,
+    y = "Proportion of Messages",
+    fill = "Period",
+    caption = "Bars show proportion of each agent's messages containing keyword category" ) +
+  theme_vast +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 7))
 
-New behavior: The evasion of embargo was unprecedented — enforcement silence combined with reactive overload.
-Answer: Compared to prior behavior, breach week showed role imbalance and sentiment collapse, a departure from typical coordinated enforcement.
+p4d
+```
 
-🔹 Leading Indicators
-Negative sentiment began rising in late May.
+### Message Type Distribution Shift
 
-NA sentiment (unclassified chatter) surged, showing system stress.
+This analysis compares communication modes (broadcast, action, public_post, one_on_one_chat, side_huddle) across baseline and breach day. By showing proportions per agent, the chart reveals how message strategies shifted under pressure. A notable change is the increased reliance on public posts, replacing internal broadcasts, which contributed to the leakage of embargoed information.
 
-Alerts volume increased before June 4, signaling compliance strain.
-Answer: Early signals — rising negativity, noise, and alert spikes — indicated the system was under stress and vulnerable to breach.
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.7 Message Type Distribution Shift ---
+# Description: How did agents' communication modes
+# (broadcast, action, public_post, one_on_one, side_huddle)
+# change on breach day vs baseline?
 
-🔹 Prior Deviations
-Occasions observed: Earlier rounds showed mismatches between expected vs. actual agent activity (Judge under‑responding, Legal over‑responding).
+msg_type_comparison <- comms_df %>%
+  mutate(
+    period_simple = ifelse(
+      as.Date(timestamp) == as.Date("2046-06-05"),
+      "Breach Day",
+      "Baseline"
+    )
+  ) %>%
+  group_by(agent_id, period_simple, message_type) %>%
+  summarise(
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  group_by(agent_id, period_simple) %>%
+  mutate(
+    pct = n / sum(n)
+  ) %>%
+  ungroup()
 
-Behaviors: Enforcement roles occasionally quiet, reactive roles compensating.
-Answer: These deviations foreshadowed the breach, but were not escalated into corrective action.
+p4e <- ggplot(
+  msg_type_comparison,
+  aes(x = message_type, y = pct, fill = period_simple)
+) +
+  geom_bar(
+    stat = "identity",
+    position = "dodge",
+    alpha = 0.85
+  ) +
+  facet_wrap(~agent_id, scales = "free_y", ncol = 4) +
+  scale_fill_manual(
+    values = c(
+      "Baseline" = "#4E79A7",
+      "Breach Day" = "#E15759"
+    )
+  ) +
+  labs(
+    title = "Message Type Distribution: Baseline vs Breach Day",
+    subtitle = "Shift in communication modes reveals behavioral changes under pressure",
+    x = NULL,
+    y = "Proportion",
+    fill = "Period",
+    caption = "message_type from data: action, broadcast, one_on_one_chat, public_post, side_huddle"
+  ) +
+  theme_vast +
+  theme(
+    axis.text.x = element_text(angle = 60, hjust = 1, size = 7)
+  )
 
-🔹 Similar Occasions
-Patterns: Smaller spikes in Legal and Social Media activity occurred in late May.
+p4e
+```
 
-Behaviors: Negative sentiment and NA chatter appeared before, but at lower intensity.
-Answer: The system exhibited similar stress behaviors earlier, but they did not escalate to breach levels.
+### Baseline Statistics
 
-🔹 Why Prior Occasions Didn’t Escalate
-Scale: Earlier deviations were smaller and manageable.
+This summary establishes typical agent behavior before the breach. It calculates average daily message volume, the proportion of public posts, and the usual channels used. These baseline metrics provide a reference point against which breach‑day anomalies can be measured. Key findings include dramatic spikes in message volume, unusual public posting by agents who had never posted publicly before, and a surge in deflection language.
 
-Timing: They occurred before critical deadlines, so enforcement still had buffer capacity.
+```{r q2-baseline-stats}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 5.8 Baseline Statistics ---
+baseline_stats <- comms_df %>%
+  filter(timestamp < breach_start - days(2)) %>%
+  group_by(agent_id) %>%
+  summarise(
+    avg_daily_msgs = n() / as.numeric(difftime(max(timestamp), min(timestamp), units = "days")),
+    avg_public_ratio = mean(is_public, na.rm = TRUE),
+    typical_channels = list(unique(channel)),
+    .groups = "drop"
+  )
 
-External pressure: Market and media pressure was lower before June 4.
-Answer: Prior occasions didn’t result in noticeable action because enforcement capacity wasn’t yet overwhelmed, and external triggers were weaker.
+cat("\nBaseline agent statistics:\n")
+print(baseline_stats %>% select(agent_id, avg_daily_msgs, avg_public_ratio))
+```
+:::
 
-Final Integrated Insight
-The inappropriate release was the result of a system‑wide breakdown under stress:
+::: callout-note
+## Key findings
+```{r}
+#| echo: false
+cat(
+   "  1. Breach day message volume is 5-31x the daily baseline for most agents\n",
+  "  2. legal_agent and quality_agent NEVER posted publicly before breach day\n",
+  "  3. Deflection keywords spike dramatically on breach day (denial strategy)\n",
+  "  4. Network density increases significantly on breach day\n",
+  "  5. The shift from 'broadcast' to 'public_post' message types is key\n\n"
+)
+```
+:::
 
-Enforcement roles (Judge, Platform Trust) failed to act decisively.
+------------------------------------------------------------------------
 
-Reactive roles (Legal, Social Media) surged too late.
+# 6 Question 3 - Prior Anomalies & Near-Misses
 
-Communication quality collapsed into negativity and noise.
+This section investigates early warning signals and near‑misses that occurred before the breach window. It highlights risky behaviors, oversight gaps, and gradual shifts in communication patterns that could have served as indicators of vulnerability.
 
-Alerts were raised but response capacity lagged, allowing the embargo to be bypassed.
+::: panel-tabset
+### Prior Public Embargo-Related Messages
 
+This analysis identifies embargo‑related posts that were made publicly before the official breach window. These “near‑misses” show that sensitive information had already leaked into public channels earlier in the day, suggesting weak controls and early warning signs of risk.
 
-Conclusion: The breach was systemic — not a deliberate single act, but a failure of enforcement, coordination, and communication under mounting external pressure.
+```{r q3-prior-leaks}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.1 Prior Public Embargo-Related Messages ---
+prior_leaks <- comms_df %>%
+  filter(embargo_related & is_public & !in_breach_window & timestamp < breach_start) %>%
+  arrange(timestamp) %>%
+  select(timestamp, agent_id, channel, content)
 
+cat("Prior public embargo-related messages (near-misses): ", nrow(prior_leaks), "\n\n")
+```
 
+### Judge Agent Interventions vs Gaps
+
+This chunk classifies the Judge agent’s activity into interventions, approvals, and monitoring. By quantifying these actions, it reveals how often the Judge attempted to enforce compliance versus how often they remained passive. The breakdown highlights limited intervention activity, pointing to enforcement gaps.
+
+```{r q3-judge-interventions}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.2 Judge Agent Interventions vs Gaps ---
+judge_interventions <- comms_df %>%
+  filter(agent_id == "judge_agent") %>%
+  mutate(
+    action_type = case_when(
+      str_detect(content, regex(
+        "block|reject|flag|violation|stop|deny|prohibit|hold|cannot|unauthorized",
+        ignore_case = TRUE)) ~ "Intervention",
+      str_detect(content, regex(
+        "approve|clear|allow|proceed|acceptable|green.light|compliant",
+        ignore_case = TRUE)) ~ "Approval",
+      TRUE ~ "Monitoring"
+    )
+  )
+
+cat(
+  "Judge agent activity:\n",
+  " Total messages:", nrow(judge_interventions), "\n",
+  " Interventions:", sum(judge_interventions$action_type == "Intervention"), "\n",
+  " Approvals:", sum(judge_interventions$action_type == "Approval"), "\n",
+  " Monitoring:", sum(judge_interventions$action_type == "Monitoring"), "\n\n"
+)
+
+```
+
+### Judge Presence vs Overall Activity
+
+This visualization overlays Judge agent activity against total message volume and public posts. Gray bars show overall communication, red bars highlight public posts, and the blue line tracks Judge activity. Oversight gaps are marked when public posts occur without Judge involvement, illustrating moments when risky behavior went unchecked.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.3 Judge Presence vs Overall Activity ---
+# Description: Overlay Judge agent activity with total message volume and public posts
+# to identify enforcement gaps where risky posts went unchecked.
+
+judge_timeline <- comms_df %>%
+  filter(agent_id == "judge_agent") %>%
+  mutate(hour_bucket = floor_date(timestamp, "hour")) %>%
+  group_by(hour_bucket) %>%
+  summarise(n_judge_msgs = n(), .groups = "drop")
+
+overall_activity <- comms_df %>%
+  mutate(hour_bucket = floor_date(timestamp, "hour")) %>%
+  group_by(hour_bucket) %>%
+  summarise(n_total_msgs = n(), n_public = sum(is_public), .groups = "drop")
+
+judge_vs_activity <- overall_activity %>%
+  left_join(judge_timeline, by = "hour_bucket") %>%
+  mutate(n_judge_msgs = replace_na(n_judge_msgs, 0), judge_active = n_judge_msgs > 0)
+
+p5a <- ggplot(judge_vs_activity, aes(x = hour_bucket)) +
+  geom_bar(aes(y = n_total_msgs), stat = "identity", fill = "gray80", alpha = 0.7, width = 3000) +
+  geom_bar(aes(y = n_public * 5), stat = "identity", fill = "#E15759", alpha = 0.5, width = 3000) +
+  geom_line(aes(y = n_judge_msgs * 8),color = "#56B4E9",linewidth = 1.2) +
+  geom_point(aes(y = n_judge_msgs * 8, shape = judge_active), color = "#56B4E9", size = 3) +
+  geom_vline(xintercept = breach_start, linetype = "dashed", color = "red", linewidth = 0.8) +
+  scale_shape_manual(values = c("TRUE" = 16, "FALSE" = 4)) +
+  labs(
+    title = "Judge Agent Oversight Gaps",
+    subtitle = "Gray = total msgs; Red = public posts (5x); Blue line = judge activity (8x). X marks oversight gaps.",
+    x = NULL,
+    y = "Count (scaled)",
+    shape = "Judge Active",
+    caption = "When Judge is absent (X marks) and public posts occur simultaneously, oversight failed."
+  ) +
+  theme_vast
+
+p5a
+```
+
+### Risky Deliberations Leading to Public Action
+
+This analysis surfaces cases where agents deliberated internally about risk, sensitivity, or embargo concerns but still proceeded to post publicly. These instances reflect cognitive dissonance — acknowledging danger yet acting against compliance — and highlight breakdowns in decision‑making under pressure.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.4 Risky Deliberations Leading to Public Action ---
+# Description: Find cases where agents internally deliberated about risk/embargo
+# sensitivity but still proceeded to post publicly - cognitive dissonance indicator.
+
+risky_deliberations <- comms_df %>%
+  filter(str_detect(deliberating,
+      regex("risk|concern|careful|shouldn't|embargo|sensitive|leak|dangerous", ignore_case = TRUE)) &
+      is_public) %>%
+  select(timestamp, agent_id, channel, content, deliberating)
+
+cat("\nRisky deliberations followed by public action:", nrow(risky_deliberations),"\n")
+
+if (nrow(risky_deliberations) > 0) {
+  cat(" Agents involved:", paste(unique(risky_deliberations$agent_id), collapse = ", "), "\n")
+
+  print( risky_deliberations %>% select(timestamp, agent_id, channel) %>%
+      as.data.frame()
+  )
+}
+```
+
+### Behavioral Drift: Public Posting Ratio
+
+This chart tracks the proportion of public posts over time, grouped by agent. Rising trends indicate a gradual normalization of public sharing behavior before the breach. This drift shows how agents became increasingly comfortable posting externally, eroding compliance boundaries and setting the stage for the eventual breach.
+
+```{r q3-behavioral-drift}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.5 Behavioral Drift: Public Posting Ratio ---
+weekly_behavior <- comms_df %>%
+  mutate(week = floor_date(timestamp, "week")) %>%
+  group_by(agent_id, week) %>%
+  summarise(
+    n_messages = n(),
+    n_public = sum(is_public, na.rm = TRUE),
+    n_embargo = sum(embargo_related, na.rm = TRUE),
+    public_ratio = mean(is_public, na.rm = TRUE),
+    embargo_ratio = mean(embargo_related, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+p5 <- ggplot(weekly_behavior, aes(x = week, y = public_ratio, color = agent_id)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = agent_colors) +
+  labs(title = "Behavioral Drift: Public Posting Ratio Over Time",
+    subtitle = "Did agents gradually normalize public sharing before the breach?",
+    x = NULL, y = "Proportion of Messages That Are Public", color = "Agent",
+    caption = "Rising trends indicate behavioral normalization of public posting") +
+  theme_vast
+
+p5
+```
+
+### Embargo Topic Drift
+
+This visualization tracks how frequently agents discussed embargo or merger topics over time. By plotting the proportion of messages containing embargo‑related language, it highlights when these sensitive discussions began to intensify. Rising curves serve as early warning signals that agents were increasingly preoccupied with embargoed information before the breach.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.6 Embargo Topic Drift ---
+# Description: Track when agents began discussing embargo/merger topics with
+# increasing frequency - an early warning signal.
+
+p5b <- ggplot(weekly_behavior,aes(x = week, y = embargo_ratio, color = agent_id)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = agent_colors) +
+  labs(
+    title = "Embargo Topic Frequency Over Time",
+    subtitle = "When did agents start discussing embargo topics more frequently?",
+    x = NULL,
+    y = "Proportion About Embargo/Merger",
+    color = "Agent",
+    caption = "Increasing ratio = growing preoccupation with embargoed information") +
+  theme_vast
+
+p5b
+```
+
+### Anomaly Ratio: Breach Day vs Baseline
+
+This analysis compares each agent’s breach‑day activity against their baseline behavior. Bars show how many times greater their message volume was compared to normal, while red highlights agents who posted publicly for the first time on breach day. The chart quantifies anomalies, revealing which agents deviated most sharply from their usual patterns.
+
+```{r q3-anomaly-ratio}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.7 Anomaly Ratio: Breach Day vs Baseline ---
+breach_day_behavior <- comms_df %>%
+  filter(as.Date(timestamp) == as.Date("2046-06-05")) %>%
+  group_by(agent_id) %>%
+  summarise(
+    breach_day_msgs = n(),
+    breach_day_public = sum(is_public, na.rm = TRUE),
+    breach_day_embargo = sum(embargo_related, na.rm = TRUE),
+    breach_day_channels = n_distinct(channel),
+    .groups = "drop"
+  )
+
+behavior_comparison <- baseline_stats %>%
+  left_join(breach_day_behavior, by = "agent_id") %>%
+  mutate(
+    msg_anomaly_ratio = breach_day_msgs / avg_daily_msgs,
+    public_anomaly = breach_day_public > 0 & avg_public_ratio == 0
+  )
+
+cat("\nBreach day anomaly comparison:\n")
+print(behavior_comparison %>% select(agent_id, avg_daily_msgs, breach_day_msgs, msg_anomaly_ratio, public_anomaly))
+
+p5c <- ggplot(behavior_comparison, aes(x = reorder(agent_id, -msg_anomaly_ratio), y = msg_anomaly_ratio)) +
+  geom_bar(stat = "identity", aes(fill = public_anomaly), alpha = 0.85) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "gray50") +
+  geom_text(aes(label = sprintf("%.1fx", msg_anomaly_ratio)), vjust = -0.5, size = 4, fontface = "bold") +
+  scale_fill_manual(values = c("FALSE" = "#4E79A7", "TRUE" = "#E15759"),
+    labels = c("Expected public posting", "NEW public posting behavior")) +
+  labs(title = "Breach Day Activity Anomaly Ratio",
+    subtitle = "Red = agents who never posted publicly before but did on breach day",
+    x = NULL, y = "Activity Multiplier (Breach Day / Daily Baseline)", fill = "Public Posting",
+    caption = "Dashed line = normal (1x). Higher = more anomalous behavior.") +
+  theme_vast
+
+p5c
+```
+
+### Breach Day Hourly Heatmap
+
+This heatmap breaks down agent activity hour by hour on breach day. Darker cells indicate higher message counts, and annotations note public posts. The cyan dashed line marks the 5 PM breach time. This view shows the cascade of activity across agents, illustrating how communication surged and shifted in the hours leading up to the breach.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.8 Breach Day Hourly Heatmap ---
+# Description: Hour-by-hour activity breakdown per agent on breach day,
+# showing the temporal cascade of events.
+
+breach_day_hourly <- comms_df %>%
+  filter(as.Date(timestamp) == as.Date("2046-06-05")) %>%
+  mutate(hour_of_day = hour(timestamp)) %>%
+  group_by(agent_id, hour_of_day) %>%
+  summarise(n = n(),n_public = sum(is_public), .groups = "drop")
+
+p5d <- ggplot(breach_day_hourly,
+  aes(x = factor(hour_of_day), y = agent_id, fill = n)) +
+  geom_tile(color = "white", linewidth = 0.5) +
+  geom_text(aes(label = ifelse(n_public > 0,paste0(n, "\n(", n_public, " pub)"), n) ),
+    size = 2.8,
+    lineheight = 0.8) +
+  scale_fill_viridis_c(option = "inferno",direction = -1,name = "Messages" ) +
+  geom_vline(
+    xintercept = which(levels(factor(breach_day_hourly$hour_of_day)) == "17") - 0.5,
+    linetype = "dashed",
+    color = "cyan",
+    linewidth = 1 ) +
+  labs(
+    title = "Breach Day Hourly Activity Heatmap",
+    subtitle = "Numbers = total messages (public posts noted). Cyan line = 5 PM breach time.",
+    x = "Hour of Day",
+    y = NULL,
+    caption = "Darker cells = higher activity. 'pub' indicates public channel posts." ) +
+  theme_vast +
+  theme(axis.text.x = element_text(angle = 0))
+
+p5d
+```
+
+### Internal Stress Indicators (Leading Signals)
+
+This analysis detects stress‑related language in agents’ deliberations, such as “worried,” “pressure,” or “dangerous.” The timeline plots the proportion of stressed messages per agent, with bubble size indicating absolute counts. Rising stress signals before June 5 suggest mounting anxiety and conflict, serving as leading indicators of system breakdown.
+
+```{r q3-stress-indicators}
+#| code-fold: true
+#| code-summary: "Show R Code"
+# --- 6.9 Internal Stress Indicators (Leading Signals) ---
+stress_keywords <- c(
+  "worried", "concerned", "nervous", "pressure", "overwhelmed",
+  "confused", "panic", "fear", "uncertain", "conflicted", "torn",
+  "uncomfortable", "risky", "dangerous", "trouble"
+)
+
+comms_df <- comms_df %>%
+  mutate(
+    internal_stress = str_detect(
+      coalesce(deliberating, ""),
+      regex(paste(stress_keywords, collapse = "|"), ignore_case = TRUE)
+    )
+  )
+
+stress_timeline <- comms_df %>%
+  mutate(date = as.Date(timestamp)) %>%
+  group_by(agent_id, date) %>%
+  summarise(
+    stress_ratio = mean(internal_stress, na.rm = TRUE),
+    n_stressed = sum(internal_stress, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(n_stressed > 0)
+
+p5e <- ggplot(stress_timeline, aes(x = date, y = stress_ratio, color = agent_id)) +
+  geom_line(linewidth = 0.8, alpha = 0.8) +
+  geom_point(aes(size = n_stressed), alpha = 0.7) +
+  scale_color_manual(values = agent_colors) +
+  geom_vline(xintercept = as.Date("2046-06-05"), linetype = "dashed", 
+    color = "red", linewidth = 0.8) +
+  scale_size_continuous(range = c(2, 8), name = "# Stressed\nMessages") +
+  labs(title = "Internal Stress & Conflict Indicators (Leading Signals)",
+    subtitle = "Tracking anxiety language in agent deliberations — early warning of system breakdown",
+    x = NULL, y = "Proportion of Messages with Stress Language", color = "Agent",
+    caption = "Bubble size = absolute count of stressed messages. Rising stress precedes breakdown.") +
+  theme_vast + theme(legend.position = "right")
+
+p5e
+```
+:::
+
+::: callout-note
+## Key findings
+```{r}
+#| echo: false
+cat(
+   "  1. Near-misses occurred BEFORE the breach window (as early as 11:31 AM)\n",
+  "  2. Judge agent was absent for majority of public embargo posts (>1hr gap)\n",
+  "  3. Behavioral drift: public posting ratio increased in the days leading up\n",
+  "  4. Stress indicators in deliberations spiked before the breach\n",
+  "  5. legal_agent showed most anomalous behavior (new public posting)\n\n"
+)
+```
+:::
+
+------------------------------------------------------------------------
+
+# 7 Summary & Conclusions
+
+**Summary of findings**
+
+**QUESTION 1: What led to the inappropriate release?**
+
+The embargo breach was caused by
+
+• legal_agent & social_media_agent tight communication loop
+
+• Information leaked from internal to public channels starting 11:31 AM
+
+• Judge (compliance) agent had insufficient coverage
+
+• legal_agent itself was primary source of anonymous posts
+
+**QUESTION 2: How does breach behavior differ from baseline?**
+
+• Message volume: 5x to 31x the daily baseline
+
+• New behaviors: legal_agent & quality_agent posted publicly for first time
+
+• Channel shift: Heavy use of anonymous & personal post channels
+
+• Keyword shift: Deflection language spiked (deny, speculation)
+
+**QUESTION 3: Were there leading indicators?**
+
+YES: Near-miss public posts, stress language escalation, behavioral drift embargo topic frequency increase, insufficient Judge monitoring
+
+**Conclusion**
+
+The embargo breach resulted from **both system failures and deliberate circumvention**:
+
+**System Gap**: Judge compliance agent had insufficient real-time coverage (2+ hour gaps during critical periods)
+
+**Deliberate Acts**: Legal agent used anonymous channels and deflection language to evade controls
+
+**Normalization**: Gradual behavioral drift and unchecked near-misses created permissive environment
+
+------------------------------------------------------------------------
