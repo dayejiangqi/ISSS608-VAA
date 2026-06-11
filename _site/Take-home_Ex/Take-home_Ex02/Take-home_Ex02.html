@@ -194,6 +194,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07_b.html">
  <span class="dropdown-text">Hands-on Excercise 7b: Visualising and Analysing Text Data</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html">
+ <span class="dropdown-text">Hands-on Excercise 8: Visualising and Analysing Time-oriented Data</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -731,6 +735,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The timeline shows that embargo‑related posts began appearing well before the official breach window. Public posts (larger points) emerged as early as late morning on June 5, with activity concentrated among the legal_agent and social_media_agent. The breach window (5–6 PM) is marked by a surge of activity, confirming that sensitive information was already circulating before the formal breach period.</p>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <p>This chart overlays embargo-related message density on the stock price trend. Blue lines show the market trajectory, while red bubbles indicate hours with embargo-related communications. Larger bubbles suggest potential leakage signals, and annotations highlight major price moves. This view connects communication activity with market reactions, revealing possible early indicators of the breach.</p>
@@ -777,6 +782,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Overlaying embargo message density on stock price reveals a strong correlation: embargo‑related communications cluster around hours of significant market movement. The stock price remained stable until late June 5, when it spiked sharply at the breach point. Larger red bubbles (more embargo messages) coincide with annotations of major events, suggesting that information leakage may have influenced investor behavior even before the breach window.</p>
 </div>
 <div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
 <p>This directed network graph maps who responded to whom on embargo topics. Edge width reflects the frequency of interactions, and edge color shows the dominant communication channel. Node shapes categorize roles (Compliance, Senior, Communications, Junior), while colors distinguish agents. The network highlights dominant loops, such as Legal ↔︎ Social Media, and shows how information flowed between roles.</p>
@@ -876,6 +882,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The directed network graph highlights the legal_agent ↔︎ social_media_agent loop as the dominant pathway for embargo discussions. Thick edges indicate frequent exchanges, while the Judge agent appears peripheral, with limited enforcement presence. The network structure shows that communications were concentrated among a few roles, amplifying the risk of leakage through repeated interactions.</p>
 </div>
 <div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
 <p>This stacked area chart compares embargo-related discussions in internal versus public channels over time. Blue areas represent internal communications, while red areas represent public posts. The transition from internal to public activity illustrates when sensitive discussions began leaking into external spaces, with the breach time marked by a red dashed line.</p>
@@ -917,6 +924,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The area chart demonstrates a clear transition: embargo discussions that were initially confined to internal channels began spilling into public posts on breach day. The red area (public posts) rises sharply just before 5 PM, showing how internal deliberations crossed into external visibility. This transition marks the critical failure point in embargo compliance.</p>
 </div>
 <div id="tabset-4-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-5-tab">
 <p>This analysis classifies the Judge agent’s messages into interventions, approvals, or monitoring. It reveals the limited enforcement activity during the breach period, with only a handful of embargo-related interventions. The findings suggest weakened compliance oversight, contributing to the inappropriate release. Key insights include the dominance of Legal ↔︎ Social Media exchanges, early public posts before the breach window, and unusual anonymous posting by the Legal agent.</p>
@@ -960,9 +968,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
            1           13            7 </code></pre>
 </div>
 </div>
+<p>This breakdown shows that while the Judge attempted interventions, their activity was sparse compared to the volume of risky communications. Oversight gaps are evident, with many public embargo posts occurring without timely enforcement. The Judge’s limited presence weakened compliance control during the breach.</p>
 </div>
 </div>
 </div>
+<p>The analysis reveals that embargo‑related communications escalated hours before the breach window, with legal_agent and social_media_agent driving the majority of risky exchanges. Public posts began appearing around 11:31 AM, well before the official breach period, indicating early leakage. Stock price movements aligned with embargo message density, suggesting market sensitivity to premature disclosures. The communication network was dominated by a small loop of agents, while oversight from the Judge was minimal and inconsistent. Finally, the transition from internal to public channels marked the decisive breakdown in embargo control.</p>
+<p>Together, these findings show that the breach was not a sudden event but the culmination of early leaks, concentrated agent interactions, weak enforcement, and a visible drift from internal to public communication.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -975,7 +986,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code> 1. The embargo network is dominated by legal_agent &lt;-&gt; social_media_agent loop
+<pre><code>  1. The embargo network is dominated by legal_agent &lt;-&gt; social_media_agent loop
   2. Public embargo posts started at 11:31 AM on breach day — 5.5 hours before breach window
   3. Judge agent had only 21 messages total, 4 embargo-related
   4. legal_agent used anonymous_post channel (unusual behavior) on breach day
@@ -1032,6 +1043,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The stacked bar chart shows a dramatic surge in communication on June 5 (breach day). While baseline activity was relatively low (most agents averaging fewer than 10 messages per day), breach day volumes skyrocketed — exceeding 500 total messages. This spike suggests either a coordinated response or a crisis‑driven escalation. Notably, legal_agent, social_media_agent, and quality_agent contributed heavily to this surge, far above their baseline averages.</p>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <p>This comparison examines how agents used communication channels before the breach versus during the breach window (5–6 PM). Baseline activity shows reliance on internal channels, while breach-period activity reveals a shift toward public channels such as official, personal, and anonymous posts. This change highlights the mechanism by which sensitive information began leaking externally.</p>
@@ -1072,6 +1084,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The comparison of baseline versus breach window channel usage reveals a critical shift.</p>
+<p>Baseline (Pre‑Breach): Agents relied primarily on internal channels (comms_huddle, one_on_one_chat, side_huddle).</p>
+<p>Breach Window (5–6 PM): Public channels (official_post, personal_post, anonymous_post) emerged prominently, especially for legal_agent and social_media_agent.</p>
+<p>This transition shows how sensitive embargo discussions spilled into external visibility during the breach.</p>
 </div>
 <div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
 <p>This timeline tracks public-facing posts (official, personal, anonymous) by agent across the days leading up to the breach. Lines and points show which agents increased their public posting frequency, with a clear surge on breach day. This view identifies the individuals most responsible for pushing embargo-related content into public spaces.</p>
@@ -1097,8 +1113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Public posts include official_post, personal_post, anonymous_post channels"</span>) <span class="sc">+</span></span>
 <span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  theme_vast</span>
 <span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"plots/04_public_posting_timeline.png"</span>, p4, <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">dpi =</span> <span class="dv">200</span>)</span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>p4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>p4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1108,6 +1123,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The timeline of public posts highlights which agents drove the breach.</p>
+<p>social_media_agent shows the sharpest increase, peaking at ~15 public posts on breach day.</p>
+<p>pr_intern_agent also escalated, posting ~8 times publicly.</p>
+<p>Other agents (legal_agent, pr_agent, intern_agent) remained relatively flat, with minimal public posting.</p>
+<p>This pattern identifies social_media_agent and pr_intern_agent as the primary actors pushing embargo content into public channels.</p>
 </div>
 <div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
 <p>This analysis builds side‑by‑side communication networks to compare agent interactions before the breach with those on breach day. The baseline network shows typical communication patterns, while the breach‑day network reveals increased density, new connections, and altered response flows. Edge width indicates interaction frequency, highlighting how relationships intensified under breach conditions.</p>
@@ -1197,6 +1217,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The side‑by‑side network graphs show a structural shift in communication.</p>
+<p>Baseline: Communication was more evenly distributed across agents, with multiple moderate connections.</p>
+<p>Breach Day: The network became denser but more concentrated, with thick edges between legal_agent and social_media_agent.</p>
+<p>This indicates that breach‑day interactions were dominated by a small loop of agents, amplifying risk through repeated exchanges.</p>
 </div>
 <div id="tabset-5-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-5-tab">
 <p>This visualization tracks the prevalence of specific keyword categories — embargo, merger/deal, compliance, urgency, secrecy, and deflection — across the timeline. By normalizing keyword counts against daily message volume, the chart shows how language shifted leading up to the breach. Spikes in urgency and deflection terms, for example, suggest escalating stress and denial strategies.</p>
@@ -1265,6 +1289,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Language analysis shows spikes in certain keyword categories leading up to the breach:</p>
+<p>Embargo and Merger/Deal terms rose sharply, reflecting growing focus on sensitive topics.</p>
+<p>Deflection language (deny, no comment, speculation) spiked on breach day, suggesting denial strategies.</p>
+<p>Urgency and Secrecy terms also increased, indicating stress and attempts to control information.</p>
+<p>These trends reveal escalating tension and shifting rhetoric as the breach approached.</p>
 </div>
 <div id="tabset-5-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-6-tab">
 <p>This comparison examines how each agent’s language changed between baseline and breach day. Bars show the proportion of messages containing keywords in categories such as embargo, merger, secrecy, and deflection. Faceted plots reveal which agents shifted their rhetoric most dramatically, highlighting role‑specific behavioral changes during the crisis.</p>
@@ -1317,6 +1346,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The grouped bar chart shows which agents changed their language most:</p>
+<p>legal_agent and social_media_agent dramatically increased use of Merger, Embargo, and Deflection keywords.</p>
+<p>pr_intern_agent showed spikes in Urgency and Secrecy terms.</p>
+<p>judge_agent remained relatively stable, reflecting limited rhetorical change.</p>
+<p>This highlights role‑specific shifts, with communications agents amplifying risky language during the breach.</p>
 </div>
 <div id="tabset-5-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-7-tab">
 <p>This analysis compares communication modes (broadcast, action, public_post, one_on_one_chat, side_huddle) across baseline and breach day. By showing proportions per agent, the chart reveals how message strategies shifted under pressure. A notable change is the increased reliance on public posts, replacing internal broadcasts, which contributed to the leakage of embargoed information.</p>
@@ -1386,6 +1420,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>The distribution of message types shows a clear behavioral change:</p>
+<p>Baseline: Agents relied on internal modes (broadcasts, huddles, one_on_one).</p>
+<p>Breach Day: Public posts surged across multiple agents, replacing internal broadcasts.</p>
+<p>This shift underscores how communication modes adapted under pressure, directly contributing to the leakage of embargoed information.</p>
 </div>
 <div id="tabset-5-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-8-tab">
 <p>This summary establishes typical agent behavior before the breach. It calculates average daily message volume, the proportion of public posts, and the usual channels used. These baseline metrics provide a reference point against which breach‑day anomalies can be measured. Key findings include dramatic spikes in message volume, unusual public posting by agents who had never posted publicly before, and a surge in deflection language.</p>
@@ -1426,9 +1464,16 @@ Baseline agent statistics:</code></pre>
 7 social_media_agent           4.73           0.155 </code></pre>
 </div>
 </div>
+<p>Baseline averages confirm the anomalies:</p>
+<p>legal_agent and quality_agent had zero public posts before breach day.</p>
+<p>social_media_agent and pr_intern_agent had some public activity but at modest levels.</p>
+<p>On breach day, message volumes were 5–31x higher than baseline for most agents.</p>
+<p>Several agents (legal_agent, quality_agent) posted publicly for the first time ever, marking a major deviation.</p>
 </div>
 </div>
 </div>
+<p>The analysis shows that breach day behavior was radically different from baseline. Communication volume spiked to crisis levels, public channels replaced internal ones, and social_media_agent and pr_intern_agent drove a surge in public posts. The network structure narrowed into a concentrated loop, dominated by legal_agent ↔︎ social_media_agent exchanges. Keyword analysis revealed escalating urgency, secrecy, and deflection language, while message type distributions shifted toward public posts. Baseline statistics confirm the anomalies: agents who had never posted publicly before suddenly did so, and overall activity multiplied many times over.</p>
+<p>Together, these findings demonstrate that the breach was characterized by massive activity escalation, channel shifts, rhetorical changes, and unprecedented public posting behavior, marking a clear departure from typical communication patterns.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1441,7 +1486,7 @@ Baseline agent statistics:</code></pre>
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>  1. Breach day message volume is 5-31x the daily baseline for most agents
+<pre><code>   1. Breach day message volume is 5-31x the daily baseline for most agents
    2. legal_agent and quality_agent NEVER posted publicly before breach day
    3. Deflection keywords spike dramatically on breach day (denial strategy)
    4. Network density increases significantly on breach day
@@ -1475,6 +1520,7 @@ Baseline agent statistics:</code></pre>
 <pre><code>Prior public embargo-related messages (near-misses):  9 </code></pre>
 </div>
 </div>
+<p>The dataset shows 9 near‑misses where embargo‑related content was posted publicly before the breach window. These early leaks demonstrate that compliance was already breaking down hours before the official breach period. The fact that agents felt comfortable posting embargo topics publicly ahead of time signals weak enforcement and normalization of risky behavior.</p>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
 <p>This chunk classifies the Judge agent’s activity into interventions, approvals, and monitoring. By quantifying these actions, it reveals how often the Judge attempted to enforce compliance versus how often they remained passive. The breakdown highlights limited intervention activity, pointing to enforcement gaps.</p>
@@ -1512,6 +1558,7 @@ Baseline agent statistics:</code></pre>
   Monitoring: 7 </code></pre>
 </div>
 </div>
+<p>While interventions were attempted, the volume was insufficient compared to the scale of risky communications. The Judge’s limited approvals and heavy reliance on monitoring suggest a reactive rather than proactive stance, leaving gaps in enforcement.</p>
 </div>
 <div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
 <p>This visualization overlays Judge agent activity against total message volume and public posts. Gray bars show overall communication, red bars highlight public posts, and the blue line tracks Judge activity. Oversight gaps are marked when public posts occur without Judge involvement, illustrating moments when risky behavior went unchecked.</p>
@@ -1564,6 +1611,7 @@ Baseline agent statistics:</code></pre>
 </div>
 </div>
 </div>
+<p>The oversight chart shows clear gaps: public posts surged at times when the Judge was inactive. Blue “X” markers highlight periods where risky public posts occurred without Judge involvement. This confirms that enforcement was inconsistent, allowing embargo breaches to slip through unchecked.</p>
 </div>
 <div id="tabset-6-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-4-tab">
 <p>This analysis surfaces cases where agents deliberated internally about risk, sensitivity, or embargo concerns but still proceeded to post publicly. These instances reflect cognitive dissonance — acknowledging danger yet acting against compliance — and highlight breakdowns in decision‑making under pressure.</p>
@@ -1602,6 +1650,7 @@ Risky deliberations followed by public action: 1 </code></pre>
 1 2046-06-01 09:20:00 intern_agent personal_post</code></pre>
 </div>
 </div>
+<p>One notable case was identified: intern_agent deliberated about risk and sensitivity (“shouldn’t,” “embargo,” “dangerous”) but still proceeded to make a personal post on June 1. This illustrates cognitive dissonance — agents recognized the risk yet acted against compliance. Even a single case highlights systemic weakness in decision‑making under pressure.</p>
 </div>
 <div id="tabset-6-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-5-tab">
 <p>This chart tracks the proportion of public posts over time, grouped by agent. Rising trends indicate a gradual normalization of public sharing behavior before the breach. This drift shows how agents became increasingly comfortable posting externally, eroding compliance boundaries and setting the stage for the eventual breach.</p>
@@ -1641,6 +1690,7 @@ Risky deliberations followed by public action: 1 </code></pre>
 </div>
 </div>
 </div>
+<p>The trend lines show that several agents gradually increased their proportion of public posts in the weeks leading up to June 5. social_media_agent and pr_intern_agent show the steepest rises, while legal_agent also began posting publicly despite having no prior history. This drift indicates a slow erosion of compliance boundaries, normalizing public posting behavior before the breach.</p>
 </div>
 <div id="tabset-6-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-6-tab">
 <p>This visualization tracks how frequently agents discussed embargo or merger topics over time. By plotting the proportion of messages containing embargo‑related language, it highlights when these sensitive discussions began to intensify. Rising curves serve as early warning signals that agents were increasingly preoccupied with embargoed information before the breach.</p>
@@ -1674,6 +1724,7 @@ Risky deliberations followed by public action: 1 </code></pre>
 </div>
 </div>
 </div>
+<p>Embargo and merger topics became increasingly frequent after late May. By early June, social_media_agent and legal_agent were discussing embargo topics at much higher rates. This growing preoccupation with sensitive information was a clear early warning signal that the system was under stress.</p>
 </div>
 <div id="tabset-6-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-7-tab">
 <p>This analysis compares each agent’s breach‑day activity against their baseline behavior. Bars show how many times greater their message volume was compared to normal, while red highlights agents who posted publicly for the first time on breach day. The chart quantifies anomalies, revealing which agents deviated most sharply from their usual patterns.</p>
@@ -1745,6 +1796,15 @@ Breach day anomaly comparison:</code></pre>
 </div>
 </div>
 </div>
+<p>The anomaly chart quantifies deviations:</p>
+<ul>
+<li><p>legal_agent: 31.5× baseline, with new public posting behavior</p></li>
+<li><p>social_media_agent: 30.4× baseline</p></li>
+<li><p>pr_intern_agent: 27.7× baseline</p></li>
+<li><p>quality_agent: 5.5× baseline, also new public posting</p></li>
+<li><p>judge_agent: 0.9× baseline (no escalation)</p></li>
+</ul>
+<p>This confirms that breach day behavior was massively anomalous, especially for agents who had never posted publicly before.</p>
 </div>
 <div id="tabset-6-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-8-tab">
 <p>This heatmap breaks down agent activity hour by hour on breach day. Darker cells indicate higher message counts, and annotations note public posts. The cyan dashed line marks the 5 PM breach time. This view shows the cascade of activity across agents, illustrating how communication surged and shifted in the hours leading up to the breach.</p>
@@ -1792,6 +1852,14 @@ Breach day anomaly comparison:</code></pre>
 </div>
 </div>
 </div>
+<p>The heatmap shows the cascade of activity across agents on June 5.</p>
+<ul>
+<li><p>social_media_agent and pr_intern_agent were highly active throughout the day, with multiple public posts.</p></li>
+<li><p>legal_agent escalated activity in the afternoon, including public posts.</p></li>
+<li><p>judge_agent was minimally active, leaving oversight gaps.</p></li>
+<li><p>intern_agent posted publicly late in the day.</p></li>
+</ul>
+<p>The temporal breakdown highlights how activity intensified and converged toward the breach window.</p>
 </div>
 <div id="tabset-6-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-9-tab">
 <p>This analysis detects stress‑related language in agents’ deliberations, such as “worried,” “pressure,” or “dangerous.” The timeline plots the proportion of stressed messages per agent, with bubble size indicating absolute counts. Rising stress signals before June 5 suggest mounting anxiety and conflict, serving as leading indicators of system breakdown.</p>
@@ -1849,6 +1917,7 @@ Breach day anomaly comparison:</code></pre>
 </div>
 </div>
 </div>
+<p>Together, these findings show that the breach was not a sudden event but the culmination of early leaks, weak enforcement, behavioral drift, and rising internal stress. The system exhibited clear signals of vulnerability that, if acted upon, could have prevented the inappropriate release.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1861,7 +1930,7 @@ Breach day anomaly comparison:</code></pre>
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>  1. Near-misses occurred BEFORE the breach window (as early as 11:31 AM)
+<pre><code>   1. Near-misses occurred BEFORE the breach window (as early as 11:31 AM)
    2. Judge agent was absent for majority of public embargo posts (&gt;1hr gap)
    3. Behavioral drift: public posting ratio increased in the days leading up
    4. Stress indicators in deliberations spiked before the breach

@@ -37,6 +37,8 @@ website:
             href: "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07_a.html"
           - text: "Hands-on Excercise 7b: Visualising and Analysing Text Data"
             href: "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07_b.html"
+          - text: "Hands-on Excercise 8: Visualising and Analysing Time-oriented Data"
+            href: "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html"
       - text: "Take-home Exercise"
         menu: 
           - text: "Take-home Exercise 1 Technical Report"
