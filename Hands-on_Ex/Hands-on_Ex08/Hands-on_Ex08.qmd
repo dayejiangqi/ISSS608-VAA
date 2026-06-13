@@ -14,19 +14,17 @@ execute:
 
 By the end of this hands-on exercise you will be able create the followings data visualisation by using R packages:
 
--   plotting a calender heatmap by using ggplot2 functions,
+- plotting a calender heatmap by using ggplot2 functions,
 
--   plotting a cycle plot by using ggplot2 function,
+- plotting a cycle plot by using ggplot2 function,
 
--   plotting a slopegraph
+- plotting a slopegraph
 
--   plotting a horizon chart
+- plotting a horizon chart
 
-# 2 Getting Started
+# 2 Loading Packages
 
-# 3 Do It Yourself
-
-Write a code chunk to check, install and launch the following R packages: scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table and tidyverse.
+We use pacman::p_load() to install and launch the following R packages: scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table and tidyverse.
 
 ```{r}
 pacman::p_load(scales, viridis, lubridate, ggthemes,
@@ -34,7 +32,7 @@ pacman::p_load(scales, viridis, lubridate, ggthemes,
                CGPfunctions, ggHoriPlot, tidyverse)
 ```
 
-# 4 Plotting Calendar Heatmap
+# 3 Plotting Calendar Heatmap
 
 In this section, you will learn how to plot a calender heatmap programmatically by using ggplot2 package.
 
@@ -42,16 +40,16 @@ In this section, you will learn how to plot a calender heatmap programmatically 
 
 By the end of this section, you will be able to:
 
--   plot a calender heatmap by using ggplot2 functions and extension,
--   to write function using R programming,
--   to derive specific date and time related field by using base R and lubridate packages
--   to perform data preparation task by using tidyr and dplyr packages.
+- plot a calender heatmap by using ggplot2 functions and extension,
+- to write function using R programming,
+- to derive specific date and time related field by using base R and lubridate packages
+- to perform data preparation task by using tidyr and dplyr packages.
 
-## 4.1 The Data
+## 3.1 The Data
 
 For the purpose of this hands-on exercise, eventlog.csv file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.
 
-## 4.2 Importing the data
+## 3.2 Importing the data
 
 First, you will use the code chunk below to import eventlog.csv file into R environment and called the data frame as attacks.
 
@@ -59,7 +57,7 @@ First, you will use the code chunk below to import eventlog.csv file into R envi
 attacks <- read_csv("data/eventlog.csv")
 ```
 
-## 4.3 Examining the data structure
+## 3.3 Examining the data structure
 
 It is always a good practice to examine the imported data frame before further analysis is performed.
 
@@ -71,11 +69,11 @@ kable(head(attacks))
 
 There are three columns, namely timestamp, source_country and tz.
 
--   timestamp field stores date-time values in POSIXct format.
--   source_country field stores the source of the attack. It is in ISO 3166-1 alpha-2 country code.
--   tz field stores time zone of the source IP address.
+- timestamp field stores date-time values in POSIXct format.
+- source_country field stores the source of the attack. It is in ISO 3166-1 alpha-2 country code.
+- tz field stores time zone of the source IP address.
 
-## 4.4 Data Preparation
+## 3.4 Data Preparation
 
 **Step 1: Deriving weekday and hour of day fields**
 
@@ -96,8 +94,8 @@ make_hr_wkday <- function(ts, sc, tz) {
 ::: callout-note
 ## Note
 
--   ymd_hms() and hour() are from lubridate package, and
--   weekdays() is a base R function.
+- ymd_hms() and hour() are from lubridate package, and
+- weekdays() is a base R function.
 :::
 
 **Step 2: Deriving the attacks tibble data frame**
@@ -132,7 +130,7 @@ Table below shows the tidy tibble table after processing.
 kable(head(attacks))
 ```
 
-## 4.5 Building the Calendar Heatmaps
+## 3.5 Building the Calendar Heatmaps
 
 ```{r}
 grouped <- attacks %>% 
@@ -163,34 +161,34 @@ theme(axis.ticks = element_blank(),
 ::: callout-note
 ## Things to learn from the code chunk
 
--   a tibble data table called grouped is derived by aggregating the attack by wkday and hour fields.
--   a new field called n is derived by using group_by() and count() functions.
--   na.omit() is used to exclude missing value.
--   geom_tile() is used to plot tiles (grids) at each x and y position. color and size arguments are used to specify the border color and line size of the tiles.
--   theme_tufte() of ggthemes package is used to remove unnecessary chart junk. To learn which visual components of default ggplot2 have been excluded, you are encouraged to comment out this line to examine the default plot.
--   coord_equal() is used to ensure the plot will have an aspect ratio of 1:1.
--   scale_fill_gradient() function is used to creates a two colour gradient (low-high).
+- a tibble data table called grouped is derived by aggregating the attack by wkday and hour fields.
+- a new field called n is derived by using group_by() and count() functions.
+- na.omit() is used to exclude missing value.
+- geom_tile() is used to plot tiles (grids) at each x and y position. color and size arguments are used to specify the border color and line size of the tiles.
+- theme_tufte() of ggthemes package is used to remove unnecessary chart junk. To learn which visual components of default ggplot2 have been excluded, you are encouraged to comment out this line to examine the default plot.
+- coord_equal() is used to ensure the plot will have an aspect ratio of 1:1.
+- scale_fill_gradient() function is used to creates a two colour gradient (low-high).
 :::
 
 Then we can simply group the count by hour and wkday and plot it, since we know that we have values for every combination there’s no need to further preprocess the data.
 
-## 4.6 Building Multiple Calendar Heatmaps
+## 3.6 Building Multiple Calendar Heatmaps
 
 **Challenge:** Building multiple heatmaps for the top four countries with the highest number of attacks.
 
 ![](https://r4va.netlify.app/chap17/img/image02.png)
 
-## 4.7 Plotting Multiple Calendar Heatmaps
+## 3.7 Plotting Multiple Calendar Heatmaps
 
 **Step 1: Deriving attack by country object**
 
 In order to identify the top 4 countries with the highest number of attacks, you are required to do the followings:
 
--   count the number of attacks by country,
+- count the number of attacks by country,
 
--   calculate the percent of attackes by country, and
+- calculate the percent of attackes by country, and
 
--   save the results in a tibble data frame.
+- save the results in a tibble data frame.
 
 ```{r}
 attacks_by_country <- count( 
@@ -214,7 +212,7 @@ top4_attacks <- attacks %>%
   na.omit()
 ```
 
-## 4.8 Plotting Multiple Calendar Heatmaps
+## 3.8 Plotting Multiple Calendar Heatmaps
 
 **Step 3: Plotting the Multiple Calender Heatmap by using ggplot2 package**
 
@@ -240,13 +238,13 @@ ggplot(top4_attacks,
         legend.text = element_text(size = 6) )
 ```
 
-# 5 Plotting Cycle Plot
+# 4 Plotting Cycle Plot
 
 In this section, you will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically by using ggplot2 functions.
 
 ![](https://r4va.netlify.app/chap17/img/image03.png)
 
-## 5.1 Step 1: Data Import
+## 4.1 Step 1: Data Import
 
 For the purpose of this hands-on exercise, arrivals_by_air.xlsx will be used.
 
@@ -256,7 +254,7 @@ The code chunk below imports arrivals_by_air.xlsx by using read_excel() of readx
 air <- read_excel("data/arrivals_by_air.xlsx")
 ```
 
-## 5.2 Step 2: Deriving month and year fields
+## 4.2 Step 2: Deriving month and year fields
 
 Next, two new fields called month and year are derived from Month-Year field.
 
@@ -268,19 +266,25 @@ air$month <- factor(month(air$`Month-Year`),
 air$year <- year(ymd(air$`Month-Year`))
 ```
 
-## 5.3 Step 4: Extracting the target country
+## 4.3 Step 3: Reshape Data for ggplot
+
+```{r}
+air <- air %>%
+  pivot_longer(cols = -c(`Month-Year`, month, year),
+               names_to = "Country",
+               values_to = "Arrivals")
+```
+
+## 4.4 Step 4: Extracting the target country
 
 Next, the code chunk below is use to extract data for the target country (i.e. Vietnam)
 
 ```{r}
 Vietnam <- air %>% 
-  select(`Vietnam`, 
-         month, 
-         year) %>%
-  filter(year >= 2010)
+  filter(Country == "Vietnam", year >= 2010)
 ```
 
-## 5.4 Step 5: Computing year average arrivals by month
+## 4.5 Step 5: Computing year average arrivals by month
 
 The code chunk below uses group_by() and summarise() of dplyr to compute year average arrivals by month.
 
@@ -290,7 +294,7 @@ hline.data <- Vietnam %>%
   summarise(avgvalue = mean(`Vietnam`))
 ```
 
-## 5.5 Srep 6: Plotting the cycle plot
+## 4.6 Step 6: Plotting the cycle plot
 
 The code chunk below is used to plot the cycle plot as shown in Slide 12/23.
 
@@ -316,13 +320,13 @@ ggplot() +
   theme_tufte(base_family = "Helvetica")
 ```
 
-# 6 Plotting Slopegraph
+# 5 Plotting Slopegraph
 
 In this section you will learn how to plot a [slopegraph](https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph) by using R.
 
 Before getting start, make sure that **CGPfunctions** has been installed and loaded onto R environment. Then, refer to Using newggslopegraph to learn more about the function. Lastly, read more about newggslopegraph() and its arguments by referring to this [link](https://www.rdocumentation.org/packages/CGPfunctions/versions/0.6.3/topics/newggslopegraph).
 
-## 6.1 Step 1: Data Import
+## 5.1 Step 1: Data Import
 
 Import the rice data set into R environment by using the code chunk below.
 
@@ -330,7 +334,7 @@ Import the rice data set into R environment by using the code chunk below.
 rice <- read_csv("data/rice.csv")
 ```
 
-## 6.2 Step 2: Plotting the slopegraph
+## 5.2 Step 2: Plotting the slopegraph
 
 Next, code chunk below will be used to plot a basic slopegraph as shown below.
 
