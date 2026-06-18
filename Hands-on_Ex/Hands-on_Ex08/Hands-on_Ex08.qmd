@@ -269,10 +269,12 @@ air$year <- year(ymd(air$`Month-Year`))
 ## 4.3 Step 3: Reshape Data for ggplot
 
 ```{r}
-air <- air %>%
-  pivot_longer(cols = -c(`Month-Year`, month, year),
-               names_to = "Country",
-               values_to = "Arrivals")
+air_long <- air %>%
+  pivot_longer(
+    cols = -c(`Month-Year`, month, year), 
+    names_to = "Country",
+    values_to = "Arrivals"
+  )
 ```
 
 ## 4.4 Step 4: Extracting the target country
@@ -281,7 +283,10 @@ Next, the code chunk below is use to extract data for the target country (i.e. V
 
 ```{r}
 Vietnam <- air %>% 
-  filter(Country == "Vietnam", year >= 2010)
+  select(`Vietnam`, 
+         month, 
+         year) %>%
+  filter(year >= 2010)
 ```
 
 ## 4.5 Step 5: Computing year average arrivals by month
