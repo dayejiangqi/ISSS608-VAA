@@ -617,7 +617,6 @@ print(table(judge_activity$action_type))
 ```
 
 This breakdown shows that while the Judge attempted interventions, their activity was sparse compared to the volume of risky communications. Oversight gaps are evident, with many public embargo posts occurring without timely enforcement. The Judge’s limited presence weakened compliance control during the breach.
-
 :::
 
 The analysis reveals that embargo‑related communications escalated hours before the breach window, with legal_agent and social_media_agent driving the majority of risky exchanges. Public posts began appearing around 11:31 AM, well before the official breach period, indicating early leakage. Stock price movements aligned with embargo message density, suggesting market sensitivity to premature disclosures. The communication network was dominated by a small loop of agents, while oversight from the Judge was minimal and inconsistent. Finally, the transition from internal to public channels marked the decisive breakdown in embargo control.
@@ -626,6 +625,7 @@ Together, these findings show that the breach was not a sudden event but the cul
 
 ::: callout-note
 ## Key findings
+
 ```{r}
 #| echo: false
 cat( "  1. The embargo network is dominated by legal_agent <-> social_media_agent loop\n",
@@ -755,9 +755,9 @@ p4
 
 The timeline of public posts highlights which agents drove the breach.
 
-social_media_agent shows the sharpest increase, peaking at ~15 public posts on breach day.
+social_media_agent shows the sharpest increase, peaking at \~15 public posts on breach day.
 
-pr_intern_agent also escalated, posting ~8 times publicly.
+pr_intern_agent also escalated, posting \~8 times publicly.
 
 Other agents (legal_agent, pr_agent, intern_agent) remained relatively flat, with minimal public posting.
 
@@ -1084,7 +1084,6 @@ social_media_agent and pr_intern_agent had some public activity but at modest le
 On breach day, message volumes were 5–31x higher than baseline for most agents.
 
 Several agents (legal_agent, quality_agent) posted publicly for the first time ever, marking a major deviation.
-
 :::
 
 The analysis shows that breach day behavior was radically different from baseline. Communication volume spiked to crisis levels, public channels replaced internal ones, and social_media_agent and pr_intern_agent drove a surge in public posts. The network structure narrowed into a concentrated loop, dominated by legal_agent ↔ social_media_agent exchanges. Keyword analysis revealed escalating urgency, secrecy, and deflection language, while message type distributions shifted toward public posts. Baseline statistics confirm the anomalies: agents who had never posted publicly before suddenly did so, and overall activity multiplied many times over.
@@ -1093,6 +1092,7 @@ Together, these findings demonstrate that the breach was characterized by massiv
 
 ::: callout-note
 ## Key findings
+
 ```{r}
 #| echo: false
 cat("   1. Breach day message volume is 5-31x the daily baseline for most agents\n",
@@ -1351,15 +1351,15 @@ p5c
 
 The anomaly chart quantifies deviations:
 
-- legal_agent: 31.5× baseline, with new public posting behavior
+-   legal_agent: 31.5× baseline, with new public posting behavior
 
-- social_media_agent: 30.4× baseline
+-   social_media_agent: 30.4× baseline
 
-- pr_intern_agent: 27.7× baseline
+-   pr_intern_agent: 27.7× baseline
 
-- quality_agent: 5.5× baseline, also new public posting
+-   quality_agent: 5.5× baseline, also new public posting
 
-- judge_agent: 0.9× baseline (no escalation)
+-   judge_agent: 0.9× baseline (no escalation)
 
 This confirms that breach day behavior was massively anomalous, especially for agents who had never posted publicly before.
 
@@ -1406,13 +1406,13 @@ p5d
 
 The heatmap shows the cascade of activity across agents on June 5.
 
-- social_media_agent and pr_intern_agent were highly active throughout the day, with multiple public posts.
+-   social_media_agent and pr_intern_agent were highly active throughout the day, with multiple public posts.
 
-- legal_agent escalated activity in the afternoon, including public posts.
+-   legal_agent escalated activity in the afternoon, including public posts.
 
-- judge_agent was minimally active, leaving oversight gaps.
+-   judge_agent was minimally active, leaving oversight gaps.
 
-- intern_agent posted publicly late in the day.
+-   intern_agent posted publicly late in the day.
 
 The temporal breakdown highlights how activity intensified and converged toward the breach window.
 
@@ -1469,6 +1469,7 @@ Together, these findings show that the breach was not a sudden event but the cul
 
 ::: callout-note
 ## Key findings
+
 ```{r}
 #| echo: false
 cat( "   1. Near-misses occurred BEFORE the breach window (as early as 11:31 AM)\n",
